@@ -17,7 +17,7 @@ class CatBoostBreakthrough:
         self.params = params or {}
 
     def fit(self, X: pd.DataFrame, y: pd.Series, groups: pd.Series,
-            cat_features: list[str] | None = None) -> "CatBoostBreakthrough":
+            cat_features: list[str] | None = None) -> CatBoostBreakthrough:
         raise NotImplementedError("M4")
 
     def predict_proba(self, X: pd.DataFrame) -> pd.Series:

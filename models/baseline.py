@@ -18,7 +18,7 @@ def naive_scout_scores(features: pd.DataFrame,
 
 
 class LogRegBaseline:
-    def fit(self, X: pd.DataFrame, y: pd.Series) -> "LogRegBaseline":
+    def fit(self, X: pd.DataFrame, y: pd.Series) -> LogRegBaseline:
         raise NotImplementedError("M3")
 
     def predict_proba(self, X: pd.DataFrame) -> pd.Series:

@@ -19,12 +19,14 @@ class LabelConfig:
     settled_age: int = 26
 
     @classmethod
-    def from_settings(cls) -> "LabelConfig":
+    def from_settings(cls) -> LabelConfig:
         t = load_settings()["target"]
         return cls(rpl_minutes_threshold=t["rpl_minutes_threshold"], settled_age=t["settled_age"])
 
 
-def binary_target(rpl_minutes_ever: float, current_age: float, cfg: LabelConfig | None = None) -> int:
+def binary_target(
+    rpl_minutes_ever: float, current_age: float, cfg: LabelConfig | None = None
+) -> int:
     """1 = broke through; 0 = settled non-breakthrough; CENSORED = still open.
 
     - 1  if career RPL minutes >= threshold

@@ -31,6 +31,6 @@ class RateLimiter:
             self._last = time.monotonic()
 
     @classmethod
-    def from_config(cls, cfg: dict) -> "RateLimiter":
+    def from_config(cls, cfg: dict) -> RateLimiter:
         s = cfg["scrape"]
         return cls(min_interval=s["min_interval_seconds"], jitter=s["jitter_seconds"])

@@ -40,9 +40,7 @@ def find_leaks(columns: Iterable[str], *, extra_forbidden: Iterable[str] = ()) -
     hits = []
     for c in columns:
         lc = c.lower()
-        if c in FORBIDDEN_EXACT or c in extra:
-            hits.append(c)
-        elif any(s in lc for s in FORBIDDEN_SUBSTRINGS):
+        if c in FORBIDDEN_EXACT or c in extra or any(s in lc for s in FORBIDDEN_SUBSTRINGS):
             hits.append(c)
     return sorted(set(hits))
 

@@ -7,12 +7,12 @@ merges records that refer to the same physical player across sources.
 from __future__ import annotations
 
 from datetime import date
-from enum import Enum
+from enum import StrEnum
 
 from pydantic import BaseModel, Field
 
 
-class Position(str, Enum):
+class Position(StrEnum):
     GK = "GK"
     CB = "CB"
     FB = "FB"
