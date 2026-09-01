@@ -14,8 +14,9 @@ import pandas as pd
 
 
 class CoxBreakthrough:
-    def fit(self, df: pd.DataFrame, duration_col: str = "duration",
-            event_col: str = "event_observed") -> CoxBreakthrough:
+    def fit(
+        self, df: pd.DataFrame, duration_col: str = "duration", event_col: str = "event_observed"
+    ) -> CoxBreakthrough:
         raise NotImplementedError("M5")
 
     def probability_by_age(self, X: pd.DataFrame, age: float) -> pd.Series:

@@ -45,8 +45,9 @@ def binary_target(
 ORDINAL_LEVELS = ("none", "lower_leagues", "rpl")
 
 
-def ordinal_target(rpl_minutes_ever: float, reached_pro_level: bool,
-                   cfg: LabelConfig | None = None) -> str:
+def ordinal_target(
+    rpl_minutes_ever: float, reached_pro_level: bool, cfg: LabelConfig | None = None
+) -> str:
     cfg = cfg or LabelConfig.from_settings()
     if rpl_minutes_ever >= cfg.rpl_minutes_threshold:
         return "rpl"

@@ -17,8 +17,12 @@ ENRICHMENT_SOURCES = ("rfs", "regional_federations", "sofascore", "fbref")
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--sources", nargs="+", default=list(CORE_SOURCES),
-                   choices=CORE_SOURCES + ENRICHMENT_SOURCES)
+    p.add_argument(
+        "--sources",
+        nargs="+",
+        default=list(CORE_SOURCES),
+        choices=CORE_SOURCES + ENRICHMENT_SOURCES,
+    )
     p.add_argument("--dry-run", action="store_true")
     return p.parse_args(argv)
 

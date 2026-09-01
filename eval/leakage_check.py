@@ -9,15 +9,17 @@ from __future__ import annotations
 from collections.abc import Iterable
 
 # Exact column names that must never be used as features.
-FORBIDDEN_EXACT: frozenset[str] = frozenset({
-    "current_club",
-    "club_at_collection",
-    "senior_national_team_caps",
-    "senior_national_team",
-    "market_value_current_eur",
-    "market_value_now_eur",
-    "last_known_club",  # fine as an outcome marker, never as a feature
-})
+FORBIDDEN_EXACT: frozenset[str] = frozenset(
+    {
+        "current_club",
+        "club_at_collection",
+        "senior_national_team_caps",
+        "senior_national_team",
+        "market_value_current_eur",
+        "market_value_now_eur",
+        "last_known_club",  # fine as an outcome marker, never as a feature
+    }
+)
 
 # Any column containing one of these substrings is suspect.
 FORBIDDEN_SUBSTRINGS: tuple[str, ...] = (

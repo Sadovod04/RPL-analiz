@@ -12,8 +12,9 @@ from __future__ import annotations
 import pandas as pd
 
 
-def naive_scout_scores(features: pd.DataFrame,
-                       value_col: str = "market_value_at_cutoff_eur") -> pd.Series:
+def naive_scout_scores(
+    features: pd.DataFrame, value_col: str = "market_value_at_cutoff_eur"
+) -> pd.Series:
     raise NotImplementedError("M3")
 
 
