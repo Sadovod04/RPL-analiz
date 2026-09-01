@@ -47,6 +47,7 @@ class CatBoostBreakthrough:
             "auto_class_weights": "Balanced",
             "random_seed": 42,
             "verbose": False,
+            "allow_writing_files": False,  # no catboost_info/ litter
             **self.params,
         }
 

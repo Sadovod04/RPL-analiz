@@ -22,3 +22,6 @@ mlartifacts/
 
 # os
 .DS_Store
+
+# catboost training logs
+catboost_info/
