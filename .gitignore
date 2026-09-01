@@ -1,0 +1,24 @@
+# env
+.venv/
+.env
+
+# python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# data — raw scrape and built features never go in git (see SPEC §5); keep the dirs
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+*.parquet
+
+# experiment tracking
+mlruns/
+mlartifacts/
+
+# os
+.DS_Store
