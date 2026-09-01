@@ -16,7 +16,12 @@ settled_age = 26               # at/after this age a non-breakthrough counts as 
 
 [features]
 cutoff_age_start = 11          # earliest age we ingest / build features from
+modeling_cutoff_age = 19       # features use ONLY seasons observed strictly before this age
 age_buckets = ["U13", "U15", "U17", "U19", "U21"]
+
+[split]
+# temporal split: train = outcome resolved before this cohort year, test = at/after
+test_cohort_from = 2001
 
 [scrape]
 min_interval_seconds = 2.0
