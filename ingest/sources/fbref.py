@@ -1,23 +1,29 @@
 """FBref adapter (M1b) — ENRICHMENT.
 
-Advanced metrics (xG/xA, progressive passes/carries) for senior leagues, used to
-enrich the adult-career side of a player's record.
+Adds: advanced metrics for senior leagues — xG/xA per 90, progressive
+passes/carries, duel win % (SPEC §7.2). Enriches the *adult-career* side of a
+record, not the youth-predictor side (FBref youth coverage for RU academies is
+near-zero).
 
-Status: skeleton — implemented in M1b.
+FBref (Cloudflare) returns HTTP 403 to plain ``httpx`` from CI. Options:
+  * ``curl_cffi`` with a Chrome TLS fingerprint, or a browser context;
+  * the ``soccerdata`` package (wraps FBref with caching + throttling).
+FBref asks for <= ~1 req / 3 s — keep the rate limiter conservative.
+
+Approach: map player -> FBref id; parse the ``scout`` / ``stats`` tables
+(``pandas.read_html`` on the commented-out table blocks FBref ships).
 """
 
 from __future__ import annotations
 
-from collections.abc import Iterator
-
-from ingest.sources.base import Source
+FBREF_BASE = "https://fbref.com"
 
 
-class Fbref(Source):
+class FbrefAdvancedStats:
     name = "fbref"
 
-    def iter_academy_players(self, academy_ref: str) -> Iterator[str]:
-        raise NotImplementedError("M1b")
-
-    def fetch_player(self, player_ref: str) -> dict:
-        raise NotImplementedError("M1b")
+    def player_stats(self, fbref_id: str) -> list[dict]:
+        raise NotImplementedError(
+            "M1b: needs curl_cffi/browser/soccerdata (httpx -> 403); "
+            "parse standard + advanced stat tables from /en/players/{id}/"
+        )
