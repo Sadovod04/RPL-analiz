@@ -1,0 +1,134 @@
+{
+ "success": true,
+ "message": "OK",
+ "data": [
+  {
+   "id": "362570",
+   "name": "Andrey Mostovoy",
+   "shortName": "A. Mostovoy",
+   "artistName": "",
+   "displayName": "",
+   "lifeDates": {
+    "age": 28,
+    "dateOfBirth": "1997-11-05",
+    "isDateOfBirthUnknown": false,
+    "dateOfDeath": null,
+    "isDateOfDeathUnknown": false
+   },
+   "birthPlaceDetails": {
+    "placeOfBirth": "Omsk",
+    "countryOfBirthId": 141,
+    "placeOfBirthAdditionalInfo": "",
+    "gender": "male"
+   },
+   "nationalityDetails": {
+    "passportName": "Мостовой Андрей Андреевич",
+    "nationalities": {
+     "nationalityId": 141,
+     "secondNationalityId": 0
+    }
+   },
+   "attributes": {
+    "height": 1.8,
+    "preferredFootId": 2,
+    "outfitterId": 2,
+    "positionGroup": "FORWARD",
+    "positionGroupName": "Striker",
+    "positionId": 11,
+    "firstSidePositionId": 12,
+    "secondSidePositionId": 14,
+    "lastContractRenewal": {
+     "year": 2023,
+     "month": 10,
+     "day": 10
+    },
+    "contractUntil": "2027-06-30",
+    "formerClubsNote": "ZSKA Moskau (2002-2012), SDYuSShOR-94 Rublevo Moskau (02.2012 - 03.2012), Lokomotiv Moskau (03.2012-31.12.2014)",
+    "consultantAgencyId": 0,
+    "preferredFoot": {
+     "id": 2,
+     "name": "right"
+    },
+    "outfitter": {
+     "id": 2,
+     "name": "Nike"
+    },
+    "position": {
+     "id": 11,
+     "name": "Left Winger",
+     "shortName": "LW",
+     "category": "Striker"
+    },
+    "firstSidePosition": {
+     "id": 12,
+     "name": "Right Winger",
+     "shortName": "RW",
+     "category": "Striker"
+    },
+    "secondSidePosition": {
+     "id": 14,
+     "name": "Centre-Forward",
+     "shortName": "CF",
+     "category": "Striker"
+    }
+   },
+   "preferences": {
+    "themeId": 0
+   },
+   "nominees": [],
+   "participations": [],
+   "relativeUrl": "/andrey-mostovoy/profil/spieler/362570",
+   "portraitUrl": "https://img.a.transfermarkt.technology/portrait/big/362570-1784995085.png",
+   "portraitUrlSource": "www.fc-zenit.ru",
+   "marketValueDetails": {
+    "current": {
+     "value": 3500000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "3.50",
+      "suffix": "M"
+     },
+     "determined": "2026-05-26"
+    },
+    "previous": {
+     "value": 4000000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "4.00",
+      "suffix": "M"
+     },
+     "determined": "2025-12-16"
+    },
+    "delta": {
+     "value": "-500.000 €",
+     "percentage": "-12,50 %",
+     "isVisible": false,
+     "type": "DECREASED"
+    },
+    "highest": {
+     "value": 4000000,
+     "currency": "EUR",
+     "compact": {
+      "prefix": "€",
+      "content": "4.00",
+      "suffix": "M"
+     },
+     "determined": "2025-12-16"
+    }
+   },
+   "clubAssignments": [
+    {
+     "playerId": "362570",
+     "clubId": "964",
+     "shirtNumber": 17,
+     "isCaptain": false,
+     "type": "current",
+     "debut": "2020-08-07",
+     "start": "2019-07-01"
+    }
+   ]
+  }
+ ]
+}

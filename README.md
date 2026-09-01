@@ -19,17 +19,27 @@ player. Portfolio project. Full spec: [`SPEC.md`](SPEC.md).
 ```bash
 # 1. окружение (Python 3.12, pinned) / environment
 uv sync
+uv run playwright install chromium        # for TM squad (kader) discovery
 
 # 2. Postgres (сырьё / raw data)
 docker compose up -d
 cp .env.example .env
 
-# 3. тесты / tests
+# 3. тесты / tests   (storage tests need Postgres up; else skipped)
 uv run pytest
 
 # 4. линт / lint
 uv run ruff check .
+
+# 5. сбор данных / ingest  (M1a)
+uv run python -m ingest.run_ingest --sources wikipedia transfermarkt \
+    --seasons 2015-2024 --limit 50
 ```
+
+> **Docker в своём терминале:** после первого запуска нужен `newgrp docker` или
+> перелогин (группа `docker` добавлена, но сессия старее).
+> **youfl.ru** недоступен из не-RU сети — ЮФЛ-контекст берётся из Wikipedia +
+> Transfermarkt `RUJL`; см. `SPEC.md` §5.
 
 `make` targets: `install`, `db-up`, `db-down`, `test`, `lint`, `fmt`.
 

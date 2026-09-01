@@ -6,7 +6,7 @@ merges records that refer to the same physical player across sources.
 
 from __future__ import annotations
 
-from datetime import date
+from datetime import date as _Date
 from enum import StrEnum
 
 from pydantic import BaseModel, Field
@@ -26,13 +26,24 @@ class Player(BaseModel):
     source: str
     source_id: str
     full_name: str
-    birth_date: date | None = None
+    name_home_country: str | None = Field(
+        default=None, description="native-script name, e.g. Cyrillic"
+    )
+    birth_date: _Date | None = None
     position: Position = Position.UNKNOWN
+    foot: str | None = None
     height_cm: int | None = None
     weight_kg: int | None = None
     nationality: str | None = None
     is_foreigner: bool | None = None
+    place_of_birth: str | None = None
     academy_club: str | None = None
+    youth_clubs: list[str] = Field(default_factory=list)
+    current_club: str | None = Field(
+        default=None, description="as of collection — NOT a feature (leakage)"
+    )
+    market_value_eur: float | None = None
+    profile_url: str | None = None
 
 
 class SeasonStats(BaseModel):
@@ -53,12 +64,21 @@ class SeasonStats(BaseModel):
 class Transfer(BaseModel):
     source: str
     source_player_id: str
-    date: date | None = None
+    date: _Date | None = None
     from_club: str | None = None
     to_club: str | None = None
     fee_eur: float | None = None
     market_value_eur: float | None = None
-    market_value_as_of: date | None = None
+    market_value_as_of: _Date | None = None
+
+
+class MarketValuePoint(BaseModel):
+    source: str
+    source_player_id: str
+    date: _Date | None = None
+    value_eur: float | None = None
+    club: str | None = None
+    age: float | None = None
 
 
 class NationalTeamCap(BaseModel):
@@ -66,5 +86,5 @@ class NationalTeamCap(BaseModel):
     source_player_id: str
     team: str = Field(description="e.g. 'Russia U17'")
     level: str = Field(description="youth | u21 | senior")
-    date: date | None = None
+    date: _Date | None = None
     caps: int | None = None

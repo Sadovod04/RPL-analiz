@@ -1,0 +1,222 @@
+{
+ "success": true,
+ "message": "OK",
+ "data": {
+  "clubId": "964",
+  "squad": [
+   {
+    "playerId": "334477",
+    "clubId": "964",
+    "shirtNumber": 16,
+    "isCaptain": false,
+    "type": "current"
+   },
+   {
+    "playerId": "718755",
+    "clubId": "964",
+    "shirtNumber": 57,
+    "isCaptain": false,
+    "type": "current"
+   },
+   {
+    "playerId": "555135",
+    "clubId": "964",
+    "shirtNumber": 71,
+    "isCaptain": false,
+    "type": "current"
+   },
+   {
+    "playerId": "520454",
+    "clubId": "964",
+    "shirtNumber": 33,
+    "isCaptain": false,
+    "type": "current"
+   },
+   {
+    "playerId": "532732",
+    "clubId": "964",
+    "shirtNumber": 78,
+    "isCaptain": false,
+    "type": "current"
+   },
+   {
+    "playerId": "574660",
+    "clubId": "964",
+    "shirtNumber": null,
+    "isCaptain": false,
+    "type": "current"
+   },
+   {
+    "playerId": "614898",
+    "clubId": "964",
+    "shirtNumber": 25,
+    "isCaptain": false,
+    "type": "current"
+   },
+   {
+    "playerId": "465408",
+    "clubId": "964",
+    "shirtNumber": 28,
+    "isCaptain": false,
+    "type": "current"
+   },
+   {
+    "playerId": "220793",
+    "clubId": "964",
+    "shirtNumber": 3,
+    "isCaptain": true,
+    "type": "current"
+   },
+   {
+    "playerId": "875947",
+    "clubId": "964",
+    "shirtNumber": 66,
+    "isCaptain": false,
+    "type": "current"
+   },
+   {
+    "playerId": "814269",
+    "clubId": "964",
+    "shirtNumber": 31,
+    "isCaptain": false,
+    "type": "current"
+   },
+   {
+    "playerId": "170620",
+    "clubId": "964",
+    "shirtNumber": 15,
+    "isCaptain": false,
+    "type": "current"
+   },
+   {
+    "playerId": "520060",
+    "clubId": "964",
+    "shirtNumber": 82,
+    "isCaptain": false,
+    "type": "current"
+   },
+   {
+    "playerId": "691920",
+    "clubId": "964",
+    "shirtNumber": 93,
+    "isCaptain": false,
+    "type": "current"
+   },
+   {
+    "playerId": "257668",
+    "clubId": "964",
+    "shirtNumber": 5,
+    "isCaptain": false,
+    "type": "current"
+   },
+   {
+    "playerId": "499721",
+    "clubId": "964",
+    "shirtNumber": 8,
+    "isCaptain": false,
+    "type": "current"
+   },
+   {
+    "playerId": "964582",
+    "clubId": "964",
+    "shirtNumber": 14,
+    "isCaptain": false,
+    "type": "current"
+   },
+   {
+    "playerId": "1109232",
+    "clubId": "964",
+    "shirtNumber": 61,
+    "isCaptain": false,
+    "type": "current"
+   },
+   {
+    "playerId": "84483",
+    "clubId": "964",
+    "shirtNumber": 21,
+    "isCaptain": false,
+    "type": "current"
+   },
+   {
+    "playerId": "1004741",
+    "clubId": "964",
+    "shirtNumber": 20,
+    "isCaptain": false,
+    "type": "current"
+   },
+   {
+    "playerId": "362570",
+    "clubId": "964",
+    "shirtNumber": 17,
+    "isCaptain": false,
+    "type": "current"
+   },
+   {
+    "playerId": "800175",
+    "clubId": "964",
+    "shirtNumber": 11,
+    "isCaptain": false,
+    "type": "current"
+   },
+   {
+    "playerId": "1109229",
+    "clubId": "964",
+    "shirtNumber": 51,
+    "isCaptain": false,
+    "type": "current"
+   },
+   {
+    "playerId": "448981",
+    "clubId": "964",
+    "shirtNumber": 10,
+    "isCaptain": false,
+    "type": "current"
+   },
+   {
+    "playerId": "834899",
+    "clubId": "964",
+    "shirtNumber": 9,
+    "isCaptain": false,
+    "type": "current"
+   },
+   {
+    "playerId": "464259",
+    "clubId": "964",
+    "shirtNumber": 7,
+    "isCaptain": false,
+    "type": "current"
+   }
+  ],
+  "playerIds": [
+   "334477",
+   "718755",
+   "555135",
+   "520454",
+   "532732",
+   "574660",
+   "614898",
+   "465408",
+   "220793",
+   "875947",
+   "814269",
+   "170620",
+   "520060",
+   "691920",
+   "257668",
+   "499721",
+   "964582",
+   "1109232",
+   "84483",
+   "1004741",
+   "362570",
+   "800175",
+   "1109229",
+   "448981",
+   "834899",
+   "464259"
+  ],
+  "localCount": 13,
+  "foreignCount": 13,
+  "nationalCount": 9
+ }
+}

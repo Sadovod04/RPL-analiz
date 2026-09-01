@@ -1,0 +1,6348 @@
+{
+ "success": true,
+ "message": "OK",
+ "data": {
+  "playerId": "362570",
+  "performance": [
+   {
+    "gameInformation": {
+     "gameId": "4904736",
+     "competitionId": "RU1",
+     "competitionTypeId": 1,
+     "competitionGroupId": "",
+     "refereeId": 17384,
+     "stadiumId": 24562,
+     "seasonId": 2026,
+     "gameDay": 6,
+     "gameDuration": 90,
+     "isNationalGame": false,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "regularly_terminated",
+     "date": {
+      "dateTimeUTC": "2026-08-29T12:00:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2026,
+      "display": "26/27",
+      "cyclicalName": "2027",
+      "nonCyclicalName": "26/27"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "away",
+      "clubId": "964",
+      "coachId": "34354",
+      "goalsTotal": 1,
+      "opponentGoalsTotal": 0,
+      "clubRank": 4,
+      "tacticId": 16,
+      "points": 3
+     },
+     "opponent": {
+      "venue": "home",
+      "clubId": "1124",
+      "coachId": "13157",
+      "goalsTotal": 0,
+      "opponentGoalsTotal": 1,
+      "clubRank": 15,
+      "tacticId": 24,
+      "points": 0
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": null,
+      "isCaptain": false,
+      "participationState": "not in squad",
+      "positionId": null,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 964,
+      "age": 28,
+      "ageDiscrepancyDays": 297,
+      "grade": null,
+      "pointsOnThePitch": null
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": null,
+      "goalsScoredTotalOfficial": null,
+      "assists": null,
+      "assistsOfficial": null,
+      "scorer": null,
+      "ownGoalsScored": null,
+      "teamGoalsOnThePitch": null,
+      "opponentGoalsOnThePitch": null,
+      "penaltyShooterAttempts": null,
+      "penaltyShooterGoalsScored": null,
+      "penaltyShooterSaves": null,
+      "penaltyShooterMisses": null,
+      "penaltyGoalkeeperAttempts": null,
+      "penaltyGoalkeeperGoalsConceded": null,
+      "penaltyGoalkeeperSaves": null,
+      "penaltyGoalkeeperMisses": null,
+      "penaltiesReceived": null,
+      "penaltiesCaused": null,
+      "penaltiesCausedGoalsScored": null,
+      "scoringAttempts": null,
+      "scoringAttemptsOnGoal": null,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": null,
+      "scoringAttemptsBlocked": null,
+      "scoringGoalkeeperSaves": null
+     },
+     "cardStatistics": {
+      "yellowCardNet": null,
+      "yellowCardGross": null,
+      "fairPlayPoints": null,
+      "redCardsRescinded": null
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": null,
+      "isStarting": false
+     },
+     "duelStatistics": {
+      "tackles": null,
+      "tacklesWon": null,
+      "tacklesLost": null,
+      "tacklesWonRatio": null,
+      "foulsCommitted": null,
+      "foulsGained": null,
+      "offsides": null
+     },
+     "distributionStatistics": {
+      "passes": null,
+      "passesReached": null,
+      "passesFailed": null,
+      "passesReachedRatio": null,
+      "corners": null,
+      "throwIns": null,
+      "goalKicks": null
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "4904722",
+     "competitionId": "RU1",
+     "competitionTypeId": 1,
+     "competitionGroupId": "",
+     "refereeId": 37014,
+     "stadiumId": 7066,
+     "seasonId": 2026,
+     "gameDay": 5,
+     "gameDuration": 90,
+     "isNationalGame": false,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "regularly_terminated",
+     "date": {
+      "dateTimeUTC": "2026-08-23T17:00:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2026,
+      "display": "26/27",
+      "cyclicalName": "2027",
+      "nonCyclicalName": "26/27"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "away",
+      "clubId": "964",
+      "coachId": "34354",
+      "goalsTotal": 0,
+      "opponentGoalsTotal": 2,
+      "clubRank": 2,
+      "tacticId": 16,
+      "points": 0
+     },
+     "opponent": {
+      "venue": "home",
+      "clubId": "232",
+      "coachId": "5145",
+      "goalsTotal": 2,
+      "opponentGoalsTotal": 0,
+      "clubRank": 3,
+      "tacticId": 16,
+      "points": 3
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": 17,
+      "isCaptain": false,
+      "participationState": "in squad",
+      "positionId": null,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 964,
+      "age": 28,
+      "ageDiscrepancyDays": 291,
+      "grade": null,
+      "pointsOnThePitch": null
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": null,
+      "goalsScoredTotalOfficial": 0,
+      "assists": null,
+      "assistsOfficial": 0,
+      "scorer": null,
+      "ownGoalsScored": null,
+      "teamGoalsOnThePitch": null,
+      "opponentGoalsOnThePitch": null,
+      "penaltyShooterAttempts": null,
+      "penaltyShooterGoalsScored": null,
+      "penaltyShooterSaves": null,
+      "penaltyShooterMisses": null,
+      "penaltyGoalkeeperAttempts": null,
+      "penaltyGoalkeeperGoalsConceded": null,
+      "penaltyGoalkeeperSaves": null,
+      "penaltyGoalkeeperMisses": null,
+      "penaltiesReceived": 0,
+      "penaltiesCaused": 0,
+      "penaltiesCausedGoalsScored": 0,
+      "scoringAttempts": 0,
+      "scoringAttemptsOnGoal": 0,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": 0,
+      "scoringAttemptsBlocked": 0,
+      "scoringGoalkeeperSaves": 0
+     },
+     "cardStatistics": {
+      "yellowCardNet": null,
+      "yellowCardGross": null,
+      "fairPlayPoints": null,
+      "redCardsRescinded": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": null,
+      "isStarting": false
+     },
+     "duelStatistics": {
+      "tackles": 0,
+      "tacklesWon": 0,
+      "tacklesLost": 0,
+      "tacklesWonRatio": null,
+      "foulsCommitted": 0,
+      "foulsGained": 0,
+      "offsides": 0
+     },
+     "distributionStatistics": {
+      "passes": 0,
+      "passesReached": 0,
+      "passesFailed": 0,
+      "passesReachedRatio": null,
+      "corners": 0,
+      "throwIns": 0,
+      "goalKicks": 0
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "4904791",
+     "competitionId": "RUP",
+     "competitionTypeId": 8,
+     "competitionGroupId": "C",
+     "refereeId": 50204,
+     "stadiumId": 12233,
+     "seasonId": 2026,
+     "gameDay": 8,
+     "gameDuration": 90,
+     "isNationalGame": false,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "penalty_shootout",
+     "date": {
+      "dateTimeUTC": "2026-08-19T13:15:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2026,
+      "display": "26/27",
+      "cyclicalName": "2027",
+      "nonCyclicalName": "26/27"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "away",
+      "clubId": "964",
+      "coachId": "34354",
+      "goalsTotal": 5,
+      "opponentGoalsTotal": 3,
+      "clubRank": 2,
+      "tacticId": 16,
+      "points": 3
+     },
+     "opponent": {
+      "venue": "home",
+      "clubId": "2696",
+      "coachId": "23592",
+      "goalsTotal": 3,
+      "opponentGoalsTotal": 5,
+      "clubRank": 1,
+      "tacticId": 16,
+      "points": 0
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": 17,
+      "isCaptain": false,
+      "participationState": "played",
+      "positionId": 11,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 964,
+      "age": 28,
+      "ageDiscrepancyDays": 287,
+      "grade": null,
+      "pointsOnThePitch": 1
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": 0,
+      "goalsScoredTotalOfficial": null,
+      "assists": 0,
+      "assistsOfficial": null,
+      "scorer": 0,
+      "ownGoalsScored": 0,
+      "teamGoalsOnThePitch": 0,
+      "opponentGoalsOnThePitch": 0,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0,
+      "penaltiesReceived": null,
+      "penaltiesCaused": null,
+      "penaltiesCausedGoalsScored": null,
+      "scoringAttempts": null,
+      "scoringAttemptsOnGoal": null,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": null,
+      "scoringAttemptsBlocked": null,
+      "scoringGoalkeeperSaves": null
+     },
+     "cardStatistics": {
+      "yellowCardNet": 0,
+      "yellowCardGross": 0,
+      "fairPlayPoints": 0,
+      "redCardsRescinded": null
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": 59,
+      "isStarting": true,
+      "substitutedOut": {
+       "minute": 59,
+       "minuteOvertime": 0,
+       "actionId": 401
+      }
+     },
+     "duelStatistics": {
+      "tackles": null,
+      "tacklesWon": null,
+      "tacklesLost": null,
+      "tacklesWonRatio": null,
+      "foulsCommitted": null,
+      "foulsGained": null,
+      "offsides": null
+     },
+     "distributionStatistics": {
+      "passes": null,
+      "passesReached": null,
+      "passesFailed": null,
+      "passesReachedRatio": null,
+      "corners": null,
+      "throwIns": null,
+      "goalKicks": null
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "4892372",
+     "competitionId": "RUSS",
+     "competitionTypeId": 9,
+     "competitionGroupId": "FF",
+     "refereeId": 18716,
+     "stadiumId": 11162,
+     "seasonId": 2026,
+     "gameDay": 1,
+     "gameDuration": 90,
+     "isNationalGame": false,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "penalty_shootout",
+     "date": {
+      "dateTimeUTC": "2026-07-18T16:30:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2026,
+      "display": "26/27",
+      "cyclicalName": "2027",
+      "nonCyclicalName": "26/27"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "home",
+      "clubId": "964",
+      "coachId": "34354",
+      "goalsTotal": 5,
+      "opponentGoalsTotal": 3,
+      "clubRank": null,
+      "tacticId": 16,
+      "points": 3
+     },
+     "opponent": {
+      "venue": "away",
+      "clubId": "232",
+      "coachId": "5145",
+      "goalsTotal": 3,
+      "opponentGoalsTotal": 5,
+      "clubRank": null,
+      "tacticId": 16,
+      "points": 0
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": 17,
+      "isCaptain": false,
+      "participationState": "played",
+      "positionId": 12,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 964,
+      "age": 28,
+      "ageDiscrepancyDays": 255,
+      "grade": null,
+      "pointsOnThePitch": 3
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": 0,
+      "goalsScoredTotalOfficial": 0,
+      "assists": 0,
+      "assistsOfficial": 0,
+      "scorer": 0,
+      "ownGoalsScored": 0,
+      "teamGoalsOnThePitch": 1,
+      "opponentGoalsOnThePitch": 0,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0,
+      "penaltiesReceived": 0,
+      "penaltiesCaused": 0,
+      "penaltiesCausedGoalsScored": 0,
+      "scoringAttempts": 0,
+      "scoringAttemptsOnGoal": 0,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": 0,
+      "scoringAttemptsBlocked": 0,
+      "scoringGoalkeeperSaves": 0
+     },
+     "cardStatistics": {
+      "yellowCardNet": 0,
+      "yellowCardGross": 0,
+      "fairPlayPoints": 0,
+      "redCardsRescinded": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": 15,
+      "isStarting": false,
+      "substitutedIn": {
+       "minute": 75,
+       "minuteOvertime": 0,
+       "actionId": 401
+      }
+     },
+     "duelStatistics": {
+      "tackles": 0,
+      "tacklesWon": 0,
+      "tacklesLost": 0,
+      "tacklesWonRatio": null,
+      "foulsCommitted": 0,
+      "foulsGained": 0,
+      "offsides": 0
+     },
+     "distributionStatistics": {
+      "passes": 1,
+      "passesReached": 1,
+      "passesFailed": 0,
+      "passesReachedRatio": 100,
+      "corners": 0,
+      "throwIns": 0,
+      "goalKicks": 0
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "4649379",
+     "competitionId": "RU1",
+     "competitionTypeId": 1,
+     "competitionGroupId": "",
+     "refereeId": 1715,
+     "stadiumId": 12234,
+     "seasonId": 2025,
+     "gameDay": 30,
+     "gameDuration": 90,
+     "isNationalGame": false,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "regularly_terminated",
+     "date": {
+      "dateTimeUTC": "2026-05-17T15:00:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2025,
+      "display": "25/26",
+      "cyclicalName": "2026",
+      "nonCyclicalName": "25/26"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "away",
+      "clubId": "964",
+      "coachId": "34354",
+      "goalsTotal": 1,
+      "opponentGoalsTotal": 0,
+      "clubRank": 1,
+      "tacticId": 16,
+      "points": 3
+     },
+     "opponent": {
+      "venue": "home",
+      "clubId": "1083",
+      "coachId": "66400",
+      "goalsTotal": 0,
+      "opponentGoalsTotal": 1,
+      "clubRank": 10,
+      "tacticId": 15,
+      "points": 0
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": 17,
+      "isCaptain": false,
+      "participationState": "in squad",
+      "positionId": null,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 964,
+      "age": 28,
+      "ageDiscrepancyDays": 193,
+      "grade": null,
+      "pointsOnThePitch": null
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": null,
+      "goalsScoredTotalOfficial": 0,
+      "assists": null,
+      "assistsOfficial": 0,
+      "scorer": null,
+      "ownGoalsScored": null,
+      "teamGoalsOnThePitch": null,
+      "opponentGoalsOnThePitch": null,
+      "penaltyShooterAttempts": null,
+      "penaltyShooterGoalsScored": null,
+      "penaltyShooterSaves": null,
+      "penaltyShooterMisses": null,
+      "penaltyGoalkeeperAttempts": null,
+      "penaltyGoalkeeperGoalsConceded": null,
+      "penaltyGoalkeeperSaves": null,
+      "penaltyGoalkeeperMisses": null,
+      "penaltiesReceived": 0,
+      "penaltiesCaused": 0,
+      "penaltiesCausedGoalsScored": 0,
+      "scoringAttempts": 0,
+      "scoringAttemptsOnGoal": 0,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": 0,
+      "scoringAttemptsBlocked": 0,
+      "scoringGoalkeeperSaves": 0
+     },
+     "cardStatistics": {
+      "yellowCardNet": null,
+      "yellowCardGross": null,
+      "fairPlayPoints": null,
+      "redCardsRescinded": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": null,
+      "isStarting": false
+     },
+     "duelStatistics": {
+      "tackles": 0,
+      "tacklesWon": 0,
+      "tacklesLost": 0,
+      "tacklesWonRatio": null,
+      "foulsCommitted": 0,
+      "foulsGained": 0,
+      "offsides": 0
+     },
+     "distributionStatistics": {
+      "passes": 0,
+      "passesReached": 0,
+      "passesFailed": 0,
+      "passesReachedRatio": null,
+      "corners": 0,
+      "throwIns": 0,
+      "goalKicks": 0
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "4847890",
+     "competitionId": "RUP",
+     "competitionTypeId": 8,
+     "competitionGroupId": "HFE",
+     "refereeId": 8539,
+     "stadiumId": 11162,
+     "seasonId": 2025,
+     "gameDay": 16,
+     "gameDuration": 90,
+     "isNationalGame": false,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "penalty_shootout",
+     "date": {
+      "dateTimeUTC": "2026-04-08T17:45:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2025,
+      "display": "25/26",
+      "cyclicalName": "2026",
+      "nonCyclicalName": "25/26"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "home",
+      "clubId": "964",
+      "coachId": "34354",
+      "goalsTotal": 6,
+      "opponentGoalsTotal": 7,
+      "clubRank": null,
+      "tacticId": 10,
+      "points": 0
+     },
+     "opponent": {
+      "venue": "away",
+      "clubId": "232",
+      "coachId": "5145",
+      "goalsTotal": 7,
+      "opponentGoalsTotal": 6,
+      "clubRank": null,
+      "tacticId": 16,
+      "points": 3
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": 17,
+      "isCaptain": false,
+      "participationState": "played",
+      "positionId": 11,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 964,
+      "age": 28,
+      "ageDiscrepancyDays": 154,
+      "grade": null,
+      "pointsOnThePitch": 1
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": 0,
+      "goalsScoredTotalOfficial": null,
+      "assists": 0,
+      "assistsOfficial": null,
+      "scorer": 0,
+      "ownGoalsScored": 0,
+      "teamGoalsOnThePitch": 0,
+      "opponentGoalsOnThePitch": 0,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0,
+      "penaltiesReceived": null,
+      "penaltiesCaused": null,
+      "penaltiesCausedGoalsScored": null,
+      "scoringAttempts": null,
+      "scoringAttemptsOnGoal": null,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": null,
+      "scoringAttemptsBlocked": null,
+      "scoringGoalkeeperSaves": null
+     },
+     "cardStatistics": {
+      "yellowCardNet": 0,
+      "yellowCardGross": 0,
+      "fairPlayPoints": 0,
+      "redCardsRescinded": null
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": 90,
+      "isStarting": true
+     },
+     "duelStatistics": {
+      "tackles": null,
+      "tacklesWon": null,
+      "tacklesLost": null,
+      "tacklesWonRatio": null,
+      "foulsCommitted": null,
+      "foulsGained": null,
+      "offsides": null
+     },
+     "distributionStatistics": {
+      "passes": null,
+      "passesReached": null,
+      "passesFailed": null,
+      "passesReachedRatio": null,
+      "corners": null,
+      "throwIns": null,
+      "goalKicks": null
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "4698929",
+     "competitionId": "FS",
+     "competitionTypeId": 11,
+     "competitionGroupId": "",
+     "refereeId": 44724,
+     "stadiumId": 2942,
+     "seasonId": 2025,
+     "gameDay": 2,
+     "gameDuration": 90,
+     "isNationalGame": true,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "regularly_terminated",
+     "date": {
+      "dateTimeUTC": "2025-09-07T15:15:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2025,
+      "display": "25/26",
+      "cyclicalName": "2026",
+      "nonCyclicalName": "25/26"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "away",
+      "clubId": "3448",
+      "coachId": "9879",
+      "goalsTotal": 4,
+      "opponentGoalsTotal": 1,
+      "clubRank": null,
+      "tacticId": 10,
+      "points": 3
+     },
+     "opponent": {
+      "venue": "home",
+      "clubId": "14162",
+      "coachId": "6615",
+      "goalsTotal": 1,
+      "opponentGoalsTotal": 4,
+      "clubRank": null,
+      "tacticId": 21,
+      "points": 0
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": 10,
+      "isCaptain": false,
+      "participationState": "in squad",
+      "positionId": null,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 964,
+      "age": 27,
+      "ageDiscrepancyDays": 306,
+      "grade": null,
+      "pointsOnThePitch": null
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": null,
+      "goalsScoredTotalOfficial": 0,
+      "assists": null,
+      "assistsOfficial": 0,
+      "scorer": null,
+      "ownGoalsScored": null,
+      "teamGoalsOnThePitch": null,
+      "opponentGoalsOnThePitch": null,
+      "penaltyShooterAttempts": null,
+      "penaltyShooterGoalsScored": null,
+      "penaltyShooterSaves": null,
+      "penaltyShooterMisses": null,
+      "penaltyGoalkeeperAttempts": null,
+      "penaltyGoalkeeperGoalsConceded": null,
+      "penaltyGoalkeeperSaves": null,
+      "penaltyGoalkeeperMisses": null,
+      "penaltiesReceived": 0,
+      "penaltiesCaused": 0,
+      "penaltiesCausedGoalsScored": 0,
+      "scoringAttempts": 0,
+      "scoringAttemptsOnGoal": 0,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": 0,
+      "scoringAttemptsBlocked": 0,
+      "scoringGoalkeeperSaves": 0
+     },
+     "cardStatistics": {
+      "yellowCardNet": null,
+      "yellowCardGross": null,
+      "fairPlayPoints": null,
+      "redCardsRescinded": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": null,
+      "isStarting": false
+     },
+     "duelStatistics": {
+      "tackles": 0,
+      "tacklesWon": 0,
+      "tacklesLost": 0,
+      "tacklesWonRatio": null,
+      "foulsCommitted": 0,
+      "foulsGained": 0,
+      "offsides": 0
+     },
+     "distributionStatistics": {
+      "passes": 0,
+      "passesReached": 0,
+      "passesFailed": 0,
+      "passesReachedRatio": null,
+      "corners": 0,
+      "throwIns": 0,
+      "goalKicks": 0
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "4559156",
+     "competitionId": "FS",
+     "competitionTypeId": 11,
+     "competitionGroupId": "",
+     "refereeId": 43282,
+     "stadiumId": 26623,
+     "seasonId": 2024,
+     "gameDay": 12,
+     "gameDuration": 90,
+     "isNationalGame": true,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "regularly_terminated",
+     "date": {
+      "dateTimeUTC": "2025-06-10T17:00:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2024,
+      "display": "24/25",
+      "cyclicalName": "2025",
+      "nonCyclicalName": "24/25"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "away",
+      "clubId": "3448",
+      "coachId": "9879",
+      "goalsTotal": 4,
+      "opponentGoalsTotal": 1,
+      "clubRank": null,
+      "tacticId": 10,
+      "points": 3
+     },
+     "opponent": {
+      "venue": "home",
+      "clubId": "3450",
+      "coachId": "38291",
+      "goalsTotal": 1,
+      "opponentGoalsTotal": 4,
+      "clubRank": null,
+      "tacticId": 24,
+      "points": 0
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": 10,
+      "isCaptain": false,
+      "participationState": "in squad",
+      "positionId": null,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 964,
+      "age": 27,
+      "ageDiscrepancyDays": 217,
+      "grade": null,
+      "pointsOnThePitch": null
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": null,
+      "goalsScoredTotalOfficial": 0,
+      "assists": null,
+      "assistsOfficial": 0,
+      "scorer": null,
+      "ownGoalsScored": null,
+      "teamGoalsOnThePitch": null,
+      "opponentGoalsOnThePitch": null,
+      "penaltyShooterAttempts": null,
+      "penaltyShooterGoalsScored": null,
+      "penaltyShooterSaves": null,
+      "penaltyShooterMisses": null,
+      "penaltyGoalkeeperAttempts": null,
+      "penaltyGoalkeeperGoalsConceded": null,
+      "penaltyGoalkeeperSaves": null,
+      "penaltyGoalkeeperMisses": null,
+      "penaltiesReceived": 0,
+      "penaltiesCaused": 0,
+      "penaltiesCausedGoalsScored": 0,
+      "scoringAttempts": 0,
+      "scoringAttemptsOnGoal": 0,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": 0,
+      "scoringAttemptsBlocked": 0,
+      "scoringGoalkeeperSaves": 0
+     },
+     "cardStatistics": {
+      "yellowCardNet": null,
+      "yellowCardGross": null,
+      "fairPlayPoints": null,
+      "redCardsRescinded": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": null,
+      "isStarting": false
+     },
+     "duelStatistics": {
+      "tackles": 0,
+      "tacklesWon": 0,
+      "tacklesLost": 0,
+      "tacklesWonRatio": null,
+      "foulsCommitted": 0,
+      "foulsGained": 0,
+      "offsides": 0
+     },
+     "distributionStatistics": {
+      "passes": 0,
+      "passesReached": 0,
+      "passesFailed": 0,
+      "passesReachedRatio": null,
+      "corners": 0,
+      "throwIns": 0,
+      "goalKicks": 0
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "4408358",
+     "competitionId": "RU1",
+     "competitionTypeId": 1,
+     "competitionGroupId": "",
+     "refereeId": 5502,
+     "stadiumId": 11162,
+     "seasonId": 2024,
+     "gameDay": 30,
+     "gameDuration": 90,
+     "isNationalGame": false,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "regularly_terminated",
+     "date": {
+      "dateTimeUTC": "2025-05-24T13:30:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2024,
+      "display": "24/25",
+      "cyclicalName": "2025",
+      "nonCyclicalName": "24/25"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "home",
+      "clubId": "964",
+      "coachId": "34354",
+      "goalsTotal": 3,
+      "opponentGoalsTotal": 0,
+      "clubRank": 2,
+      "tacticId": 16,
+      "points": 3
+     },
+     "opponent": {
+      "venue": "away",
+      "clubId": "3725",
+      "coachId": "7989",
+      "goalsTotal": 0,
+      "opponentGoalsTotal": 3,
+      "clubRank": 14,
+      "tacticId": 16,
+      "points": 0
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": 17,
+      "isCaptain": false,
+      "participationState": "played",
+      "positionId": 11,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 964,
+      "age": 27,
+      "ageDiscrepancyDays": 200,
+      "grade": null,
+      "pointsOnThePitch": 3
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": 2,
+      "goalsScoredTotalOfficial": 2,
+      "assists": 0,
+      "assistsOfficial": 0,
+      "scorer": 2,
+      "ownGoalsScored": 0,
+      "teamGoalsOnThePitch": 3,
+      "opponentGoalsOnThePitch": 0,
+      "penaltyShooterAttempts": 2,
+      "penaltyShooterGoalsScored": 2,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0,
+      "penaltiesReceived": 0,
+      "penaltiesCaused": 0,
+      "penaltiesCausedGoalsScored": 0,
+      "scoringAttempts": 5,
+      "scoringAttemptsOnGoal": 3,
+      "scoringAttemptsOnGoalRatio": 60,
+      "scoringAttemptsOffGoal": 2,
+      "scoringAttemptsBlocked": 0,
+      "scoringGoalkeeperSaves": 0
+     },
+     "cardStatistics": {
+      "yellowCardNet": 0,
+      "yellowCardGross": 0,
+      "fairPlayPoints": 0,
+      "redCardsRescinded": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": 70,
+      "isStarting": true,
+      "substitutedOut": {
+       "minute": 70,
+       "minuteOvertime": 0,
+       "actionId": 401
+      }
+     },
+     "duelStatistics": {
+      "tackles": 0,
+      "tacklesWon": 0,
+      "tacklesLost": 0,
+      "tacklesWonRatio": null,
+      "foulsCommitted": 0,
+      "foulsGained": 1,
+      "offsides": 0
+     },
+     "distributionStatistics": {
+      "passes": 34,
+      "passesReached": 26,
+      "passesFailed": 8,
+      "passesReachedRatio": 76.5,
+      "corners": 0,
+      "throwIns": 0,
+      "goalKicks": 0
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "4597388",
+     "competitionId": "RUP",
+     "competitionTypeId": 8,
+     "competitionGroupId": "HFR",
+     "refereeId": 2937,
+     "stadiumId": 10154,
+     "seasonId": 2024,
+     "gameDay": 18,
+     "gameDuration": 90,
+     "isNationalGame": false,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "penalty_shootout",
+     "date": {
+      "dateTimeUTC": "2025-05-14T16:30:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2024,
+      "display": "24/25",
+      "cyclicalName": "2025",
+      "nonCyclicalName": "24/25"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "away",
+      "clubId": "964",
+      "coachId": "34354",
+      "goalsTotal": 3,
+      "opponentGoalsTotal": 6,
+      "clubRank": null,
+      "tacticId": 10,
+      "points": 0
+     },
+     "opponent": {
+      "venue": "home",
+      "clubId": "2410",
+      "coachId": "8142",
+      "goalsTotal": 6,
+      "opponentGoalsTotal": 3,
+      "clubRank": null,
+      "tacticId": 20,
+      "points": 3
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": 17,
+      "isCaptain": false,
+      "participationState": "played",
+      "positionId": 11,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 964,
+      "age": 27,
+      "ageDiscrepancyDays": 190,
+      "grade": null,
+      "pointsOnThePitch": 0
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": 0,
+      "goalsScoredTotalOfficial": null,
+      "assists": 0,
+      "assistsOfficial": null,
+      "scorer": 0,
+      "ownGoalsScored": 0,
+      "teamGoalsOnThePitch": 0,
+      "opponentGoalsOnThePitch": 2,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0,
+      "penaltiesReceived": null,
+      "penaltiesCaused": null,
+      "penaltiesCausedGoalsScored": null,
+      "scoringAttempts": null,
+      "scoringAttemptsOnGoal": null,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": null,
+      "scoringAttemptsBlocked": null,
+      "scoringGoalkeeperSaves": null
+     },
+     "cardStatistics": {
+      "yellowCardNet": 0,
+      "yellowCardGross": 0,
+      "fairPlayPoints": 0,
+      "redCardsRescinded": null
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": 90,
+      "isStarting": true
+     },
+     "duelStatistics": {
+      "tackles": null,
+      "tacklesWon": null,
+      "tacklesLost": null,
+      "tacklesWonRatio": null,
+      "foulsCommitted": null,
+      "foulsGained": null,
+      "offsides": null
+     },
+     "distributionStatistics": {
+      "passes": null,
+      "passesReached": null,
+      "passesFailed": null,
+      "passesReachedRatio": null,
+      "corners": null,
+      "throwIns": null,
+      "goalKicks": null
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "4358446",
+     "competitionId": "RUSS",
+     "competitionTypeId": 9,
+     "competitionGroupId": "FF",
+     "refereeId": 14197,
+     "stadiumId": 12596,
+     "seasonId": 2024,
+     "gameDay": 1,
+     "gameDuration": 90,
+     "isNationalGame": false,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "regularly_terminated",
+     "date": {
+      "dateTimeUTC": "2024-07-13T17:30:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2024,
+      "display": "24/25",
+      "cyclicalName": "2025",
+      "nonCyclicalName": "24/25"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "home",
+      "clubId": "964",
+      "coachId": "34354",
+      "goalsTotal": 4,
+      "opponentGoalsTotal": 2,
+      "clubRank": null,
+      "tacticId": 10,
+      "points": 3
+     },
+     "opponent": {
+      "venue": "away",
+      "clubId": "16704",
+      "coachId": "49366",
+      "goalsTotal": 2,
+      "opponentGoalsTotal": 4,
+      "clubRank": null,
+      "tacticId": 10,
+      "points": 0
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": 17,
+      "isCaptain": false,
+      "participationState": "played",
+      "positionId": 11,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 964,
+      "age": 26,
+      "ageDiscrepancyDays": 251,
+      "grade": null,
+      "pointsOnThePitch": 3
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": 0,
+      "goalsScoredTotalOfficial": 0,
+      "assists": 0,
+      "assistsOfficial": 0,
+      "scorer": 0,
+      "ownGoalsScored": 0,
+      "teamGoalsOnThePitch": 3,
+      "opponentGoalsOnThePitch": 0,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0,
+      "penaltiesReceived": 0,
+      "penaltiesCaused": 0,
+      "penaltiesCausedGoalsScored": 0,
+      "scoringAttempts": 0,
+      "scoringAttemptsOnGoal": 0,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": 0,
+      "scoringAttemptsBlocked": 0,
+      "scoringGoalkeeperSaves": 0
+     },
+     "cardStatistics": {
+      "yellowCardNet": 0,
+      "yellowCardGross": 0,
+      "fairPlayPoints": 0,
+      "redCardsRescinded": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": 61,
+      "isStarting": true,
+      "substitutedOut": {
+       "minute": 61,
+       "minuteOvertime": 0,
+       "actionId": 401
+      }
+     },
+     "duelStatistics": {
+      "tackles": 0,
+      "tacklesWon": 0,
+      "tacklesLost": 0,
+      "tacklesWonRatio": null,
+      "foulsCommitted": 0,
+      "foulsGained": 1,
+      "offsides": 0
+     },
+     "distributionStatistics": {
+      "passes": 25,
+      "passesReached": 17,
+      "passesFailed": 8,
+      "passesReachedRatio": 68,
+      "corners": 0,
+      "throwIns": 1,
+      "goalKicks": 0
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "4317050",
+     "competitionId": "FS",
+     "competitionTypeId": 11,
+     "competitionGroupId": "",
+     "refereeId": 7521,
+     "stadiumId": 753,
+     "seasonId": 2023,
+     "gameDay": 23,
+     "gameDuration": 90,
+     "isNationalGame": true,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "regularly_terminated",
+     "date": {
+      "dateTimeUTC": "2024-06-07T17:00:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2023,
+      "display": "23/24",
+      "cyclicalName": "2024",
+      "nonCyclicalName": "23/24"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "away",
+      "clubId": "3448",
+      "coachId": "9879",
+      "goalsTotal": 4,
+      "opponentGoalsTotal": 0,
+      "clubRank": null,
+      "tacticId": 10,
+      "points": 3
+     },
+     "opponent": {
+      "venue": "home",
+      "clubId": "3450",
+      "coachId": "38291",
+      "goalsTotal": 0,
+      "opponentGoalsTotal": 4,
+      "clubRank": null,
+      "tacticId": 10,
+      "points": 0
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": null,
+      "isCaptain": false,
+      "participationState": "not in squad",
+      "positionId": null,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 964,
+      "age": 26,
+      "ageDiscrepancyDays": 215,
+      "grade": null,
+      "pointsOnThePitch": null
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": null,
+      "goalsScoredTotalOfficial": null,
+      "assists": null,
+      "assistsOfficial": null,
+      "scorer": null,
+      "ownGoalsScored": null,
+      "teamGoalsOnThePitch": null,
+      "opponentGoalsOnThePitch": null,
+      "penaltyShooterAttempts": null,
+      "penaltyShooterGoalsScored": null,
+      "penaltyShooterSaves": null,
+      "penaltyShooterMisses": null,
+      "penaltyGoalkeeperAttempts": null,
+      "penaltyGoalkeeperGoalsConceded": null,
+      "penaltyGoalkeeperSaves": null,
+      "penaltyGoalkeeperMisses": null,
+      "penaltiesReceived": null,
+      "penaltiesCaused": null,
+      "penaltiesCausedGoalsScored": null,
+      "scoringAttempts": null,
+      "scoringAttemptsOnGoal": null,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": null,
+      "scoringAttemptsBlocked": null,
+      "scoringGoalkeeperSaves": null
+     },
+     "cardStatistics": {
+      "yellowCardNet": null,
+      "yellowCardGross": null,
+      "fairPlayPoints": null,
+      "redCardsRescinded": null
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": null,
+      "isStarting": false
+     },
+     "duelStatistics": {
+      "tackles": null,
+      "tacklesWon": null,
+      "tacklesLost": null,
+      "tacklesWonRatio": null,
+      "foulsCommitted": null,
+      "foulsGained": null,
+      "offsides": null
+     },
+     "distributionStatistics": {
+      "passes": null,
+      "passesReached": null,
+      "passesFailed": null,
+      "passesReachedRatio": null,
+      "corners": null,
+      "throwIns": null,
+      "goalKicks": null
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "4346131",
+     "competitionId": "RUP",
+     "competitionTypeId": 8,
+     "competitionGroupId": "FF",
+     "refereeId": 1715,
+     "stadiumId": 431,
+     "seasonId": 2023,
+     "gameDay": 19,
+     "gameDuration": 90,
+     "isNationalGame": false,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "regularly_terminated",
+     "date": {
+      "dateTimeUTC": "2024-06-02T15:00:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2023,
+      "display": "23/24",
+      "cyclicalName": "2024",
+      "nonCyclicalName": "23/24"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "away",
+      "clubId": "964",
+      "coachId": "34354",
+      "goalsTotal": 2,
+      "opponentGoalsTotal": 1,
+      "clubRank": null,
+      "tacticId": 9,
+      "points": 3
+     },
+     "opponent": {
+      "venue": "home",
+      "clubId": "2741",
+      "coachId": "62001",
+      "goalsTotal": 1,
+      "opponentGoalsTotal": 2,
+      "clubRank": null,
+      "tacticId": 13,
+      "points": 0
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": 17,
+      "isCaptain": false,
+      "participationState": "played",
+      "positionId": 11,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 964,
+      "age": 26,
+      "ageDiscrepancyDays": 210,
+      "grade": null,
+      "pointsOnThePitch": 3
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": 0,
+      "goalsScoredTotalOfficial": null,
+      "assists": 1,
+      "assistsOfficial": null,
+      "scorer": 1,
+      "ownGoalsScored": 0,
+      "teamGoalsOnThePitch": 1,
+      "opponentGoalsOnThePitch": 0,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0,
+      "penaltiesReceived": null,
+      "penaltiesCaused": null,
+      "penaltiesCausedGoalsScored": null,
+      "scoringAttempts": null,
+      "scoringAttemptsOnGoal": null,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": null,
+      "scoringAttemptsBlocked": null,
+      "scoringGoalkeeperSaves": null
+     },
+     "cardStatistics": {
+      "yellowCardNet": 0,
+      "yellowCardGross": 0,
+      "fairPlayPoints": 0,
+      "redCardsRescinded": null
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": 6,
+      "isStarting": false,
+      "substitutedIn": {
+       "minute": 84,
+       "minuteOvertime": 0,
+       "actionId": 401
+      }
+     },
+     "duelStatistics": {
+      "tackles": null,
+      "tacklesWon": null,
+      "tacklesLost": null,
+      "tacklesWonRatio": null,
+      "foulsCommitted": null,
+      "foulsGained": null,
+      "offsides": null
+     },
+     "distributionStatistics": {
+      "passes": null,
+      "passesReached": null,
+      "passesFailed": null,
+      "passesReachedRatio": null,
+      "corners": null,
+      "throwIns": null,
+      "goalKicks": null
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "4272844",
+     "competitionId": "RU1",
+     "competitionTypeId": 1,
+     "competitionGroupId": "",
+     "refereeId": 2937,
+     "stadiumId": 11162,
+     "seasonId": 2023,
+     "gameDay": 30,
+     "gameDuration": 90,
+     "isNationalGame": false,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "regularly_terminated",
+     "date": {
+      "dateTimeUTC": "2024-05-25T13:30:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2023,
+      "display": "23/24",
+      "cyclicalName": "2024",
+      "nonCyclicalName": "23/24"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "home",
+      "clubId": "964",
+      "coachId": "34354",
+      "goalsTotal": 2,
+      "opponentGoalsTotal": 1,
+      "clubRank": 2,
+      "tacticId": 4,
+      "points": 3
+     },
+     "opponent": {
+      "venue": "away",
+      "clubId": "1083",
+      "coachId": "9879",
+      "goalsTotal": 1,
+      "opponentGoalsTotal": 2,
+      "clubRank": 7,
+      "tacticId": 10,
+      "points": 0
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": 17,
+      "isCaptain": false,
+      "participationState": "in squad",
+      "positionId": null,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 964,
+      "age": 26,
+      "ageDiscrepancyDays": 202,
+      "grade": null,
+      "pointsOnThePitch": null
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": null,
+      "goalsScoredTotalOfficial": 0,
+      "assists": null,
+      "assistsOfficial": 0,
+      "scorer": null,
+      "ownGoalsScored": null,
+      "teamGoalsOnThePitch": null,
+      "opponentGoalsOnThePitch": null,
+      "penaltyShooterAttempts": null,
+      "penaltyShooterGoalsScored": null,
+      "penaltyShooterSaves": null,
+      "penaltyShooterMisses": null,
+      "penaltyGoalkeeperAttempts": null,
+      "penaltyGoalkeeperGoalsConceded": null,
+      "penaltyGoalkeeperSaves": null,
+      "penaltyGoalkeeperMisses": null,
+      "penaltiesReceived": 0,
+      "penaltiesCaused": 0,
+      "penaltiesCausedGoalsScored": 0,
+      "scoringAttempts": 0,
+      "scoringAttemptsOnGoal": 0,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": 0,
+      "scoringAttemptsBlocked": 0,
+      "scoringGoalkeeperSaves": 0
+     },
+     "cardStatistics": {
+      "yellowCardNet": null,
+      "yellowCardGross": null,
+      "fairPlayPoints": null,
+      "redCardsRescinded": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": null,
+      "isStarting": false
+     },
+     "duelStatistics": {
+      "tackles": 0,
+      "tacklesWon": 0,
+      "tacklesLost": 0,
+      "tacklesWonRatio": null,
+      "foulsCommitted": 0,
+      "foulsGained": 0,
+      "offsides": 0
+     },
+     "distributionStatistics": {
+      "passes": 0,
+      "passesReached": 0,
+      "passesFailed": 0,
+      "passesReachedRatio": null,
+      "corners": 0,
+      "throwIns": 0,
+      "goalKicks": 0
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "4093041",
+     "competitionId": "RUSS",
+     "competitionTypeId": 9,
+     "competitionGroupId": "FF",
+     "refereeId": 7150,
+     "stadiumId": 6629,
+     "seasonId": 2023,
+     "gameDay": 1,
+     "gameDuration": 90,
+     "isNationalGame": false,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "penalty_shootout",
+     "date": {
+      "dateTimeUTC": "2023-07-15T14:00:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2023,
+      "display": "23/24",
+      "cyclicalName": "2024",
+      "nonCyclicalName": "23/24"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "home",
+      "clubId": "964",
+      "coachId": "34354",
+      "goalsTotal": 5,
+      "opponentGoalsTotal": 4,
+      "clubRank": null,
+      "tacticId": 16,
+      "points": 3
+     },
+     "opponent": {
+      "venue": "away",
+      "clubId": "2410",
+      "coachId": "12095",
+      "goalsTotal": 4,
+      "opponentGoalsTotal": 5,
+      "clubRank": null,
+      "tacticId": 13,
+      "points": 0
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": 17,
+      "isCaptain": false,
+      "participationState": "played",
+      "positionId": 11,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 964,
+      "age": 25,
+      "ageDiscrepancyDays": 252,
+      "grade": null,
+      "pointsOnThePitch": 1
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": 0,
+      "goalsScoredTotalOfficial": 0,
+      "assists": 0,
+      "assistsOfficial": 0,
+      "scorer": 0,
+      "ownGoalsScored": 0,
+      "teamGoalsOnThePitch": 0,
+      "opponentGoalsOnThePitch": 0,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0,
+      "penaltiesReceived": 0,
+      "penaltiesCaused": 0,
+      "penaltiesCausedGoalsScored": 0,
+      "scoringAttempts": 0,
+      "scoringAttemptsOnGoal": 0,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": 0,
+      "scoringAttemptsBlocked": 0,
+      "scoringGoalkeeperSaves": 0
+     },
+     "cardStatistics": {
+      "yellowCardNet": 0,
+      "yellowCardGross": 0,
+      "fairPlayPoints": 0,
+      "redCardsRescinded": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": 27,
+      "isStarting": false,
+      "substitutedIn": {
+       "minute": 63,
+       "minuteOvertime": 0,
+       "actionId": 401
+      }
+     },
+     "duelStatistics": {
+      "tackles": 0,
+      "tacklesWon": 0,
+      "tacklesLost": 0,
+      "tacklesWonRatio": null,
+      "foulsCommitted": 0,
+      "foulsGained": 1,
+      "offsides": 0
+     },
+     "distributionStatistics": {
+      "passes": 11,
+      "passesReached": 8,
+      "passesFailed": 3,
+      "passesReachedRatio": 72.7,
+      "corners": 0,
+      "throwIns": 0,
+      "goalKicks": 0
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "4056379",
+     "competitionId": "RU1",
+     "competitionTypeId": 1,
+     "competitionGroupId": "",
+     "refereeId": 8539,
+     "stadiumId": 11162,
+     "seasonId": 2022,
+     "gameDay": 30,
+     "gameDuration": 90,
+     "isNationalGame": false,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "regularly_terminated",
+     "date": {
+      "dateTimeUTC": "2023-06-03T14:00:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2022,
+      "display": "22/23",
+      "cyclicalName": "2023",
+      "nonCyclicalName": "22/23"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "home",
+      "clubId": "964",
+      "coachId": "34354",
+      "goalsTotal": 1,
+      "opponentGoalsTotal": 0,
+      "clubRank": 1,
+      "tacticId": 16,
+      "points": 3
+     },
+     "opponent": {
+      "venue": "away",
+      "clubId": "1124",
+      "coachId": "29380",
+      "goalsTotal": 0,
+      "opponentGoalsTotal": 1,
+      "clubRank": 12,
+      "tacticId": 9,
+      "points": 0
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": 17,
+      "isCaptain": false,
+      "participationState": "played",
+      "positionId": 11,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 964,
+      "age": 25,
+      "ageDiscrepancyDays": 210,
+      "grade": null,
+      "pointsOnThePitch": 1
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": 0,
+      "goalsScoredTotalOfficial": 0,
+      "assists": 0,
+      "assistsOfficial": 0,
+      "scorer": 0,
+      "ownGoalsScored": 0,
+      "teamGoalsOnThePitch": 0,
+      "opponentGoalsOnThePitch": 0,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0,
+      "penaltiesReceived": 0,
+      "penaltiesCaused": 0,
+      "penaltiesCausedGoalsScored": 0,
+      "scoringAttempts": 0,
+      "scoringAttemptsOnGoal": 0,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": 0,
+      "scoringAttemptsBlocked": 0,
+      "scoringGoalkeeperSaves": 0
+     },
+     "cardStatistics": {
+      "yellowCardNet": 0,
+      "yellowCardGross": 0,
+      "fairPlayPoints": 0,
+      "redCardsRescinded": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": 57,
+      "isStarting": true,
+      "substitutedOut": {
+       "minute": 57,
+       "minuteOvertime": 0,
+       "actionId": 401
+      }
+     },
+     "duelStatistics": {
+      "tackles": 0,
+      "tacklesWon": 0,
+      "tacklesLost": 0,
+      "tacklesWonRatio": null,
+      "foulsCommitted": 2,
+      "foulsGained": 2,
+      "offsides": 0
+     },
+     "distributionStatistics": {
+      "passes": 31,
+      "passesReached": 27,
+      "passesFailed": 4,
+      "passesReachedRatio": 87.1,
+      "corners": 1,
+      "throwIns": 0,
+      "goalKicks": 0
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "4038185",
+     "competitionId": "FS",
+     "competitionTypeId": 11,
+     "competitionGroupId": "",
+     "refereeId": 36225,
+     "stadiumId": 11162,
+     "seasonId": 2022,
+     "gameDay": 32,
+     "gameDuration": 90,
+     "isNationalGame": true,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "regularly_terminated",
+     "date": {
+      "dateTimeUTC": "2023-03-26T15:00:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2022,
+      "display": "22/23",
+      "cyclicalName": "2023",
+      "nonCyclicalName": "22/23"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "home",
+      "clubId": "3448",
+      "coachId": "9879",
+      "goalsTotal": 2,
+      "opponentGoalsTotal": 0,
+      "clubRank": null,
+      "tacticId": 10,
+      "points": 3
+     },
+     "opponent": {
+      "venue": "away",
+      "clubId": "3560",
+      "coachId": "61895",
+      "goalsTotal": 0,
+      "opponentGoalsTotal": 2,
+      "clubRank": null,
+      "tacticId": 29,
+      "points": 0
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": null,
+      "isCaptain": false,
+      "participationState": "not in squad",
+      "positionId": null,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 964,
+      "age": 25,
+      "ageDiscrepancyDays": 141,
+      "grade": null,
+      "pointsOnThePitch": null
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": null,
+      "goalsScoredTotalOfficial": null,
+      "assists": null,
+      "assistsOfficial": null,
+      "scorer": null,
+      "ownGoalsScored": null,
+      "teamGoalsOnThePitch": null,
+      "opponentGoalsOnThePitch": null,
+      "penaltyShooterAttempts": null,
+      "penaltyShooterGoalsScored": null,
+      "penaltyShooterSaves": null,
+      "penaltyShooterMisses": null,
+      "penaltyGoalkeeperAttempts": null,
+      "penaltyGoalkeeperGoalsConceded": null,
+      "penaltyGoalkeeperSaves": null,
+      "penaltyGoalkeeperMisses": null,
+      "penaltiesReceived": null,
+      "penaltiesCaused": null,
+      "penaltiesCausedGoalsScored": null,
+      "scoringAttempts": null,
+      "scoringAttemptsOnGoal": null,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": null,
+      "scoringAttemptsBlocked": null,
+      "scoringGoalkeeperSaves": null
+     },
+     "cardStatistics": {
+      "yellowCardNet": null,
+      "yellowCardGross": null,
+      "fairPlayPoints": null,
+      "redCardsRescinded": null
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": null,
+      "isStarting": false
+     },
+     "duelStatistics": {
+      "tackles": null,
+      "tacklesWon": null,
+      "tacklesLost": null,
+      "tacklesWonRatio": null,
+      "foulsCommitted": null,
+      "foulsGained": null,
+      "offsides": null
+     },
+     "distributionStatistics": {
+      "passes": null,
+      "passesReached": null,
+      "passesFailed": null,
+      "passesReachedRatio": null,
+      "corners": null,
+      "throwIns": null,
+      "goalKicks": null
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "4034843",
+     "competitionId": "RUP",
+     "competitionTypeId": 8,
+     "competitionGroupId": "VFE",
+     "refereeId": 14199,
+     "stadiumId": 11162,
+     "seasonId": 2022,
+     "gameDay": 15,
+     "gameDuration": 90,
+     "isNationalGame": false,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "penalty_shootout",
+     "date": {
+      "dateTimeUTC": "2023-03-15T17:00:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2022,
+      "display": "22/23",
+      "cyclicalName": "2023",
+      "nonCyclicalName": "22/23"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "home",
+      "clubId": "964",
+      "coachId": "34354",
+      "goalsTotal": 5,
+      "opponentGoalsTotal": 6,
+      "clubRank": null,
+      "tacticId": 16,
+      "points": 0
+     },
+     "opponent": {
+      "venue": "away",
+      "clubId": "121",
+      "coachId": "5627",
+      "goalsTotal": 6,
+      "opponentGoalsTotal": 5,
+      "clubRank": null,
+      "tacticId": 10,
+      "points": 3
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": 17,
+      "isCaptain": false,
+      "participationState": "played",
+      "positionId": 11,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 964,
+      "age": 25,
+      "ageDiscrepancyDays": 130,
+      "grade": null,
+      "pointsOnThePitch": 1
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": 0,
+      "goalsScoredTotalOfficial": null,
+      "assists": 0,
+      "assistsOfficial": null,
+      "scorer": 0,
+      "ownGoalsScored": 0,
+      "teamGoalsOnThePitch": 0,
+      "opponentGoalsOnThePitch": 0,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0,
+      "penaltiesReceived": null,
+      "penaltiesCaused": null,
+      "penaltiesCausedGoalsScored": null,
+      "scoringAttempts": null,
+      "scoringAttemptsOnGoal": null,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": null,
+      "scoringAttemptsBlocked": null,
+      "scoringGoalkeeperSaves": null
+     },
+     "cardStatistics": {
+      "yellowCardNet": 0,
+      "yellowCardGross": 0,
+      "fairPlayPoints": 0,
+      "redCardsRescinded": null
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": 18,
+      "isStarting": false,
+      "substitutedIn": {
+       "minute": 72,
+       "minuteOvertime": 0,
+       "actionId": 401
+      }
+     },
+     "duelStatistics": {
+      "tackles": null,
+      "tacklesWon": null,
+      "tacklesLost": null,
+      "tacklesWonRatio": null,
+      "foulsCommitted": null,
+      "foulsGained": null,
+      "offsides": null
+     },
+     "distributionStatistics": {
+      "passes": null,
+      "passesReached": null,
+      "passesFailed": null,
+      "passesReachedRatio": null,
+      "corners": null,
+      "throwIns": null,
+      "goalKicks": null
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "3825563",
+     "competitionId": "RUSS",
+     "competitionTypeId": 9,
+     "competitionGroupId": "FF",
+     "refereeId": 6962,
+     "stadiumId": 11162,
+     "seasonId": 2022,
+     "gameDay": 1,
+     "gameDuration": 90,
+     "isNationalGame": false,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "regularly_terminated",
+     "date": {
+      "dateTimeUTC": "2022-07-09T16:00:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2022,
+      "display": "22/23",
+      "cyclicalName": "2023",
+      "nonCyclicalName": "22/23"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "home",
+      "clubId": "964",
+      "coachId": "34354",
+      "goalsTotal": 4,
+      "opponentGoalsTotal": 0,
+      "clubRank": null,
+      "tacticId": 10,
+      "points": 3
+     },
+     "opponent": {
+      "venue": "away",
+      "clubId": "232",
+      "coachId": "53943",
+      "goalsTotal": 0,
+      "opponentGoalsTotal": 4,
+      "clubRank": null,
+      "tacticId": 20,
+      "points": 0
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": 17,
+      "isCaptain": false,
+      "participationState": "played",
+      "positionId": 11,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 964,
+      "age": 24,
+      "ageDiscrepancyDays": 246,
+      "grade": null,
+      "pointsOnThePitch": 3
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": 0,
+      "goalsScoredTotalOfficial": 0,
+      "assists": 0,
+      "assistsOfficial": 0,
+      "scorer": 0,
+      "ownGoalsScored": 0,
+      "teamGoalsOnThePitch": 1,
+      "opponentGoalsOnThePitch": 0,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0,
+      "penaltiesReceived": 0,
+      "penaltiesCaused": 0,
+      "penaltiesCausedGoalsScored": 0,
+      "scoringAttempts": 0,
+      "scoringAttemptsOnGoal": 0,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": 0,
+      "scoringAttemptsBlocked": 0,
+      "scoringGoalkeeperSaves": 0
+     },
+     "cardStatistics": {
+      "yellowCardNet": 0,
+      "yellowCardGross": 0,
+      "fairPlayPoints": 0,
+      "redCardsRescinded": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": 13,
+      "isStarting": false,
+      "substitutedIn": {
+       "minute": 77,
+       "minuteOvertime": 0,
+       "actionId": 401
+      }
+     },
+     "duelStatistics": {
+      "tackles": 0,
+      "tacklesWon": 0,
+      "tacklesLost": 0,
+      "tacklesWonRatio": null,
+      "foulsCommitted": 0,
+      "foulsGained": 1,
+      "offsides": 0
+     },
+     "distributionStatistics": {
+      "passes": 9,
+      "passesReached": 7,
+      "passesFailed": 2,
+      "passesReachedRatio": 77.8,
+      "corners": 0,
+      "throwIns": 0,
+      "goalKicks": 0
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "3602644",
+     "competitionId": "RU1",
+     "competitionTypeId": 1,
+     "competitionGroupId": "",
+     "refereeId": 2937,
+     "stadiumId": 12546,
+     "seasonId": 2021,
+     "gameDay": 30,
+     "gameDuration": 90,
+     "isNationalGame": false,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "regularly_terminated",
+     "date": {
+      "dateTimeUTC": "2022-05-21T14:00:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2021,
+      "display": "21/22",
+      "cyclicalName": "2022",
+      "nonCyclicalName": "21/22"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "away",
+      "clubId": "964",
+      "coachId": "34354",
+      "goalsTotal": 0,
+      "opponentGoalsTotal": 1,
+      "clubRank": 1,
+      "tacticId": 11,
+      "points": 0
+     },
+     "opponent": {
+      "venue": "home",
+      "clubId": "49702",
+      "coachId": "54792",
+      "goalsTotal": 1,
+      "opponentGoalsTotal": 0,
+      "clubRank": 11,
+      "tacticId": 13,
+      "points": 3
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": 17,
+      "isCaptain": false,
+      "participationState": "played",
+      "positionId": 11,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 964,
+      "age": 24,
+      "ageDiscrepancyDays": 197,
+      "grade": null,
+      "pointsOnThePitch": 0
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": 0,
+      "goalsScoredTotalOfficial": 0,
+      "assists": 0,
+      "assistsOfficial": 0,
+      "scorer": 0,
+      "ownGoalsScored": 0,
+      "teamGoalsOnThePitch": 0,
+      "opponentGoalsOnThePitch": 1,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0,
+      "penaltiesReceived": 0,
+      "penaltiesCaused": 0,
+      "penaltiesCausedGoalsScored": 1,
+      "scoringAttempts": 1,
+      "scoringAttemptsOnGoal": 1,
+      "scoringAttemptsOnGoalRatio": 100,
+      "scoringAttemptsOffGoal": 0,
+      "scoringAttemptsBlocked": 0,
+      "scoringGoalkeeperSaves": 0
+     },
+     "cardStatistics": {
+      "yellowCardNet": 0,
+      "yellowCardGross": 0,
+      "fairPlayPoints": 0,
+      "redCardsRescinded": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": 90,
+      "isStarting": true
+     },
+     "duelStatistics": {
+      "tackles": 1,
+      "tacklesWon": 0,
+      "tacklesLost": 1,
+      "tacklesWonRatio": 0,
+      "foulsCommitted": 2,
+      "foulsGained": 3,
+      "offsides": 0
+     },
+     "distributionStatistics": {
+      "passes": 39,
+      "passesReached": 34,
+      "passesFailed": 5,
+      "passesReachedRatio": 87.2,
+      "corners": 5,
+      "throwIns": 1,
+      "goalKicks": 0
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "3762378",
+     "competitionId": "RUP",
+     "competitionTypeId": 8,
+     "competitionGroupId": "VF",
+     "refereeId": 14197,
+     "stadiumId": 1480,
+     "seasonId": 2021,
+     "gameDay": 8,
+     "gameDuration": 90,
+     "isNationalGame": false,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "penalty_shootout",
+     "date": {
+      "dateTimeUTC": "2022-04-20T14:00:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2021,
+      "display": "21/22",
+      "cyclicalName": "2022",
+      "nonCyclicalName": "21/22"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "away",
+      "clubId": "964",
+      "coachId": "34354",
+      "goalsTotal": 7,
+      "opponentGoalsTotal": 8,
+      "clubRank": null,
+      "tacticId": 24,
+      "points": 0
+     },
+     "opponent": {
+      "venue": "home",
+      "clubId": "75506",
+      "coachId": "65851",
+      "goalsTotal": 8,
+      "opponentGoalsTotal": 7,
+      "clubRank": null,
+      "tacticId": 14,
+      "points": 3
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": 17,
+      "isCaptain": false,
+      "participationState": "played",
+      "positionId": 11,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 964,
+      "age": 24,
+      "ageDiscrepancyDays": 166,
+      "grade": null,
+      "pointsOnThePitch": 1
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": 0,
+      "goalsScoredTotalOfficial": null,
+      "assists": 0,
+      "assistsOfficial": null,
+      "scorer": 0,
+      "ownGoalsScored": 0,
+      "teamGoalsOnThePitch": 1,
+      "opponentGoalsOnThePitch": 1,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0,
+      "penaltiesReceived": null,
+      "penaltiesCaused": null,
+      "penaltiesCausedGoalsScored": null,
+      "scoringAttempts": null,
+      "scoringAttemptsOnGoal": null,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": null,
+      "scoringAttemptsBlocked": null,
+      "scoringGoalkeeperSaves": null
+     },
+     "cardStatistics": {
+      "yellowCardNet": 0,
+      "yellowCardGross": 0,
+      "fairPlayPoints": 0,
+      "redCardsRescinded": null
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": 76,
+      "isStarting": true,
+      "substitutedOut": {
+       "minute": 76,
+       "minuteOvertime": 0,
+       "actionId": 401
+      }
+     },
+     "duelStatistics": {
+      "tackles": null,
+      "tacklesWon": null,
+      "tacklesLost": null,
+      "tacklesWonRatio": null,
+      "foulsCommitted": null,
+      "foulsGained": null,
+      "offsides": null
+     },
+     "distributionStatistics": {
+      "passes": null,
+      "passesReached": null,
+      "passesFailed": null,
+      "passesReachedRatio": null,
+      "corners": null,
+      "throwIns": null,
+      "goalKicks": null
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "3704055",
+     "competitionId": "POWM",
+     "competitionTypeId": 19,
+     "competitionGroupId": "HF",
+     "refereeId": 0,
+     "stadiumId": 431,
+     "seasonId": 2021,
+     "gameDay": 1,
+     "gameDuration": 90,
+     "isNationalGame": true,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": null,
+     "date": {
+      "dateTimeUTC": "2022-03-24T13:00:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2021,
+      "display": "21/22",
+      "cyclicalName": "2022",
+      "nonCyclicalName": "21/22"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "home",
+      "clubId": "3448",
+      "coachId": "9879",
+      "goalsTotal": 0,
+      "opponentGoalsTotal": 0,
+      "clubRank": null,
+      "tacticId": 1,
+      "points": 0
+     },
+     "opponent": {
+      "venue": "away",
+      "clubId": "3442",
+      "coachId": "2472",
+      "goalsTotal": 0,
+      "opponentGoalsTotal": 0,
+      "clubRank": null,
+      "tacticId": 1,
+      "points": 3
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": null,
+      "isCaptain": false,
+      "participationState": "not in squad",
+      "positionId": null,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 964,
+      "age": 24,
+      "ageDiscrepancyDays": 139,
+      "grade": null,
+      "pointsOnThePitch": null
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": null,
+      "goalsScoredTotalOfficial": null,
+      "assists": null,
+      "assistsOfficial": null,
+      "scorer": null,
+      "ownGoalsScored": null,
+      "teamGoalsOnThePitch": null,
+      "opponentGoalsOnThePitch": null,
+      "penaltyShooterAttempts": null,
+      "penaltyShooterGoalsScored": null,
+      "penaltyShooterSaves": null,
+      "penaltyShooterMisses": null,
+      "penaltyGoalkeeperAttempts": null,
+      "penaltyGoalkeeperGoalsConceded": null,
+      "penaltyGoalkeeperSaves": null,
+      "penaltyGoalkeeperMisses": null,
+      "penaltiesReceived": null,
+      "penaltiesCaused": null,
+      "penaltiesCausedGoalsScored": null,
+      "scoringAttempts": null,
+      "scoringAttemptsOnGoal": null,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": null,
+      "scoringAttemptsBlocked": null,
+      "scoringGoalkeeperSaves": null
+     },
+     "cardStatistics": {
+      "yellowCardNet": null,
+      "yellowCardGross": null,
+      "fairPlayPoints": null,
+      "redCardsRescinded": null
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": null,
+      "isStarting": false
+     },
+     "duelStatistics": {
+      "tackles": null,
+      "tacklesWon": null,
+      "tacklesLost": null,
+      "tacklesWonRatio": null,
+      "foulsCommitted": null,
+      "foulsGained": null,
+      "offsides": null
+     },
+     "distributionStatistics": {
+      "passes": null,
+      "passesReached": null,
+      "passesFailed": null,
+      "passesReachedRatio": null,
+      "corners": null,
+      "throwIns": null,
+      "goalKicks": null
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "3714024",
+     "competitionId": "EL",
+     "competitionTypeId": 10,
+     "competitionGroupId": "ZRR",
+     "refereeId": 10014,
+     "stadiumId": 2979,
+     "seasonId": 2021,
+     "gameDay": 8,
+     "gameDuration": 90,
+     "isNationalGame": false,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "regularly_terminated",
+     "date": {
+      "dateTimeUTC": "2022-02-24T20:00:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2021,
+      "display": "21/22",
+      "cyclicalName": "2022",
+      "nonCyclicalName": "21/22"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "away",
+      "clubId": "964",
+      "coachId": "34354",
+      "goalsTotal": 0,
+      "opponentGoalsTotal": 0,
+      "clubRank": null,
+      "tacticId": 17,
+      "points": 1
+     },
+     "opponent": {
+      "venue": "home",
+      "clubId": "150",
+      "coachId": "1558",
+      "goalsTotal": 0,
+      "opponentGoalsTotal": 0,
+      "clubRank": null,
+      "tacticId": 16,
+      "points": 1
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": 17,
+      "isCaptain": false,
+      "participationState": "played",
+      "positionId": 11,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 964,
+      "age": 24,
+      "ageDiscrepancyDays": 111,
+      "grade": null,
+      "pointsOnThePitch": 1
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": 0,
+      "goalsScoredTotalOfficial": 0,
+      "assists": 0,
+      "assistsOfficial": 0,
+      "scorer": 0,
+      "ownGoalsScored": 0,
+      "teamGoalsOnThePitch": 0,
+      "opponentGoalsOnThePitch": 0,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0,
+      "penaltiesReceived": 0,
+      "penaltiesCaused": 0,
+      "penaltiesCausedGoalsScored": 0,
+      "scoringAttempts": 0,
+      "scoringAttemptsOnGoal": 0,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": 0,
+      "scoringAttemptsBlocked": 0,
+      "scoringGoalkeeperSaves": 0
+     },
+     "cardStatistics": {
+      "yellowCardNet": 0,
+      "yellowCardGross": 0,
+      "fairPlayPoints": 0,
+      "redCardsRescinded": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": 4,
+      "isStarting": false,
+      "substitutedIn": {
+       "minute": 86,
+       "minuteOvertime": 0,
+       "actionId": 401
+      }
+     },
+     "duelStatistics": {
+      "tackles": 0,
+      "tacklesWon": 0,
+      "tacklesLost": 0,
+      "tacklesWonRatio": null,
+      "foulsCommitted": 0,
+      "foulsGained": 0,
+      "offsides": 0
+     },
+     "distributionStatistics": {
+      "passes": 2,
+      "passesReached": 1,
+      "passesFailed": 1,
+      "passesReachedRatio": 50,
+      "corners": 0,
+      "throwIns": 2,
+      "goalKicks": 0
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "3651140",
+     "competitionId": "CL",
+     "competitionTypeId": 10,
+     "competitionGroupId": "H",
+     "refereeId": 1700,
+     "stadiumId": 11162,
+     "seasonId": 2021,
+     "gameDay": 6,
+     "gameDuration": 90,
+     "isNationalGame": false,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "regularly_terminated",
+     "date": {
+      "dateTimeUTC": "2021-12-08T17:45:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2021,
+      "display": "21/22",
+      "cyclicalName": "2022",
+      "nonCyclicalName": "21/22"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "home",
+      "clubId": "964",
+      "coachId": "34354",
+      "goalsTotal": 3,
+      "opponentGoalsTotal": 3,
+      "clubRank": 1,
+      "tacticId": 13,
+      "points": 1
+     },
+     "opponent": {
+      "venue": "away",
+      "clubId": "631",
+      "coachId": "7471",
+      "goalsTotal": 3,
+      "opponentGoalsTotal": 3,
+      "clubRank": null,
+      "tacticId": 29,
+      "points": 1
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": 17,
+      "isCaptain": false,
+      "participationState": "played",
+      "positionId": 11,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 964,
+      "age": 24,
+      "ageDiscrepancyDays": 33,
+      "grade": null,
+      "pointsOnThePitch": 0
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": 0,
+      "goalsScoredTotalOfficial": 0,
+      "assists": 0,
+      "assistsOfficial": 0,
+      "scorer": 0,
+      "ownGoalsScored": 0,
+      "teamGoalsOnThePitch": 1,
+      "opponentGoalsOnThePitch": 2,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0,
+      "penaltiesReceived": 0,
+      "penaltiesCaused": 0,
+      "penaltiesCausedGoalsScored": 0,
+      "scoringAttempts": 0,
+      "scoringAttemptsOnGoal": 0,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": 0,
+      "scoringAttemptsBlocked": 0,
+      "scoringGoalkeeperSaves": 0
+     },
+     "cardStatistics": {
+      "yellowCardNet": 0,
+      "yellowCardGross": 0,
+      "fairPlayPoints": 0,
+      "redCardsRescinded": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": 39,
+      "isStarting": false,
+      "substitutedIn": {
+       "minute": 51,
+       "minuteOvertime": 0,
+       "actionId": 402
+      }
+     },
+     "duelStatistics": {
+      "tackles": 0,
+      "tacklesWon": 0,
+      "tacklesLost": 0,
+      "tacklesWonRatio": null,
+      "foulsCommitted": 1,
+      "foulsGained": 0,
+      "offsides": 0
+     },
+     "distributionStatistics": {
+      "passes": 11,
+      "passesReached": 9,
+      "passesFailed": 2,
+      "passesReachedRatio": 81.8,
+      "corners": 0,
+      "throwIns": 0,
+      "goalKicks": 0
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "3495783",
+     "competitionId": "WMQ6",
+     "competitionTypeId": 19,
+     "competitionGroupId": "H",
+     "refereeId": 1239,
+     "stadiumId": 318,
+     "seasonId": 2020,
+     "gameDay": 10,
+     "gameDuration": 90,
+     "isNationalGame": true,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "regularly_terminated",
+     "date": {
+      "dateTimeUTC": "2021-11-14T14:00:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2020,
+      "display": "2021",
+      "cyclicalName": "2021",
+      "nonCyclicalName": "20/21"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "away",
+      "clubId": "3448",
+      "coachId": "9879",
+      "goalsTotal": 0,
+      "opponentGoalsTotal": 1,
+      "clubRank": 1,
+      "tacticId": 10,
+      "points": 0
+     },
+     "opponent": {
+      "venue": "home",
+      "clubId": "3556",
+      "coachId": "2711",
+      "goalsTotal": 1,
+      "opponentGoalsTotal": 0,
+      "clubRank": 2,
+      "tacticId": 10,
+      "points": 3
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": 22,
+      "isCaptain": false,
+      "participationState": "played",
+      "positionId": 14,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 964,
+      "age": 24,
+      "ageDiscrepancyDays": 9,
+      "grade": null,
+      "pointsOnThePitch": 0
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": 0,
+      "goalsScoredTotalOfficial": 0,
+      "assists": 0,
+      "assistsOfficial": 0,
+      "scorer": 0,
+      "ownGoalsScored": 0,
+      "teamGoalsOnThePitch": 0,
+      "opponentGoalsOnThePitch": 1,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0,
+      "penaltiesReceived": 0,
+      "penaltiesCaused": 0,
+      "penaltiesCausedGoalsScored": 0,
+      "scoringAttempts": 0,
+      "scoringAttemptsOnGoal": 0,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": 0,
+      "scoringAttemptsBlocked": 0,
+      "scoringGoalkeeperSaves": 0
+     },
+     "cardStatistics": {
+      "yellowCardNet": 0,
+      "yellowCardGross": 0,
+      "fairPlayPoints": 0,
+      "redCardsRescinded": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": 12,
+      "isStarting": false,
+      "substitutedIn": {
+       "minute": 78,
+       "minuteOvertime": 0,
+       "actionId": 401
+      }
+     },
+     "duelStatistics": {
+      "tackles": 0,
+      "tacklesWon": 0,
+      "tacklesLost": 0,
+      "tacklesWonRatio": null,
+      "foulsCommitted": 0,
+      "foulsGained": 0,
+      "offsides": 0
+     },
+     "distributionStatistics": {
+      "passes": 4,
+      "passesReached": 3,
+      "passesFailed": 1,
+      "passesReachedRatio": 75,
+      "corners": 1,
+      "throwIns": 0,
+      "goalKicks": 0
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "3596976",
+     "competitionId": "RUSS",
+     "competitionTypeId": 9,
+     "competitionGroupId": "FF",
+     "refereeId": 14197,
+     "stadiumId": 12235,
+     "seasonId": 2021,
+     "gameDay": 1,
+     "gameDuration": 90,
+     "isNationalGame": false,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "regularly_terminated",
+     "date": {
+      "dateTimeUTC": "2021-07-17T16:00:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2021,
+      "display": "21/22",
+      "cyclicalName": "2022",
+      "nonCyclicalName": "21/22"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "home",
+      "clubId": "964",
+      "coachId": "34354",
+      "goalsTotal": 3,
+      "opponentGoalsTotal": 0,
+      "clubRank": null,
+      "tacticId": 11,
+      "points": 3
+     },
+     "opponent": {
+      "venue": "away",
+      "clubId": "932",
+      "coachId": "8142",
+      "goalsTotal": 0,
+      "opponentGoalsTotal": 3,
+      "clubRank": null,
+      "tacticId": 20,
+      "points": 0
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": 17,
+      "isCaptain": false,
+      "participationState": "played",
+      "positionId": 12,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 964,
+      "age": 23,
+      "ageDiscrepancyDays": 254,
+      "grade": null,
+      "pointsOnThePitch": 3
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": 0,
+      "goalsScoredTotalOfficial": 0,
+      "assists": 0,
+      "assistsOfficial": 0,
+      "scorer": 0,
+      "ownGoalsScored": 0,
+      "teamGoalsOnThePitch": 1,
+      "opponentGoalsOnThePitch": 0,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0,
+      "penaltiesReceived": 0,
+      "penaltiesCaused": 0,
+      "penaltiesCausedGoalsScored": 0,
+      "scoringAttempts": 0,
+      "scoringAttemptsOnGoal": 0,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": 0,
+      "scoringAttemptsBlocked": 0,
+      "scoringGoalkeeperSaves": 0
+     },
+     "cardStatistics": {
+      "yellowCardNet": 1,
+      "yellowCardGross": 1,
+      "fairPlayPoints": 1,
+      "redCardsRescinded": 0,
+      "yellowCard": {
+       "minute": 88,
+       "minuteOvertime": 0,
+       "actionId": 306
+      }
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": 29,
+      "isStarting": false,
+      "substitutedIn": {
+       "minute": 61,
+       "minuteOvertime": 0,
+       "actionId": 401
+      }
+     },
+     "duelStatistics": {
+      "tackles": 0,
+      "tacklesWon": 0,
+      "tacklesLost": 0,
+      "tacklesWonRatio": null,
+      "foulsCommitted": 1,
+      "foulsGained": 1,
+      "offsides": 0
+     },
+     "distributionStatistics": {
+      "passes": 10,
+      "passesReached": 8,
+      "passesFailed": 2,
+      "passesReachedRatio": 80,
+      "corners": 0,
+      "throwIns": 0,
+      "goalKicks": 0
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "3287218",
+     "competitionId": "EURO",
+     "competitionTypeId": 11,
+     "competitionGroupId": "B",
+     "refereeId": 1276,
+     "stadiumId": 480,
+     "seasonId": 2020,
+     "gameDay": 3,
+     "gameDuration": 90,
+     "isNationalGame": true,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "regularly_terminated",
+     "date": {
+      "dateTimeUTC": "2021-06-21T19:00:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2020,
+      "display": "2021",
+      "cyclicalName": "2021",
+      "nonCyclicalName": "20/21"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "away",
+      "clubId": "3448",
+      "coachId": "2073",
+      "goalsTotal": 1,
+      "opponentGoalsTotal": 4,
+      "clubRank": 1,
+      "tacticId": 13,
+      "points": 0
+     },
+     "opponent": {
+      "venue": "home",
+      "clubId": "3436",
+      "coachId": "5372",
+      "goalsTotal": 4,
+      "opponentGoalsTotal": 1,
+      "clubRank": null,
+      "tacticId": 24,
+      "points": 3
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": null,
+      "isCaptain": false,
+      "participationState": "not in squad",
+      "positionId": null,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 964,
+      "age": 23,
+      "ageDiscrepancyDays": 228,
+      "grade": null,
+      "pointsOnThePitch": null
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": null,
+      "goalsScoredTotalOfficial": null,
+      "assists": null,
+      "assistsOfficial": null,
+      "scorer": null,
+      "ownGoalsScored": null,
+      "teamGoalsOnThePitch": null,
+      "opponentGoalsOnThePitch": null,
+      "penaltyShooterAttempts": null,
+      "penaltyShooterGoalsScored": null,
+      "penaltyShooterSaves": null,
+      "penaltyShooterMisses": null,
+      "penaltyGoalkeeperAttempts": null,
+      "penaltyGoalkeeperGoalsConceded": null,
+      "penaltyGoalkeeperSaves": null,
+      "penaltyGoalkeeperMisses": null,
+      "penaltiesReceived": null,
+      "penaltiesCaused": null,
+      "penaltiesCausedGoalsScored": null,
+      "scoringAttempts": null,
+      "scoringAttemptsOnGoal": null,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": null,
+      "scoringAttemptsBlocked": null,
+      "scoringGoalkeeperSaves": null
+     },
+     "cardStatistics": {
+      "yellowCardNet": null,
+      "yellowCardGross": null,
+      "fairPlayPoints": null,
+      "redCardsRescinded": null
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": null,
+      "isStarting": false
+     },
+     "duelStatistics": {
+      "tackles": null,
+      "tacklesWon": null,
+      "tacklesLost": null,
+      "tacklesWonRatio": null,
+      "foulsCommitted": null,
+      "foulsGained": null,
+      "offsides": null
+     },
+     "distributionStatistics": {
+      "passes": null,
+      "passesReached": null,
+      "passesFailed": null,
+      "passesReachedRatio": null,
+      "corners": null,
+      "throwIns": null,
+      "goalKicks": null
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "3551696",
+     "competitionId": "FS",
+     "competitionTypeId": 11,
+     "competitionGroupId": "",
+     "refereeId": 1443,
+     "stadiumId": 771,
+     "seasonId": 2020,
+     "gameDay": 15,
+     "gameDuration": 90,
+     "isNationalGame": true,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "regularly_terminated",
+     "date": {
+      "dateTimeUTC": "2021-06-05T15:00:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2020,
+      "display": "20/21",
+      "cyclicalName": "2021",
+      "nonCyclicalName": "20/21"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "home",
+      "clubId": "3448",
+      "coachId": "2073",
+      "goalsTotal": 1,
+      "opponentGoalsTotal": 0,
+      "clubRank": null,
+      "tacticId": 24,
+      "points": 3
+     },
+     "opponent": {
+      "venue": "away",
+      "clubId": "3394",
+      "coachId": "14733",
+      "goalsTotal": 0,
+      "opponentGoalsTotal": 1,
+      "clubRank": null,
+      "tacticId": 24,
+      "points": 0
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": 27,
+      "isCaptain": false,
+      "participationState": "played",
+      "positionId": 11,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 964,
+      "age": 23,
+      "ageDiscrepancyDays": 212,
+      "grade": null,
+      "pointsOnThePitch": 3
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": 0,
+      "goalsScoredTotalOfficial": null,
+      "assists": 0,
+      "assistsOfficial": null,
+      "scorer": 0,
+      "ownGoalsScored": 0,
+      "teamGoalsOnThePitch": 1,
+      "opponentGoalsOnThePitch": 0,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0,
+      "penaltiesReceived": null,
+      "penaltiesCaused": null,
+      "penaltiesCausedGoalsScored": null,
+      "scoringAttempts": null,
+      "scoringAttemptsOnGoal": null,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": null,
+      "scoringAttemptsBlocked": null,
+      "scoringGoalkeeperSaves": null
+     },
+     "cardStatistics": {
+      "yellowCardNet": 0,
+      "yellowCardGross": 0,
+      "fairPlayPoints": 0,
+      "redCardsRescinded": null
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": 28,
+      "isStarting": false,
+      "substitutedIn": {
+       "minute": 62,
+       "minuteOvertime": 0,
+       "actionId": 401
+      }
+     },
+     "duelStatistics": {
+      "tackles": null,
+      "tacklesWon": null,
+      "tacklesLost": null,
+      "tacklesWonRatio": null,
+      "foulsCommitted": null,
+      "foulsGained": null,
+      "offsides": null
+     },
+     "distributionStatistics": {
+      "passes": null,
+      "passesReached": null,
+      "passesFailed": null,
+      "passesReachedRatio": null,
+      "corners": null,
+      "throwIns": null,
+      "goalKicks": null
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "3522920",
+     "competitionId": "RU1",
+     "competitionTypeId": 1,
+     "competitionGroupId": "",
+     "refereeId": 17384,
+     "stadiumId": 12236,
+     "seasonId": 2020,
+     "gameDay": 30,
+     "gameDuration": 90,
+     "isNationalGame": false,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "regularly_terminated",
+     "date": {
+      "dateTimeUTC": "2021-05-16T11:00:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2020,
+      "display": "20/21",
+      "cyclicalName": "2021",
+      "nonCyclicalName": "20/21"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "away",
+      "clubId": "964",
+      "coachId": "34354",
+      "goalsTotal": 5,
+      "opponentGoalsTotal": 1,
+      "clubRank": 1,
+      "tacticId": 16,
+      "points": 3
+     },
+     "opponent": {
+      "venue": "home",
+      "clubId": "41201",
+      "coachId": "62399",
+      "goalsTotal": 1,
+      "opponentGoalsTotal": 5,
+      "clubRank": 16,
+      "tacticId": 24,
+      "points": 0
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": 17,
+      "isCaptain": false,
+      "participationState": "played",
+      "positionId": 11,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 964,
+      "age": 23,
+      "ageDiscrepancyDays": 192,
+      "grade": null,
+      "pointsOnThePitch": 3
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": 0,
+      "goalsScoredTotalOfficial": 0,
+      "assists": 1,
+      "assistsOfficial": 0,
+      "scorer": 1,
+      "ownGoalsScored": 0,
+      "teamGoalsOnThePitch": 5,
+      "opponentGoalsOnThePitch": 1,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0,
+      "penaltiesReceived": 0,
+      "penaltiesCaused": 0,
+      "penaltiesCausedGoalsScored": 0,
+      "scoringAttempts": 0,
+      "scoringAttemptsOnGoal": 0,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": 0,
+      "scoringAttemptsBlocked": 0,
+      "scoringGoalkeeperSaves": 0
+     },
+     "cardStatistics": {
+      "yellowCardNet": 0,
+      "yellowCardGross": 0,
+      "fairPlayPoints": 0,
+      "redCardsRescinded": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": 90,
+      "isStarting": true
+     },
+     "duelStatistics": {
+      "tackles": 1,
+      "tacklesWon": 1,
+      "tacklesLost": 0,
+      "tacklesWonRatio": 100,
+      "foulsCommitted": 2,
+      "foulsGained": 0,
+      "offsides": 0
+     },
+     "distributionStatistics": {
+      "passes": 57,
+      "passesReached": 47,
+      "passesFailed": 10,
+      "passesReachedRatio": 82.5,
+      "corners": 0,
+      "throwIns": 1,
+      "goalKicks": 0
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "3485739",
+     "competitionId": "RUP",
+     "competitionTypeId": 8,
+     "competitionGroupId": "AF",
+     "refereeId": 9585,
+     "stadiumId": 11162,
+     "seasonId": 2020,
+     "gameDay": 7,
+     "gameDuration": 90,
+     "isNationalGame": false,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "regularly_terminated",
+     "date": {
+      "dateTimeUTC": "2021-02-20T14:00:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2020,
+      "display": "20/21",
+      "cyclicalName": "2021",
+      "nonCyclicalName": "20/21"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "home",
+      "clubId": "964",
+      "coachId": "34354",
+      "goalsTotal": 1,
+      "opponentGoalsTotal": 2,
+      "clubRank": 54,
+      "tacticId": 16,
+      "points": 0
+     },
+     "opponent": {
+      "venue": "away",
+      "clubId": "3729",
+      "coachId": "29299",
+      "goalsTotal": 2,
+      "opponentGoalsTotal": 1,
+      "clubRank": 27,
+      "tacticId": 16,
+      "points": 3
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": 17,
+      "isCaptain": false,
+      "participationState": "played",
+      "positionId": 11,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 964,
+      "age": 23,
+      "ageDiscrepancyDays": 107,
+      "grade": null,
+      "pointsOnThePitch": 0
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": 0,
+      "goalsScoredTotalOfficial": null,
+      "assists": 0,
+      "assistsOfficial": null,
+      "scorer": 0,
+      "ownGoalsScored": 0,
+      "teamGoalsOnThePitch": 1,
+      "opponentGoalsOnThePitch": 2,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0,
+      "penaltiesReceived": null,
+      "penaltiesCaused": null,
+      "penaltiesCausedGoalsScored": null,
+      "scoringAttempts": null,
+      "scoringAttemptsOnGoal": null,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": null,
+      "scoringAttemptsBlocked": null,
+      "scoringGoalkeeperSaves": null
+     },
+     "cardStatistics": {
+      "yellowCardNet": 0,
+      "yellowCardGross": 0,
+      "fairPlayPoints": 0,
+      "redCardsRescinded": null
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": 81,
+      "isStarting": true,
+      "substitutedOut": {
+       "minute": 81,
+       "minuteOvertime": 0,
+       "actionId": 401
+      }
+     },
+     "duelStatistics": {
+      "tackles": null,
+      "tacklesWon": null,
+      "tacklesLost": null,
+      "tacklesWonRatio": null,
+      "foulsCommitted": null,
+      "foulsGained": null,
+      "offsides": null
+     },
+     "distributionStatistics": {
+      "passes": null,
+      "passesReached": null,
+      "passesFailed": null,
+      "passesReachedRatio": null,
+      "corners": null,
+      "throwIns": null,
+      "goalKicks": null
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "3461818",
+     "competitionId": "CL",
+     "competitionTypeId": 10,
+     "competitionGroupId": "F",
+     "refereeId": 1225,
+     "stadiumId": 11162,
+     "seasonId": 2020,
+     "gameDay": 6,
+     "gameDuration": 90,
+     "isNationalGame": false,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "regularly_terminated",
+     "date": {
+      "dateTimeUTC": "2020-12-08T17:55:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2020,
+      "display": "20/21",
+      "cyclicalName": "2021",
+      "nonCyclicalName": "20/21"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "home",
+      "clubId": "964",
+      "coachId": "34354",
+      "goalsTotal": 1,
+      "opponentGoalsTotal": 2,
+      "clubRank": 1,
+      "tacticId": 4,
+      "points": 0
+     },
+     "opponent": {
+      "venue": "away",
+      "clubId": "16",
+      "coachId": "535",
+      "goalsTotal": 2,
+      "opponentGoalsTotal": 1,
+      "clubRank": null,
+      "tacticId": 26,
+      "points": 3
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": 17,
+      "isCaptain": false,
+      "participationState": "in squad",
+      "positionId": null,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 964,
+      "age": 23,
+      "ageDiscrepancyDays": 33,
+      "grade": null,
+      "pointsOnThePitch": null
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": null,
+      "goalsScoredTotalOfficial": 0,
+      "assists": null,
+      "assistsOfficial": 0,
+      "scorer": null,
+      "ownGoalsScored": null,
+      "teamGoalsOnThePitch": null,
+      "opponentGoalsOnThePitch": null,
+      "penaltyShooterAttempts": null,
+      "penaltyShooterGoalsScored": null,
+      "penaltyShooterSaves": null,
+      "penaltyShooterMisses": null,
+      "penaltyGoalkeeperAttempts": null,
+      "penaltyGoalkeeperGoalsConceded": null,
+      "penaltyGoalkeeperSaves": null,
+      "penaltyGoalkeeperMisses": null,
+      "penaltiesReceived": 0,
+      "penaltiesCaused": 0,
+      "penaltiesCausedGoalsScored": 0,
+      "scoringAttempts": 0,
+      "scoringAttemptsOnGoal": 0,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": 0,
+      "scoringAttemptsBlocked": 0,
+      "scoringGoalkeeperSaves": 0
+     },
+     "cardStatistics": {
+      "yellowCardNet": null,
+      "yellowCardGross": null,
+      "fairPlayPoints": null,
+      "redCardsRescinded": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": null,
+      "isStarting": false
+     },
+     "duelStatistics": {
+      "tackles": 0,
+      "tacklesWon": 0,
+      "tacklesLost": 0,
+      "tacklesWonRatio": null,
+      "foulsCommitted": 0,
+      "foulsGained": 0,
+      "offsides": 0
+     },
+     "distributionStatistics": {
+      "passes": 0,
+      "passesReached": 0,
+      "passesFailed": 0,
+      "passesReachedRatio": null,
+      "corners": 0,
+      "throwIns": 0,
+      "goalKicks": 0
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "3330682",
+     "competitionId": "UNLB",
+     "competitionTypeId": 11,
+     "competitionGroupId": "3",
+     "refereeId": 847,
+     "stadiumId": 401,
+     "seasonId": 2020,
+     "gameDay": 6,
+     "gameDuration": 90,
+     "isNationalGame": true,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "regularly_terminated",
+     "date": {
+      "dateTimeUTC": "2020-11-18T19:45:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2020,
+      "display": "20/21",
+      "cyclicalName": "2021",
+      "nonCyclicalName": "20/21"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "away",
+      "clubId": "3448",
+      "coachId": "2073",
+      "goalsTotal": 0,
+      "opponentGoalsTotal": 5,
+      "clubRank": 1,
+      "tacticId": 16,
+      "points": 0
+     },
+     "opponent": {
+      "venue": "home",
+      "clubId": "3438",
+      "coachId": "4481",
+      "goalsTotal": 5,
+      "opponentGoalsTotal": 0,
+      "clubRank": 4,
+      "tacticId": 4,
+      "points": 3
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": 17,
+      "isCaptain": false,
+      "participationState": "played",
+      "positionId": 11,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 964,
+      "age": 23,
+      "ageDiscrepancyDays": 13,
+      "grade": null,
+      "pointsOnThePitch": 0
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": 0,
+      "goalsScoredTotalOfficial": 0,
+      "assists": 0,
+      "assistsOfficial": 0,
+      "scorer": 0,
+      "ownGoalsScored": 0,
+      "teamGoalsOnThePitch": 0,
+      "opponentGoalsOnThePitch": 1,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0,
+      "penaltiesReceived": 0,
+      "penaltiesCaused": 0,
+      "penaltiesCausedGoalsScored": 0,
+      "scoringAttempts": 0,
+      "scoringAttemptsOnGoal": 0,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": 0,
+      "scoringAttemptsBlocked": 0,
+      "scoringGoalkeeperSaves": 0
+     },
+     "cardStatistics": {
+      "yellowCardNet": 0,
+      "yellowCardGross": 0,
+      "fairPlayPoints": 0,
+      "redCardsRescinded": 0
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": 45,
+      "isStarting": false,
+      "substitutedIn": {
+       "minute": 46,
+       "minuteOvertime": 0,
+       "actionId": 401
+      }
+     },
+     "duelStatistics": {
+      "tackles": 0,
+      "tacklesWon": 0,
+      "tacklesLost": 0,
+      "tacklesWonRatio": null,
+      "foulsCommitted": 0,
+      "foulsGained": 0,
+      "offsides": 0
+     },
+     "distributionStatistics": {
+      "passes": 17,
+      "passesReached": 15,
+      "passesFailed": 2,
+      "passesReachedRatio": 88.2,
+      "corners": 0,
+      "throwIns": 0,
+      "goalKicks": 0
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "3403408",
+     "competitionId": "RUSS",
+     "competitionTypeId": 9,
+     "competitionGroupId": "FF",
+     "refereeId": 2170,
+     "stadiumId": 10154,
+     "seasonId": 2020,
+     "gameDay": 1,
+     "gameDuration": 90,
+     "isNationalGame": false,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "regularly_terminated",
+     "date": {
+      "dateTimeUTC": "2020-08-07T16:00:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2020,
+      "display": "20/21",
+      "cyclicalName": "2021",
+      "nonCyclicalName": "20/21"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "away",
+      "clubId": "964",
+      "coachId": "34354",
+      "goalsTotal": 2,
+      "opponentGoalsTotal": 1,
+      "clubRank": null,
+      "tacticId": 4,
+      "points": 3
+     },
+     "opponent": {
+      "venue": "home",
+      "clubId": "932",
+      "coachId": "8142",
+      "goalsTotal": 1,
+      "opponentGoalsTotal": 2,
+      "clubRank": null,
+      "tacticId": 10,
+      "points": 0
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": 17,
+      "isCaptain": false,
+      "participationState": "played",
+      "positionId": 12,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 964,
+      "age": 22,
+      "ageDiscrepancyDays": 276,
+      "grade": null,
+      "pointsOnThePitch": 1
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": 0,
+      "goalsScoredTotalOfficial": null,
+      "assists": 0,
+      "assistsOfficial": null,
+      "scorer": 0,
+      "ownGoalsScored": 0,
+      "teamGoalsOnThePitch": 0,
+      "opponentGoalsOnThePitch": 0,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0,
+      "penaltiesReceived": null,
+      "penaltiesCaused": null,
+      "penaltiesCausedGoalsScored": null,
+      "scoringAttempts": null,
+      "scoringAttemptsOnGoal": null,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": null,
+      "scoringAttemptsBlocked": null,
+      "scoringGoalkeeperSaves": null
+     },
+     "cardStatistics": {
+      "yellowCardNet": 0,
+      "yellowCardGross": 0,
+      "fairPlayPoints": 0,
+      "redCardsRescinded": null
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": 9,
+      "isStarting": false,
+      "substitutedIn": {
+       "minute": 81,
+       "minuteOvertime": 0,
+       "actionId": 404
+      }
+     },
+     "duelStatistics": {
+      "tackles": null,
+      "tacklesWon": null,
+      "tacklesLost": null,
+      "tacklesWonRatio": null,
+      "foulsCommitted": null,
+      "foulsGained": null,
+      "offsides": null
+     },
+     "distributionStatistics": {
+      "passes": null,
+      "passesReached": null,
+      "passesFailed": null,
+      "passesReachedRatio": null,
+      "corners": null,
+      "throwIns": null,
+      "goalKicks": null
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "3335193",
+     "competitionId": "RU1",
+     "competitionTypeId": 1,
+     "competitionGroupId": "",
+     "refereeId": 0,
+     "stadiumId": 12233,
+     "seasonId": 2019,
+     "gameDay": 30,
+     "gameDuration": 90,
+     "isNationalGame": false,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "regularly_terminated",
+     "date": {
+      "dateTimeUTC": "2020-07-22T16:00:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2019,
+      "display": "19/20",
+      "cyclicalName": "2020",
+      "nonCyclicalName": "19/20"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "away",
+      "clubId": "41231",
+      "coachId": "12095",
+      "goalsTotal": 0,
+      "opponentGoalsTotal": 3,
+      "clubRank": 12,
+      "tacticId": 1,
+      "points": 0
+     },
+     "opponent": {
+      "venue": "home",
+      "clubId": "2696",
+      "coachId": "10358",
+      "goalsTotal": 3,
+      "opponentGoalsTotal": 0,
+      "clubRank": 15,
+      "tacticId": 1,
+      "points": 3
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": null,
+      "isCaptain": false,
+      "participationState": "not in squad",
+      "positionId": null,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 41231,
+      "age": 22,
+      "ageDiscrepancyDays": 260,
+      "grade": null,
+      "pointsOnThePitch": null
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": null,
+      "goalsScoredTotalOfficial": null,
+      "assists": null,
+      "assistsOfficial": null,
+      "scorer": null,
+      "ownGoalsScored": null,
+      "teamGoalsOnThePitch": null,
+      "opponentGoalsOnThePitch": null,
+      "penaltyShooterAttempts": null,
+      "penaltyShooterGoalsScored": null,
+      "penaltyShooterSaves": null,
+      "penaltyShooterMisses": null,
+      "penaltyGoalkeeperAttempts": null,
+      "penaltyGoalkeeperGoalsConceded": null,
+      "penaltyGoalkeeperSaves": null,
+      "penaltyGoalkeeperMisses": null,
+      "penaltiesReceived": null,
+      "penaltiesCaused": null,
+      "penaltiesCausedGoalsScored": null,
+      "scoringAttempts": null,
+      "scoringAttemptsOnGoal": null,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": null,
+      "scoringAttemptsBlocked": null,
+      "scoringGoalkeeperSaves": null
+     },
+     "cardStatistics": {
+      "yellowCardNet": null,
+      "yellowCardGross": null,
+      "fairPlayPoints": null,
+      "redCardsRescinded": null
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": null,
+      "isStarting": false
+     },
+     "duelStatistics": {
+      "tackles": null,
+      "tacklesWon": null,
+      "tacklesLost": null,
+      "tacklesWonRatio": null,
+      "foulsCommitted": null,
+      "foulsGained": null,
+      "offsides": null
+     },
+     "distributionStatistics": {
+      "passes": null,
+      "passesReached": null,
+      "passesFailed": null,
+      "passesReachedRatio": null,
+      "corners": null,
+      "throwIns": null,
+      "goalKicks": null
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "3258408",
+     "competitionId": "RUP",
+     "competitionTypeId": 8,
+     "competitionGroupId": "5R",
+     "refereeId": 5504,
+     "stadiumId": 1481,
+     "seasonId": 2019,
+     "gameDay": 5,
+     "gameDuration": 120,
+     "isNationalGame": false,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "penalty_shootout",
+     "date": {
+      "dateTimeUTC": "2019-09-25T15:30:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2019,
+      "display": "19/20",
+      "cyclicalName": "2020",
+      "nonCyclicalName": "19/20"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "away",
+      "clubId": "41231",
+      "coachId": "35091",
+      "goalsTotal": 4,
+      "opponentGoalsTotal": 5,
+      "clubRank": null,
+      "tacticId": 14,
+      "points": 0
+     },
+     "opponent": {
+      "venue": "home",
+      "clubId": "2374",
+      "coachId": "7977",
+      "goalsTotal": 5,
+      "opponentGoalsTotal": 4,
+      "clubRank": null,
+      "tacticId": 16,
+      "points": 3
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": 17,
+      "isCaptain": false,
+      "participationState": "played",
+      "positionId": 11,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 41231,
+      "age": 21,
+      "ageDiscrepancyDays": 324,
+      "grade": null,
+      "pointsOnThePitch": 1
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": 0,
+      "goalsScoredTotalOfficial": null,
+      "assists": 0,
+      "assistsOfficial": null,
+      "scorer": 0,
+      "ownGoalsScored": 0,
+      "teamGoalsOnThePitch": 0,
+      "opponentGoalsOnThePitch": 0,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0,
+      "penaltiesReceived": null,
+      "penaltiesCaused": null,
+      "penaltiesCausedGoalsScored": null,
+      "scoringAttempts": null,
+      "scoringAttemptsOnGoal": null,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": null,
+      "scoringAttemptsBlocked": null,
+      "scoringGoalkeeperSaves": null
+     },
+     "cardStatistics": {
+      "yellowCardNet": 0,
+      "yellowCardGross": 0,
+      "fairPlayPoints": 0,
+      "redCardsRescinded": null
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": 54,
+      "isStarting": false,
+      "substitutedIn": {
+       "minute": 66,
+       "minuteOvertime": 0,
+       "actionId": 401
+      }
+     },
+     "duelStatistics": {
+      "tackles": null,
+      "tacklesWon": null,
+      "tacklesLost": null,
+      "tacklesWonRatio": null,
+      "foulsCommitted": null,
+      "foulsGained": null,
+      "offsides": null
+     },
+     "distributionStatistics": {
+      "passes": null,
+      "passesReached": null,
+      "passesFailed": null,
+      "passesReachedRatio": null,
+      "corners": null,
+      "throwIns": null,
+      "goalKicks": null
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "3189462",
+     "competitionId": "RUSS",
+     "competitionTypeId": 9,
+     "competitionGroupId": "FF",
+     "refereeId": 3150,
+     "stadiumId": 771,
+     "seasonId": 2019,
+     "gameDay": 1,
+     "gameDuration": 90,
+     "isNationalGame": false,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "regularly_terminated",
+     "date": {
+      "dateTimeUTC": "2019-07-06T16:00:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2019,
+      "display": "19/20",
+      "cyclicalName": "2020",
+      "nonCyclicalName": "19/20"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "away",
+      "clubId": "964",
+      "coachId": "34354",
+      "goalsTotal": 2,
+      "opponentGoalsTotal": 3,
+      "clubRank": null,
+      "tacticId": 4,
+      "points": 0
+     },
+     "opponent": {
+      "venue": "home",
+      "clubId": "932",
+      "coachId": "580",
+      "goalsTotal": 3,
+      "opponentGoalsTotal": 2,
+      "clubRank": null,
+      "tacticId": 16,
+      "points": 3
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": 36,
+      "isCaptain": false,
+      "participationState": "in squad",
+      "positionId": null,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 964,
+      "age": 21,
+      "ageDiscrepancyDays": 243,
+      "grade": null,
+      "pointsOnThePitch": null
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": null,
+      "goalsScoredTotalOfficial": null,
+      "assists": null,
+      "assistsOfficial": null,
+      "scorer": null,
+      "ownGoalsScored": null,
+      "teamGoalsOnThePitch": null,
+      "opponentGoalsOnThePitch": null,
+      "penaltyShooterAttempts": null,
+      "penaltyShooterGoalsScored": null,
+      "penaltyShooterSaves": null,
+      "penaltyShooterMisses": null,
+      "penaltyGoalkeeperAttempts": null,
+      "penaltyGoalkeeperGoalsConceded": null,
+      "penaltyGoalkeeperSaves": null,
+      "penaltyGoalkeeperMisses": null,
+      "penaltiesReceived": null,
+      "penaltiesCaused": null,
+      "penaltiesCausedGoalsScored": null,
+      "scoringAttempts": null,
+      "scoringAttemptsOnGoal": null,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": null,
+      "scoringAttemptsBlocked": null,
+      "scoringGoalkeeperSaves": null
+     },
+     "cardStatistics": {
+      "yellowCardNet": null,
+      "yellowCardGross": null,
+      "fairPlayPoints": null,
+      "redCardsRescinded": null
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": null,
+      "isStarting": false
+     },
+     "duelStatistics": {
+      "tackles": null,
+      "tacklesWon": null,
+      "tacklesLost": null,
+      "tacklesWonRatio": null,
+      "foulsCommitted": null,
+      "foulsGained": null,
+      "offsides": null
+     },
+     "distributionStatistics": {
+      "passes": null,
+      "passesReached": null,
+      "passesFailed": null,
+      "passesReachedRatio": null,
+      "corners": null,
+      "throwIns": null,
+      "goalKicks": null
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "3181219",
+     "competitionId": "RU2",
+     "competitionTypeId": 2,
+     "competitionGroupId": "",
+     "refereeId": 14197,
+     "stadiumId": 8677,
+     "seasonId": 2018,
+     "gameDay": 38,
+     "gameDuration": 90,
+     "isNationalGame": false,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "regularly_terminated",
+     "date": {
+      "dateTimeUTC": "2019-05-25T12:00:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2018,
+      "display": "18/19",
+      "cyclicalName": "2019",
+      "nonCyclicalName": "18/19"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "away",
+      "clubId": "16950",
+      "coachId": "8542",
+      "goalsTotal": 1,
+      "opponentGoalsTotal": 2,
+      "clubRank": 19,
+      "tacticId": 14,
+      "points": 0
+     },
+     "opponent": {
+      "venue": "home",
+      "clubId": "41201",
+      "coachId": "17294",
+      "goalsTotal": 2,
+      "opponentGoalsTotal": 1,
+      "clubRank": 1,
+      "tacticId": 4,
+      "points": 3
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": null,
+      "isCaptain": false,
+      "participationState": "not in squad",
+      "positionId": null,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 964,
+      "age": 21,
+      "ageDiscrepancyDays": 201,
+      "grade": null,
+      "pointsOnThePitch": null
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": null,
+      "goalsScoredTotalOfficial": null,
+      "assists": null,
+      "assistsOfficial": null,
+      "scorer": null,
+      "ownGoalsScored": null,
+      "teamGoalsOnThePitch": null,
+      "opponentGoalsOnThePitch": null,
+      "penaltyShooterAttempts": null,
+      "penaltyShooterGoalsScored": null,
+      "penaltyShooterSaves": null,
+      "penaltyShooterMisses": null,
+      "penaltyGoalkeeperAttempts": null,
+      "penaltyGoalkeeperGoalsConceded": null,
+      "penaltyGoalkeeperSaves": null,
+      "penaltyGoalkeeperMisses": null,
+      "penaltiesReceived": null,
+      "penaltiesCaused": null,
+      "penaltiesCausedGoalsScored": null,
+      "scoringAttempts": null,
+      "scoringAttemptsOnGoal": null,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": null,
+      "scoringAttemptsBlocked": null,
+      "scoringGoalkeeperSaves": null
+     },
+     "cardStatistics": {
+      "yellowCardNet": null,
+      "yellowCardGross": null,
+      "fairPlayPoints": null,
+      "redCardsRescinded": null
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": null,
+      "isStarting": false
+     },
+     "duelStatistics": {
+      "tackles": null,
+      "tacklesWon": null,
+      "tacklesLost": null,
+      "tacklesWonRatio": null,
+      "foulsCommitted": null,
+      "foulsGained": null,
+      "offsides": null
+     },
+     "distributionStatistics": {
+      "passes": null,
+      "passesReached": null,
+      "passesFailed": null,
+      "passesReachedRatio": null,
+      "corners": null,
+      "throwIns": null,
+      "goalKicks": null
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "3096323",
+     "competitionId": "RUP",
+     "competitionTypeId": 8,
+     "competitionGroupId": "5R",
+     "refereeId": 14204,
+     "stadiumId": 913,
+     "seasonId": 2018,
+     "gameDay": 5,
+     "gameDuration": 120,
+     "isNationalGame": false,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "extra_time",
+     "date": {
+      "dateTimeUTC": "2018-09-26T16:00:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2018,
+      "display": "18/19",
+      "cyclicalName": "2019",
+      "nonCyclicalName": "18/19"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "home",
+      "clubId": "3719",
+      "coachId": "41333",
+      "goalsTotal": 0,
+      "opponentGoalsTotal": 1,
+      "clubRank": null,
+      "tacticId": 16,
+      "points": 0
+     },
+     "opponent": {
+      "venue": "away",
+      "clubId": "2698",
+      "coachId": "2754",
+      "goalsTotal": 1,
+      "opponentGoalsTotal": 0,
+      "clubRank": null,
+      "tacticId": 15,
+      "points": 3
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": 9,
+      "isCaptain": false,
+      "participationState": "played",
+      "positionId": 11,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 3719,
+      "age": 20,
+      "ageDiscrepancyDays": 325,
+      "grade": null,
+      "pointsOnThePitch": 0
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": 0,
+      "goalsScoredTotalOfficial": null,
+      "assists": 0,
+      "assistsOfficial": null,
+      "scorer": 0,
+      "ownGoalsScored": 0,
+      "teamGoalsOnThePitch": 0,
+      "opponentGoalsOnThePitch": 1,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0,
+      "penaltiesReceived": null,
+      "penaltiesCaused": null,
+      "penaltiesCausedGoalsScored": null,
+      "scoringAttempts": null,
+      "scoringAttemptsOnGoal": null,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": null,
+      "scoringAttemptsBlocked": null,
+      "scoringGoalkeeperSaves": null
+     },
+     "cardStatistics": {
+      "yellowCardNet": 0,
+      "yellowCardGross": 0,
+      "fairPlayPoints": 0,
+      "redCardsRescinded": null
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": 102,
+      "isStarting": true,
+      "substitutedOut": {
+       "minute": 102,
+       "minuteOvertime": 0,
+       "actionId": 401
+      }
+     },
+     "duelStatistics": {
+      "tackles": null,
+      "tacklesWon": null,
+      "tacklesLost": null,
+      "tacklesWonRatio": null,
+      "foulsCommitted": null,
+      "foulsGained": null,
+      "offsides": null
+     },
+     "distributionStatistics": {
+      "passes": null,
+      "passesReached": null,
+      "passesFailed": null,
+      "passesReachedRatio": null,
+      "corners": null,
+      "throwIns": null,
+      "goalKicks": null
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "2990733",
+     "competitionId": "RU2",
+     "competitionTypeId": 2,
+     "competitionGroupId": "",
+     "refereeId": 7150,
+     "stadiumId": 11687,
+     "seasonId": 2017,
+     "gameDay": 38,
+     "gameDuration": 90,
+     "isNationalGame": false,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "regularly_terminated",
+     "date": {
+      "dateTimeUTC": "2018-05-12T11:00:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2017,
+      "display": "17/18",
+      "cyclicalName": "2018",
+      "nonCyclicalName": "17/18"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "away",
+      "clubId": "3719",
+      "coachId": "4346",
+      "goalsTotal": 1,
+      "opponentGoalsTotal": 3,
+      "clubRank": 12,
+      "tacticId": 19,
+      "points": 0
+     },
+     "opponent": {
+      "venue": "home",
+      "clubId": "3609",
+      "coachId": "4347",
+      "goalsTotal": 3,
+      "opponentGoalsTotal": 1,
+      "clubRank": 18,
+      "tacticId": 11,
+      "points": 3
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": null,
+      "isCaptain": false,
+      "participationState": "not in squad",
+      "positionId": null,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 3719,
+      "age": 20,
+      "ageDiscrepancyDays": 188,
+      "grade": null,
+      "pointsOnThePitch": null
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": null,
+      "goalsScoredTotalOfficial": null,
+      "assists": null,
+      "assistsOfficial": null,
+      "scorer": null,
+      "ownGoalsScored": null,
+      "teamGoalsOnThePitch": null,
+      "opponentGoalsOnThePitch": null,
+      "penaltyShooterAttempts": null,
+      "penaltyShooterGoalsScored": null,
+      "penaltyShooterSaves": null,
+      "penaltyShooterMisses": null,
+      "penaltyGoalkeeperAttempts": null,
+      "penaltyGoalkeeperGoalsConceded": null,
+      "penaltyGoalkeeperSaves": null,
+      "penaltyGoalkeeperMisses": null,
+      "penaltiesReceived": null,
+      "penaltiesCaused": null,
+      "penaltiesCausedGoalsScored": null,
+      "scoringAttempts": null,
+      "scoringAttemptsOnGoal": null,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": null,
+      "scoringAttemptsBlocked": null,
+      "scoringGoalkeeperSaves": null
+     },
+     "cardStatistics": {
+      "yellowCardNet": null,
+      "yellowCardGross": null,
+      "fairPlayPoints": null,
+      "redCardsRescinded": null
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": null,
+      "isStarting": false
+     },
+     "duelStatistics": {
+      "tackles": null,
+      "tacklesWon": null,
+      "tacklesLost": null,
+      "tacklesWonRatio": null,
+      "foulsCommitted": null,
+      "foulsGained": null,
+      "offsides": null
+     },
+     "distributionStatistics": {
+      "passes": null,
+      "passesReached": null,
+      "passesFailed": null,
+      "passesReachedRatio": null,
+      "corners": null,
+      "throwIns": null,
+      "goalKicks": null
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "2906687",
+     "competitionId": "RUP",
+     "competitionTypeId": 8,
+     "competitionGroupId": "4R",
+     "refereeId": 10511,
+     "stadiumId": 1870,
+     "seasonId": 2017,
+     "gameDay": 4,
+     "gameDuration": 90,
+     "isNationalGame": false,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "regularly_terminated",
+     "date": {
+      "dateTimeUTC": "2017-08-23T16:00:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2017,
+      "display": "17/18",
+      "cyclicalName": "2018",
+      "nonCyclicalName": "17/18"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "home",
+      "clubId": "3719",
+      "coachId": "52246",
+      "goalsTotal": 0,
+      "opponentGoalsTotal": 2,
+      "clubRank": null,
+      "tacticId": 15,
+      "points": 0
+     },
+     "opponent": {
+      "venue": "away",
+      "clubId": "2374",
+      "coachId": "7977",
+      "goalsTotal": 2,
+      "opponentGoalsTotal": 0,
+      "clubRank": null,
+      "tacticId": 4,
+      "points": 3
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": 9,
+      "isCaptain": false,
+      "participationState": "played",
+      "positionId": 9,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 3719,
+      "age": 19,
+      "ageDiscrepancyDays": 291,
+      "grade": null,
+      "pointsOnThePitch": 0
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": 0,
+      "goalsScoredTotalOfficial": null,
+      "assists": 0,
+      "assistsOfficial": null,
+      "scorer": 0,
+      "ownGoalsScored": 0,
+      "teamGoalsOnThePitch": 0,
+      "opponentGoalsOnThePitch": 1,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0,
+      "penaltiesReceived": null,
+      "penaltiesCaused": null,
+      "penaltiesCausedGoalsScored": null,
+      "scoringAttempts": null,
+      "scoringAttemptsOnGoal": null,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": null,
+      "scoringAttemptsBlocked": null,
+      "scoringGoalkeeperSaves": null
+     },
+     "cardStatistics": {
+      "yellowCardNet": 0,
+      "yellowCardGross": 0,
+      "fairPlayPoints": 0,
+      "redCardsRescinded": null
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": 65,
+      "isStarting": true,
+      "substitutedOut": {
+       "minute": 65,
+       "minuteOvertime": 0,
+       "actionId": 0
+      }
+     },
+     "duelStatistics": {
+      "tackles": null,
+      "tacklesWon": null,
+      "tacklesLost": null,
+      "tacklesWonRatio": null,
+      "foulsCommitted": null,
+      "foulsGained": null,
+      "offsides": null
+     },
+     "distributionStatistics": {
+      "passes": null,
+      "passesReached": null,
+      "passesFailed": null,
+      "passesReachedRatio": null,
+      "corners": null,
+      "throwIns": null,
+      "goalKicks": null
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "2807419",
+     "competitionId": "RU2",
+     "competitionTypeId": 2,
+     "competitionGroupId": "",
+     "refereeId": 14197,
+     "stadiumId": 913,
+     "seasonId": 2016,
+     "gameDay": 38,
+     "gameDuration": 90,
+     "isNationalGame": false,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "regularly_terminated",
+     "date": {
+      "dateTimeUTC": "2017-05-20T13:00:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2016,
+      "display": "16/17",
+      "cyclicalName": "2017",
+      "nonCyclicalName": "16/17"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "home",
+      "clubId": "3719",
+      "coachId": "5059",
+      "goalsTotal": 1,
+      "opponentGoalsTotal": 3,
+      "clubRank": 11,
+      "tacticId": 21,
+      "points": 0
+     },
+     "opponent": {
+      "venue": "away",
+      "clubId": "40426",
+      "coachId": "29299",
+      "goalsTotal": 3,
+      "opponentGoalsTotal": 1,
+      "clubRank": 2,
+      "tacticId": 4,
+      "points": 3
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": null,
+      "isCaptain": false,
+      "participationState": "not in squad",
+      "positionId": null,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 3719,
+      "age": 19,
+      "ageDiscrepancyDays": 196,
+      "grade": null,
+      "pointsOnThePitch": null
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": null,
+      "goalsScoredTotalOfficial": null,
+      "assists": null,
+      "assistsOfficial": null,
+      "scorer": null,
+      "ownGoalsScored": null,
+      "teamGoalsOnThePitch": null,
+      "opponentGoalsOnThePitch": null,
+      "penaltyShooterAttempts": null,
+      "penaltyShooterGoalsScored": null,
+      "penaltyShooterSaves": null,
+      "penaltyShooterMisses": null,
+      "penaltyGoalkeeperAttempts": null,
+      "penaltyGoalkeeperGoalsConceded": null,
+      "penaltyGoalkeeperSaves": null,
+      "penaltyGoalkeeperMisses": null,
+      "penaltiesReceived": null,
+      "penaltiesCaused": null,
+      "penaltiesCausedGoalsScored": null,
+      "scoringAttempts": null,
+      "scoringAttemptsOnGoal": null,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": null,
+      "scoringAttemptsBlocked": null,
+      "scoringGoalkeeperSaves": null
+     },
+     "cardStatistics": {
+      "yellowCardNet": null,
+      "yellowCardGross": null,
+      "fairPlayPoints": null,
+      "redCardsRescinded": null
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": null,
+      "isStarting": false
+     },
+     "duelStatistics": {
+      "tackles": null,
+      "tacklesWon": null,
+      "tacklesLost": null,
+      "tacklesWonRatio": null,
+      "foulsCommitted": null,
+      "foulsGained": null,
+      "offsides": null
+     },
+     "distributionStatistics": {
+      "passes": null,
+      "passesReached": null,
+      "passesFailed": null,
+      "passesReachedRatio": null,
+      "corners": null,
+      "throwIns": null,
+      "goalKicks": null
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "2758998",
+     "competitionId": "RUP",
+     "competitionTypeId": 8,
+     "competitionGroupId": "5R",
+     "refereeId": 2167,
+     "stadiumId": 2710,
+     "seasonId": 2016,
+     "gameDay": 5,
+     "gameDuration": 90,
+     "isNationalGame": false,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "regularly_terminated",
+     "date": {
+      "dateTimeUTC": "2016-09-21T17:00:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2016,
+      "display": "16/17",
+      "cyclicalName": "2017",
+      "nonCyclicalName": "16/17"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "home",
+      "clubId": "3719",
+      "coachId": "5059",
+      "goalsTotal": 0,
+      "opponentGoalsTotal": 3,
+      "clubRank": null,
+      "tacticId": 15,
+      "points": 0
+     },
+     "opponent": {
+      "venue": "away",
+      "clubId": "932",
+      "coachId": "580",
+      "goalsTotal": 3,
+      "opponentGoalsTotal": 0,
+      "clubRank": null,
+      "tacticId": 16,
+      "points": 3
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": 9,
+      "isCaptain": false,
+      "participationState": "played",
+      "positionId": 11,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 3719,
+      "age": 18,
+      "ageDiscrepancyDays": 321,
+      "grade": null,
+      "pointsOnThePitch": 0
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": 0,
+      "goalsScoredTotalOfficial": null,
+      "assists": 0,
+      "assistsOfficial": null,
+      "scorer": 0,
+      "ownGoalsScored": 0,
+      "teamGoalsOnThePitch": 0,
+      "opponentGoalsOnThePitch": 1,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0,
+      "penaltiesReceived": null,
+      "penaltiesCaused": null,
+      "penaltiesCausedGoalsScored": null,
+      "scoringAttempts": null,
+      "scoringAttemptsOnGoal": null,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": null,
+      "scoringAttemptsBlocked": null,
+      "scoringGoalkeeperSaves": null
+     },
+     "cardStatistics": {
+      "yellowCardNet": 0,
+      "yellowCardGross": 0,
+      "fairPlayPoints": 0,
+      "redCardsRescinded": null
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": 31,
+      "isStarting": false,
+      "substitutedIn": {
+       "minute": 59,
+       "minuteOvertime": 0,
+       "actionId": 401
+      }
+     },
+     "duelStatistics": {
+      "tackles": null,
+      "tacklesWon": null,
+      "tacklesLost": null,
+      "tacklesWonRatio": null,
+      "foulsCommitted": null,
+      "foulsGained": null,
+      "offsides": null
+     },
+     "distributionStatistics": {
+      "passes": null,
+      "passesReached": null,
+      "passesFailed": null,
+      "passesReachedRatio": null,
+      "corners": null,
+      "throwIns": null,
+      "goalKicks": null
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "3279104",
+     "competitionId": "RPLW",
+     "competitionTypeId": 3,
+     "competitionGroupId": "",
+     "refereeId": 26576,
+     "stadiumId": 8732,
+     "seasonId": 2015,
+     "gameDay": 30,
+     "gameDuration": 90,
+     "isNationalGame": false,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "regularly_terminated",
+     "date": {
+      "dateTimeUTC": "2016-05-31T15:00:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2015,
+      "display": "15/16",
+      "cyclicalName": "2016",
+      "nonCyclicalName": "15/16"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "away",
+      "clubId": "37029",
+      "coachId": "30888",
+      "goalsTotal": 1,
+      "opponentGoalsTotal": 3,
+      "clubRank": 2,
+      "tacticId": 16,
+      "points": 0
+     },
+     "opponent": {
+      "venue": "home",
+      "clubId": "40896",
+      "coachId": "28856",
+      "goalsTotal": 3,
+      "opponentGoalsTotal": 1,
+      "clubRank": 9,
+      "tacticId": 12,
+      "points": 3
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": null,
+      "isCaptain": false,
+      "participationState": "not in squad",
+      "positionId": null,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 37029,
+      "age": 18,
+      "ageDiscrepancyDays": 208,
+      "grade": null,
+      "pointsOnThePitch": null
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": null,
+      "goalsScoredTotalOfficial": null,
+      "assists": null,
+      "assistsOfficial": null,
+      "scorer": null,
+      "ownGoalsScored": null,
+      "teamGoalsOnThePitch": null,
+      "opponentGoalsOnThePitch": null,
+      "penaltyShooterAttempts": null,
+      "penaltyShooterGoalsScored": null,
+      "penaltyShooterSaves": null,
+      "penaltyShooterMisses": null,
+      "penaltyGoalkeeperAttempts": null,
+      "penaltyGoalkeeperGoalsConceded": null,
+      "penaltyGoalkeeperSaves": null,
+      "penaltyGoalkeeperMisses": null,
+      "penaltiesReceived": null,
+      "penaltiesCaused": null,
+      "penaltiesCausedGoalsScored": null,
+      "scoringAttempts": null,
+      "scoringAttemptsOnGoal": null,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": null,
+      "scoringAttemptsBlocked": null,
+      "scoringGoalkeeperSaves": null
+     },
+     "cardStatistics": {
+      "yellowCardNet": null,
+      "yellowCardGross": null,
+      "fairPlayPoints": null,
+      "redCardsRescinded": null
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": null,
+      "isStarting": false
+     },
+     "duelStatistics": {
+      "tackles": null,
+      "tacklesWon": null,
+      "tacklesLost": null,
+      "tacklesWonRatio": null,
+      "foulsCommitted": null,
+      "foulsGained": null,
+      "offsides": null
+     },
+     "distributionStatistics": {
+      "passes": null,
+      "passesReached": null,
+      "passesFailed": null,
+      "passesReachedRatio": null,
+      "corners": null,
+      "throwIns": null,
+      "goalKicks": null
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "3344493",
+     "competitionId": "RUJL",
+     "competitionTypeId": 7,
+     "competitionGroupId": "",
+     "refereeId": 19581,
+     "stadiumId": 14927,
+     "seasonId": 2015,
+     "gameDay": 18,
+     "gameDuration": 90,
+     "isNationalGame": false,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "regularly_terminated",
+     "date": {
+      "dateTimeUTC": "2015-12-03T11:00:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2015,
+      "display": "15/16",
+      "cyclicalName": "2016",
+      "nonCyclicalName": "15/16"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "home",
+      "clubId": "11749",
+      "coachId": "54686",
+      "goalsTotal": 4,
+      "opponentGoalsTotal": 1,
+      "clubRank": 7,
+      "tacticId": 1,
+      "points": 3
+     },
+     "opponent": {
+      "venue": "away",
+      "clubId": "28085",
+      "coachId": "11152",
+      "goalsTotal": 1,
+      "opponentGoalsTotal": 4,
+      "clubRank": 14,
+      "tacticId": 1,
+      "points": 0
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": 93,
+      "isCaptain": false,
+      "participationState": "played",
+      "positionId": 0,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 932,
+      "age": 18,
+      "ageDiscrepancyDays": 28,
+      "grade": null,
+      "pointsOnThePitch": 3
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": 0,
+      "goalsScoredTotalOfficial": null,
+      "assists": 0,
+      "assistsOfficial": null,
+      "scorer": 0,
+      "ownGoalsScored": 0,
+      "teamGoalsOnThePitch": 4,
+      "opponentGoalsOnThePitch": 1,
+      "penaltyShooterAttempts": 0,
+      "penaltyShooterGoalsScored": 0,
+      "penaltyShooterSaves": 0,
+      "penaltyShooterMisses": 0,
+      "penaltyGoalkeeperAttempts": 0,
+      "penaltyGoalkeeperGoalsConceded": 0,
+      "penaltyGoalkeeperSaves": 0,
+      "penaltyGoalkeeperMisses": 0,
+      "penaltiesReceived": null,
+      "penaltiesCaused": null,
+      "penaltiesCausedGoalsScored": null,
+      "scoringAttempts": null,
+      "scoringAttemptsOnGoal": null,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": null,
+      "scoringAttemptsBlocked": null,
+      "scoringGoalkeeperSaves": null
+     },
+     "cardStatistics": {
+      "yellowCardNet": 0,
+      "yellowCardGross": 0,
+      "fairPlayPoints": 0,
+      "redCardsRescinded": null
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": 90,
+      "isStarting": true
+     },
+     "duelStatistics": {
+      "tackles": null,
+      "tacklesWon": null,
+      "tacklesLost": null,
+      "tacklesWonRatio": null,
+      "foulsCommitted": null,
+      "foulsGained": null,
+      "offsides": null
+     },
+     "distributionStatistics": {
+      "passes": null,
+      "passesReached": null,
+      "passesFailed": null,
+      "passesReachedRatio": null,
+      "corners": null,
+      "throwIns": null,
+      "goalKicks": null
+     }
+    }
+   },
+   {
+    "gameInformation": {
+     "gameId": "3360508",
+     "competitionId": "RUJL",
+     "competitionTypeId": 7,
+     "competitionGroupId": "",
+     "refereeId": 18724,
+     "stadiumId": 2969,
+     "seasonId": 2014,
+     "gameDay": 30,
+     "gameDuration": 90,
+     "isNationalGame": false,
+     "isLiveGame": false,
+     "isGameReportCreated": true,
+     "isGamePostponed": false,
+     "gameState": "regularly_terminated",
+     "date": {
+      "dateTimeUTC": "2015-05-29T10:00:00+00:00",
+      "isTimeDefined": true
+     },
+     "season": {
+      "id": 2014,
+      "display": "14/15",
+      "cyclicalName": "2015",
+      "nonCyclicalName": "14/15"
+     }
+    },
+    "clubsInformation": {
+     "club": {
+      "venue": "away",
+      "clubId": "11749",
+      "coachId": "54686",
+      "goalsTotal": 1,
+      "opponentGoalsTotal": 1,
+      "clubRank": 6,
+      "tacticId": 1,
+      "points": 1
+     },
+     "opponent": {
+      "venue": "home",
+      "clubId": "6082",
+      "coachId": "36770",
+      "goalsTotal": 1,
+      "opponentGoalsTotal": 1,
+      "clubRank": 8,
+      "tacticId": 1,
+      "points": 1
+     }
+    },
+    "statistics": {
+     "generalStatistics": {
+      "shirtNumber": 93,
+      "isCaptain": false,
+      "participationState": "in squad",
+      "positionId": null,
+      "injuryId": 0,
+      "absenceId": 0,
+      "primaryClubId": 932,
+      "age": 17,
+      "ageDiscrepancyDays": 205,
+      "grade": null,
+      "pointsOnThePitch": null
+     },
+     "goalStatistics": {
+      "goalsScoredTotal": null,
+      "goalsScoredTotalOfficial": null,
+      "assists": null,
+      "assistsOfficial": null,
+      "scorer": null,
+      "ownGoalsScored": null,
+      "teamGoalsOnThePitch": null,
+      "opponentGoalsOnThePitch": null,
+      "penaltyShooterAttempts": null,
+      "penaltyShooterGoalsScored": null,
+      "penaltyShooterSaves": null,
+      "penaltyShooterMisses": null,
+      "penaltyGoalkeeperAttempts": null,
+      "penaltyGoalkeeperGoalsConceded": null,
+      "penaltyGoalkeeperSaves": null,
+      "penaltyGoalkeeperMisses": null,
+      "penaltiesReceived": null,
+      "penaltiesCaused": null,
+      "penaltiesCausedGoalsScored": null,
+      "scoringAttempts": null,
+      "scoringAttemptsOnGoal": null,
+      "scoringAttemptsOnGoalRatio": null,
+      "scoringAttemptsOffGoal": null,
+      "scoringAttemptsBlocked": null,
+      "scoringGoalkeeperSaves": null
+     },
+     "cardStatistics": {
+      "yellowCardNet": null,
+      "yellowCardGross": null,
+      "fairPlayPoints": null,
+      "redCardsRescinded": null
+     },
+     "playingTimeStatistics": {
+      "playedMinutes": null,
+      "isStarting": false
+     },
+     "duelStatistics": {
+      "tackles": null,
+      "tacklesWon": null,
+      "tacklesLost": null,
+      "tacklesWonRatio": null,
+      "foulsCommitted": null,
+      "foulsGained": null,
+      "offsides": null
+     },
+     "distributionStatistics": {
+      "passes": null,
+      "passesReached": null,
+      "passesFailed": null,
+      "passesReachedRatio": null,
+      "corners": null,
+      "throwIns": null,
+      "goalKicks": null
+     }
+    }
+   }
+  ],
+  "clubIds": [
+   "16",
+   "121",
+   "150",
+   "232",
+   "398",
+   "496",
+   "506",
+   "631",
+   "932",
+   "964",
+   "1083",
+   "1124",
+   "1186",
+   "2282",
+   "2374",
+   "2410",
+   "2439",
+   "2696",
+   "2698",
+   "2741",
+   "3243",
+   "3381",
+   "3382",
+   "3394",
+   "3434",
+   "3436",
+   "3438",
+   "3442",
+   "3443",
+   "3444",
+   "3448",
+   "3450",
+   "3468",
+   "3503",
+   "3556",
+   "3557",
+   "3560",
+   "3563",
+   "3582",
+   "3587",
+   "3588",
+   "3609",
+   "3668",
+   "3690",
+   "3691",
+   "3703",
+   "3714",
+   "3719",
+   "3725",
+   "3729",
+   "3733",
+   "3808",
+   "3834",
+   "3956",
+   "4057",
+   "6082",
+   "6090",
+   "6189",
+   "6407",
+   "6432",
+   "8778",
+   "8835",
+   "8987",
+   "10688",
+   "11122",
+   "11125",
+   "11126",
+   "11127",
+   "11740",
+   "11741",
+   "11746",
+   "11747",
+   "11748",
+   "11749",
+   "11750",
+   "11755",
+   "12054",
+   "12065",
+   "12069",
+   "12439",
+   "12444",
+   "13065",
+   "13674",
+   "13975",
+   "14162",
+   "14175",
+   "14233",
+   "14589",
+   "14590",
+   "15737",
+   "16202",
+   "16704",
+   "16950",
+   "19958",
+   "22444",
+   "22810",
+   "22881",
+   "26567",
+   "28085",
+   "28095",
+   "36903",
+   "37029",
+   "40280",
+   "40426",
+   "40896",
+   "41194",
+   "41201",
+   "41231",
+   "43502",
+   "44753",
+   "45035",
+   "45036",
+   "49702",
+   "59024",
+   "71985",
+   "75231",
+   "75506"
+  ],
+  "coachIds": [
+   "535",
+   "543",
+   "580",
+   "719",
+   "1519",
+   "1558",
+   "2073",
+   "2332",
+   "2451",
+   "2472",
+   "2503",
+   "2612",
+   "2711",
+   "2730",
+   "2754",
+   "2763",
+   "2835",
+   "3632",
+   "4328",
+   "4346",
+   "4347",
+   "4348",
+   "4481",
+   "4695",
+   "4955",
+   "5059",
+   "5071",
+   "5145",
+   "5232",
+   "5372",
+   "5528",
+   "5627",
+   "5638",
+   "6615",
+   "6648",
+   "6907",
+   "7057",
+   "7471",
+   "7484",
+   "7671",
+   "7927",
+   "7977",
+   "7980",
+   "7983",
+   "7989",
+   "8142",
+   "8275",
+   "8369",
+   "8542",
+   "9570",
+   "9610",
+   "9879",
+   "10084",
+   "10358",
+   "10359",
+   "10370",
+   "10440",
+   "10810",
+   "11152",
+   "11692",
+   "11754",
+   "12095",
+   "12230",
+   "12602",
+   "13118",
+   "13157",
+   "14531",
+   "14733",
+   "14906",
+   "16090",
+   "16220",
+   "17069",
+   "17294",
+   "17306",
+   "17346",
+   "17427",
+   "17565",
+   "17687",
+   "17734",
+   "17918",
+   "18537",
+   "19564",
+   "19838",
+   "20088",
+   "20098",
+   "20101",
+   "20104",
+   "21624",
+   "22734",
+   "23592",
+   "23593",
+   "23882",
+   "24258",
+   "24544",
+   "24876",
+   "25573",
+   "25929",
+   "25981",
+   "26691",
+   "28282",
+   "28856",
+   "29299",
+   "29380",
+   "29578",
+   "29893",
+   "30342",
+   "30407",
+   "30433",
+   "30857",
+   "30888",
+   "31196",
+   "31656",
+   "31678",
+   "31876",
+   "33243",
+   "33297",
+   "34042",
+   "34354",
+   "34719",
+   "35088",
+   "35091",
+   "35256",
+   "35560",
+   "35662",
+   "35944",
+   "36710",
+   "36770",
+   "36961",
+   "37024",
+   "37745",
+   "38291",
+   "38740",
+   "38759",
+   "40201",
+   "40527",
+   "40789",
+   "40914",
+   "41090",
+   "41333",
+   "41750",
+   "42046",
+   "42276",
+   "42278",
+   "42289",
+   "42316",
+   "44094",
+   "45626",
+   "45783",
+   "46373",
+   "46716",
+   "46807",
+   "48043",
+   "48313",
+   "49366",
+   "49599",
+   "51491",
+   "51493",
+   "51515",
+   "52246",
+   "52416",
+   "53632",
+   "53943",
+   "54686",
+   "54792",
+   "55500",
+   "56828",
+   "58161",
+   "58581",
+   "59726",
+   "59776",
+   "59887",
+   "59994",
+   "60672",
+   "61271",
+   "61441",
+   "61895",
+   "62001",
+   "62399",
+   "63917",
+   "64903",
+   "65557",
+   "65660",
+   "65851",
+   "66142",
+   "66170",
+   "66400",
+   "71972",
+   "73322",
+   "75175",
+   "77946",
+   "79003",
+   "84770",
+   "87314",
+   "87404",
+   "104904",
+   "119880"
+  ],
+  "competitionIds": [
+   "CL",
+   "EL",
+   "EURO",
+   "FS",
+   "POWM",
+   "RPLW",
+   "RU1",
+   "RU2",
+   "RUJL",
+   "RUP",
+   "RUSS",
+   "UNLB",
+   "WMQ6"
+  ],
+  "gameIds": [
+   "2709603",
+   "2709615",
+   "2709625",
+   "2719972",
+   "2719991",
+   "2719997",
+   "2720011",
+   "2720018",
+   "2720029",
+   "2720040",
+   "2731527",
+   "2731537",
+   "2731549",
+   "2731553",
+   "2731560",
+   "2731569",
+   "2731582",
+   "2731593",
+   "2731612",
+   "2731620",
+   "2731621",
+   "2731636",
+   "2731645",
+   "2734356",
+   "2734372",
+   "2752900",
+   "2758998",
+   "2798444",
+   "2798453",
+   "2798463",
+   "2798475",
+   "2798482",
+   "2798488",
+   "2798501",
+   "2807371",
+   "2807381",
+   "2807393",
+   "2807401",
+   "2807415",
+   "2807419",
+   "2864561",
+   "2865164",
+   "2865169",
+   "2865178",
+   "2893656",
+   "2893667",
+   "2893688",
+   "2893713",
+   "2893745",
+   "2893769",
+   "2893779",
+   "2894032",
+   "2894054",
+   "2894084",
+   "2906687",
+   "2925566",
+   "2925572",
+   "2925584",
+   "2925592",
+   "2925604",
+   "2925611",
+   "2925627",
+   "2925630",
+   "2925640",
+   "2925649",
+   "2925668",
+   "2975902",
+   "2975915",
+   "2990574",
+   "2990586",
+   "2990604",
+   "2990615",
+   "2990631",
+   "2990656",
+   "2990679",
+   "2990694",
+   "2990712",
+   "2990720",
+   "2990733",
+   "3047412",
+   "3077610",
+   "3083047",
+   "3086875",
+   "3088872",
+   "3089876",
+   "3090120",
+   "3093397",
+   "3093406",
+   "3093410",
+   "3096323",
+   "3100111",
+   "3102757",
+   "3107520",
+   "3108426",
+   "3110081",
+   "3111058",
+   "3115533",
+   "3117255",
+   "3119401",
+   "3119408",
+   "3120880",
+   "3122092",
+   "3122101",
+   "3122111",
+   "3122121",
+   "3137510",
+   "3137520",
+   "3137531",
+   "3137541",
+   "3171577",
+   "3172136",
+   "3175947",
+   "3175957",
+   "3178352",
+   "3180071",
+   "3181185",
+   "3181200",
+   "3181208",
+   "3181219",
+   "3189462",
+   "3194946",
+   "3194958",
+   "3224710",
+   "3224728",
+   "3234731",
+   "3234734",
+   "3234749",
+   "3234752",
+   "3254693",
+   "3256802",
+   "3256812",
+   "3258408",
+   "3264426",
+   "3264946",
+   "3266906",
+   "3266926",
+   "3274531",
+   "3278925",
+   "3278941",
+   "3278950",
+   "3278954",
+   "3279064",
+   "3279072",
+   "3279076",
+   "3279084",
+   "3279089",
+   "3279097",
+   "3279104",
+   "3280166",
+   "3280859",
+   "3280870",
+   "3280878",
+   "3287201",
+   "3287209",
+   "3287218",
+   "3298464",
+   "3298474",
+   "3298478",
+   "3330655",
+   "3330663",
+   "3330672",
+   "3330682",
+   "3334634",
+   "3334897",
+   "3335156",
+   "3335171",
+   "3335174",
+   "3335181",
+   "3335193",
+   "3344254",
+   "3344277",
+   "3344290",
+   "3344302",
+   "3344324",
+   "3344333",
+   "3344348",
+   "3344358",
+   "3344373",
+   "3344389",
+   "3344406",
+   "3344414",
+   "3344430",
+   "3344433",
+   "3344455",
+   "3344467",
+   "3344480",
+   "3344493",
+   "3360396",
+   "3360401",
+   "3360413",
+   "3360417",
+   "3360426",
+   "3360436",
+   "3360440",
+   "3360459",
+   "3360466",
+   "3360478",
+   "3360487",
+   "3360498",
+   "3360508",
+   "3393956",
+   "3393957",
+   "3403408",
+   "3406883",
+   "3406924",
+   "3409225",
+   "3409238",
+   "3409250",
+   "3409255",
+   "3431110",
+   "3431125",
+   "3434736",
+   "3434746",
+   "3461720",
+   "3461743",
+   "3461759",
+   "3461776",
+   "3461787",
+   "3461818",
+   "3464135",
+   "3464267",
+   "3464279",
+   "3464288",
+   "3464292",
+   "3464302",
+   "3464306",
+   "3464321",
+   "3485739",
+   "3490911",
+   "3495179",
+   "3495195",
+   "3495228",
+   "3495255",
+   "3495270",
+   "3495393",
+   "3495475",
+   "3495500",
+   "3495642",
+   "3495783",
+   "3497451",
+   "3522822",
+   "3522854",
+   "3522861",
+   "3522867",
+   "3522879",
+   "3522884",
+   "3522891",
+   "3522900",
+   "3522914",
+   "3522920",
+   "3551695",
+   "3551696",
+   "3582985",
+   "3589522",
+   "3596976",
+   "3602414",
+   "3602433",
+   "3602443",
+   "3602446",
+   "3602454",
+   "3602466",
+   "3602470",
+   "3602478",
+   "3602491",
+   "3602494",
+   "3602502",
+   "3602517",
+   "3602518",
+   "3602526",
+   "3602534",
+   "3602546",
+   "3602550",
+   "3602558",
+   "3602567",
+   "3602574",
+   "3602587",
+   "3602592",
+   "3602598",
+   "3602607",
+   "3602614",
+   "3602622",
+   "3602630",
+   "3602644",
+   "3651035",
+   "3651075",
+   "3651092",
+   "3651100",
+   "3651115",
+   "3651140",
+   "3693536",
+   "3704055",
+   "3714016",
+   "3714024",
+   "3762378",
+   "3825563",
+   "3842706",
+   "3842707",
+   "3845631",
+   "3845639",
+   "3845647",
+   "3889526",
+   "3889532",
+   "3889542",
+   "3889550",
+   "3889555",
+   "3909908",
+   "3909915",
+   "3909922",
+   "3909931",
+   "3909938",
+   "3909945",
+   "3919951",
+   "3925892",
+   "3925897",
+   "3925930",
+   "3925949",
+   "3925967",
+   "3925971",
+   "3925979",
+   "3951355",
+   "3955252",
+   "3962634",
+   "3971177",
+   "3999365",
+   "3999375",
+   "4032325",
+   "4034843",
+   "4038185",
+   "4042704",
+   "4042715",
+   "4055287",
+   "4056157",
+   "4056339",
+   "4056351",
+   "4056356",
+   "4056364",
+   "4056373",
+   "4056379",
+   "4092055",
+   "4092058",
+   "4092065",
+   "4092073",
+   "4092081",
+   "4093041",
+   "4126937",
+   "4126945",
+   "4126954",
+   "4126961",
+   "4126969",
+   "4126977",
+   "4163133",
+   "4167382",
+   "4174429",
+   "4174435",
+   "4174440",
+   "4191137",
+   "4194385",
+   "4198832",
+   "4202291",
+   "4216883",
+   "4216888",
+   "4216898",
+   "4222128",
+   "4222135",
+   "4225540",
+   "4225552",
+   "4225558",
+   "4227009",
+   "4242330",
+   "4272770",
+   "4272772",
+   "4272781",
+   "4272788",
+   "4272797",
+   "4272804",
+   "4272815",
+   "4272825",
+   "4272828",
+   "4272840",
+   "4272844",
+   "4279694",
+   "4312000",
+   "4312001",
+   "4317050",
+   "4331063",
+   "4331066",
+   "4346131",
+   "4358446",
+   "4364462",
+   "4364482",
+   "4364489",
+   "4364498",
+   "4364505",
+   "4364514",
+   "4364522",
+   "4376345",
+   "4376351",
+   "4376361",
+   "4376368",
+   "4376376",
+   "4376383",
+   "4408215",
+   "4408222",
+   "4408236",
+   "4408238",
+   "4408259",
+   "4408262",
+   "4408270",
+   "4408278",
+   "4408292",
+   "4408298",
+   "4408302",
+   "4408310",
+   "4408322",
+   "4408326",
+   "4408337",
+   "4408348",
+   "4408350",
+   "4408358",
+   "4408366",
+   "4408390",
+   "4408407",
+   "4408478",
+   "4408486",
+   "4436194",
+   "4472262",
+   "4481770",
+   "4481845",
+   "4481849",
+   "4501652",
+   "4559156",
+   "4559157",
+   "4565657",
+   "4575327",
+   "4576005",
+   "4597363",
+   "4597388",
+   "4627617",
+   "4627631",
+   "4649179",
+   "4649193",
+   "4649196",
+   "4649203",
+   "4649211",
+   "4649219",
+   "4649227",
+   "4649239",
+   "4649250",
+   "4649258",
+   "4649259",
+   "4649267",
+   "4649281",
+   "4649283",
+   "4649291",
+   "4649304",
+   "4649307",
+   "4649315",
+   "4649323",
+   "4649331",
+   "4649342",
+   "4649354",
+   "4649355",
+   "4649366",
+   "4649371",
+   "4649379",
+   "4649388",
+   "4649395",
+   "4650490",
+   "4650498",
+   "4650506",
+   "4650514",
+   "4650522",
+   "4650550",
+   "4698076",
+   "4698929",
+   "4758978",
+   "4758983",
+   "4777070",
+   "4839900",
+   "4847890",
+   "4892372",
+   "4904479",
+   "4904699",
+   "4904711",
+   "4904720",
+   "4904722",
+   "4904736",
+   "4904783",
+   "4904791"
+  ],
+  "_trimmed_from": 489
+ }
+}
