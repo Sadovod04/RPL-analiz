@@ -26,8 +26,8 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-# survival deep models pull torch (~heavy) — installed only when needed for M5
-survival = ["pycox>=0.2.3", "torch>=2.2"]
+# M5 extras. scikit-survival = Random Survival Forest; pycox/torch = DeepSurv (heavy)
+survival = ["scikit-survival>=0.23", "pycox>=0.2.3", "torch>=2.2"]
 # dashboard — M6
 app = ["streamlit>=1.36"]
 
