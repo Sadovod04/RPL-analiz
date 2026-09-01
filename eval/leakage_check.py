@@ -30,6 +30,12 @@ FORBIDDEN_SUBSTRINGS: tuple[str, ...] = (
     "outcome_",
     "target",
     "label",
+    # post-outcome aggregates that must never be features (SPEC §3, §7)
+    "rpl_minutes",
+    "rpl_debut",
+    "reached_pro",
+    "current_age",
+    "event_observed",
 )
 
 
