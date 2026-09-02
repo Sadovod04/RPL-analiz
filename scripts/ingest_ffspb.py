@@ -21,10 +21,15 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import pandas as pd  # noqa: E402
 
 from ingest.rate_limiter import RateLimiter  # noqa: E402
-from ingest.sources.ffspb import FfspbSource, Nagradion  # noqa: E402
+from ingest.sources.ffspb import REGIONS, FfspbSource, Nagradion  # noqa: E402
 
-OUT = Path("data/processed/ffspb_players.parquet")
-CKPT = Path("data/raw/ffspb_players_checkpoint.parquet")
+
+def _out(region):
+    return Path(f"data/processed/ffspb_players_{region}.parquet")
+
+
+def _ckpt(region):
+    return Path(f"data/raw/ffspb_players_{region}_checkpoint.parquet")
 
 
 def _collect_player_ids(
@@ -52,12 +57,13 @@ def _collect_player_ids(
 
 def main(argv: list[str] | None = None) -> None:
     ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--region", default="spb", choices=sorted(REGIONS))
     ap.add_argument("--tournaments", nargs="*", help="explicit tournament ids (skips discovery)")
     ap.add_argument("--max-age", type=int, default=15)
     ap.add_argument("--limit", type=int, default=None, help="cap unique players (debug)")
     args = ap.parse_args(argv)
 
-    src = FfspbSource(Nagradion(fetcher=None))
+    src = FfspbSource(Nagradion(base=REGIONS[args.region]))
     src.api._f.rate_limiter = RateLimiter(min_interval=0.3, jitter=0.2)
 
     if args.tournaments:
@@ -67,6 +73,7 @@ def main(argv: list[str] | None = None) -> None:
         tids = [d["tournament_id"] for d in disc]
         print(f"discovered {len(tids)} youth tournaments (<= {args.max_age} y.o.)")
 
+    OUT, CKPT = _out(args.region), _ckpt(args.region)
     done: set[str] = set()
     rows: list[dict] = []
     if CKPT.exists():

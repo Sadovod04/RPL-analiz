@@ -30,6 +30,15 @@ FFSPB_BASE = "https://stat.ffspb.org"
 _UA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/124.0 Safari/537.36"
 _MATCH_FEED_BLOCK = "16215"
 
+# Наградион tenants (regional federations on the same platform). Match / player /
+# stats parsing is shared; per-tenant tournament DISCOVERY may still need tuning
+# (some serve a server-rendered /calendar, others are client-only -> pass ids).
+REGIONS = {
+    "spb": "https://stat.ffspb.org",  # ✅ full auto-discovery
+    "moscow": "https://stat.mosff.ru",  # Наградион, but calendar is client-rendered
+    # "krasnodar": "https://stat.<...>",   # TODO: find the tenant domain
+}
+
 # tournament-name patterns that mark a youth competition
 _AGE_RE = re.compile(r"до\s*(\d{1,2})\s*лет|мальчики\s*(20\d\d)", re.IGNORECASE)
 
