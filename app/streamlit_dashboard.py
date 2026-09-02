@@ -85,8 +85,12 @@ _TARGET_LABELS = {
 }
 _target_opts = [c for c in ("pro_target", "target") if c in df.columns] or ["target"]
 target_col = st.sidebar.radio(
-    "Цель / Target", _target_opts, format_func=lambda c: _TARGET_LABELS[lang].get(c, c)
+    "Цель / Target",
+    _target_opts,
+    format_func=lambda c: _TARGET_LABELS[lang].get(c, c),
+    help=t("target_help", lang),
 )
+st.sidebar.caption(t("target_help", lang))
 
 st.title(t("title", lang))
 st.caption(t("subtitle", lang))
@@ -128,30 +132,45 @@ def _filter_widgets(frame: pd.DataFrame) -> dict:
             {position_label(r.position, r.position_detail, lang) for r in frame.itertuples()}
         )
         pos_sel = st.multiselect(
-            t("position", lang), poss, placeholder=t("all_ph", lang), key="f_pos"
+            t("position", lang),
+            poss,
+            placeholder=t("all_ph", lang),
+            help=t("pos_help", lang),
+            key="f_pos",
         )
         lvl_sel = (
             st.multiselect(
-                t("level_reached", lang), list(LEVELS), placeholder=t("all_ph", lang), key="f_lvl"
+                t("level_reached", lang),
+                list(LEVELS),
+                placeholder=t("all_ph", lang),
+                help=t("lvl_help", lang),
+                key="f_lvl",
             )
             if has_level
             else []
         )
         yr = (
-            st.slider(t("birth_range", lang), lo, hi, (lo, hi), key="f_yr") if lo < hi else (lo, hi)
+            st.slider(t("birth_range", lang), lo, hi, (lo, hi), help=t("yr_help", lang), key="f_yr")
+            if lo < hi
+            else (lo, hi)
         )
-        mm = st.slider(t("min_minutes", lang), 0, 5000, 0, 100, key="f_min")
         acs = sorted({str(x) for x in frame["academy_club"].dropna()})
-        ac_sel = st.multiselect(t("academy", lang), acs, placeholder=t("all_ph", lang), key="f_ac")
-        top_n = st.slider(t("top_n", lang), 5, 300, 50, key="f_top")
-    return {"pos": pos_sel, "lvl": lvl_sel, "yr": yr, "mm": mm, "ac": ac_sel, "top": top_n}
+        ac_sel = st.multiselect(
+            t("academy", lang),
+            acs,
+            placeholder=t("all_ph", lang),
+            help=t("ac_help", lang),
+            key="f_ac",
+        )
+        top_n = st.slider(t("top_n", lang), 10, 300, 50, help=t("top_n_help", lang), key="f_top")
+    return {"pos": pos_sel, "lvl": lvl_sel, "yr": yr, "ac": ac_sel, "top": top_n}
 
 
 def _apply(frame: pd.DataFrame, f: dict) -> pd.DataFrame:
     d = frame.assign(
         _pos=[position_label(r.position, r.position_detail, lang) for r in frame.itertuples()]
     )
-    m = (d["youth_minutes_total"] >= f["mm"]) & (d["birth_year"].fillna(0).between(*f["yr"]))
+    m = d["birth_year"].fillna(0).between(*f["yr"])
     if f["pos"]:
         m &= d["_pos"].isin(f["pos"])
     if f["lvl"] and "outcome_level" in d:
@@ -189,6 +208,90 @@ def _table(frame: pd.DataFrame) -> pd.DataFrame:
     return d[[c for c in keep if c in d.columns]]
 
 
+@st.cache_data
+def _quantiles(mtime: float) -> dict:
+    cols = [
+        "youth_minutes_total",
+        "youth_ga_per90",
+        "youth_minutes_trend",
+        "market_value_at_cutoff_eur",
+        "academy_conversion_rate",
+    ]
+    return {c: df[c].quantile([0.25, 0.5, 0.75]).to_dict() for c in cols if c in df}
+
+
+def _projected_level(score: float) -> str:
+    if target_col == "target":  # RPL-only model
+        return (
+            "lvl_rpl_high"
+            if score >= 0.5
+            else "lvl_rpl_mid"
+            if score >= 0.3
+            else "lvl_fnl"
+            if score >= 0.15
+            else "lvl_fnl2"
+            if score >= 0.05
+            else "lvl_low"
+        )
+    return (  # any-pro model
+        "lvl_rpl_mid"
+        if score >= 0.88
+        else "lvl_fnl"
+        if score >= 0.62
+        else "lvl_fnl2"
+        if score >= 0.35
+        else "lvl_low"
+    )
+
+
+def _player_report(row: pd.Series, score: float):
+    q = _quantiles(_parquet_mtime())
+    st.markdown(f"**{t('report_hdr', lang)}**")
+    st.markdown(
+        f"{t('report_level', lang)}: **{t(_projected_level(score), lang)}** ({score * 100:.0f}%)"
+    )
+
+    def hi(c):
+        return c in q and pd.notna(row.get(c)) and row[c] >= q[c][0.75]
+
+    def lo(c):
+        return c in q and pd.notna(row.get(c)) and row[c] <= q[c][0.25]
+
+    strengths, weaknesses = [], []
+    if hi("youth_minutes_total"):
+        strengths.append("s_minutes")
+    elif lo("youth_minutes_total"):
+        weaknesses.append("w_minutes")
+    if hi("youth_ga_per90"):
+        strengths.append("s_output")
+    elif lo("youth_ga_per90"):
+        weaknesses.append("w_output")
+    trend = row.get("youth_minutes_trend")
+    if pd.notna(trend) and trend > 5:
+        strengths.append("s_trend")
+    elif pd.notna(trend) and trend < -5:
+        weaknesses.append("w_trend")
+    lvl = row.get("best_level_pre_cutoff", 0) or 0
+    if lvl >= 3:
+        strengths.append("s_level")
+    elif lvl == 0:
+        weaknesses.append("w_level")
+    if bool(row.get("played_youth_league")):
+        strengths.append("s_youthleague")
+    if hi("market_value_at_cutoff_eur"):
+        strengths.append("s_value")
+    if hi("academy_conversion_rate"):
+        strengths.append("s_academy")
+
+    if strengths:
+        st.markdown(f"{t('report_strengths', lang)}: " + ", ".join(t(s, lang) for s in strengths))
+    if weaknesses:
+        st.markdown(f"{t('report_weaknesses', lang)}: " + ", ".join(t(w, lang) for w in weaknesses))
+    if not strengths and not weaknesses:
+        st.caption(t("w_nodata", lang))
+    st.divider()
+
+
 def _player_card(view: pd.DataFrame):
     st.subheader(t("why", lang))
     if not len(view):
@@ -199,6 +302,10 @@ def _player_card(view: pd.DataFrame):
         view["player_id"],
         format_func=lambda pid: view.loc[view["player_id"] == pid, "canonical_name"].iloc[0],
     )
+    prow = df[df["player_id"] == pick].iloc[0]
+    pscore = float(view.loc[view["player_id"] == pick, "breakthrough_score"].iloc[0])
+    _player_report(prow, pscore)
+
     raw = player_raw_stats(df, pick)
     st.markdown(f"**{t('raw_stats', lang)}**")
     st.table(pd.Series({feat_label(k, lang): _fmt(k, v) for k, v in raw.items()}, name=""))
