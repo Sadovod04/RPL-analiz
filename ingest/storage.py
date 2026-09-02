@@ -159,6 +159,11 @@ def store_market_values(engine: Engine, player_id: str, points: list[MarketValue
     upsert(engine, tables.market_value, rows, ["player_id", "source", "date"])
 
 
+def store_wiki_recognition(engine: Engine, rows: list[dict]) -> None:
+    """Upsert one row per player into ``wiki_recognition`` (see ingest.tables)."""
+    upsert(engine, tables.wiki_recognition, rows, ["player_id"])
+
+
 def store_wiki_standings(engine: Engine, season: str, standings: list[dict], division: str = "1"):
     rows = [
         {

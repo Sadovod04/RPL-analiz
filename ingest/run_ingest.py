@@ -296,8 +296,8 @@ def _resolve_and_store(engine, records: list[dict]) -> pd.DataFrame:
 def _build_features(engine) -> None:
     from features.build_features import build_feature_matrix, feature_columns, from_db
 
-    players, seasons, mvs = from_db(engine)
-    m = build_feature_matrix(players, seasons, mvs)
+    players, seasons, mvs, wiki = from_db(engine)
+    m = build_feature_matrix(players, seasons, mvs, wiki=wiki)
     out = ROOT / load_settings()["paths"]["data_processed"] / "features.parquet"
     m.to_parquet(out, index=False)
     print(f"features: wrote {out}  shape={m.shape}  features={len(feature_columns(m))}")

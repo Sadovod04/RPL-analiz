@@ -6,6 +6,7 @@ import pytest
 
 from eval.leakage_check import LeakageError
 from features.build_features import (
+    _attach_recognition,
     _trajectory_features,
     age_bucket,
     assert_matrix_is_clean,
@@ -254,3 +255,54 @@ def test_build_matrix_phase_a_columns_present_and_clean():
                 "minutes_dropoff_max", "had_minutes_collapse"):
         assert col in feature_columns(m)
     assert_matrix_is_clean(m)  # new columns must not trip the leakage guard
+
+
+# --- Phase B: ru.wikipedia recognition -------------------------------------
+def _recognition_matrix(wiki):
+    base = pd.DataFrame({"player_id": ["a", "b", "c"]})
+    return _attach_recognition(base, wiki, cutoff_age=19)
+
+
+def test_recognition_none_is_all_zero():
+    m = _recognition_matrix(None)
+    for c in ("wiki_article_pre_cutoff", "wiki_youth_national_team", "wiki_youth_honours",
+              "recognition_count", "pre_cutoff_recognition_score"):
+        assert (m[c] == 0).all()
+    assert (~m["any_recognition"]).all()
+
+
+def test_recognition_pre_vs_post_cutoff_and_nt_level():
+    wiki = pd.DataFrame([
+        # a: article at 17 (pre-cutoff), U17 cap, one youth honour -> 3 + 2 + 1
+        {"player_id": "a", "article_created_age": 17.0, "youth_honours_count": 1,
+         "nt_youth_levels": [17, 21]},
+        # b: article at 20 (post-cutoff), only a U21 (молодёжная) cap -> nothing counts
+        {"player_id": "b", "article_created_age": 20.4, "youth_honours_count": 0,
+         "nt_youth_levels": [21]},
+        # c: no article row at all -> absent from wiki frame
+    ])
+    m = _recognition_matrix(wiki).set_index("player_id")
+    assert m.loc["a", "wiki_article_pre_cutoff"] == 1
+    assert m.loc["a", "wiki_youth_national_team"] == 1
+    assert m.loc["a", "pre_cutoff_recognition_score"] == 6
+    assert bool(m.loc["a", "any_recognition"]) is True
+    assert m.loc["b", "wiki_article_pre_cutoff"] == 0
+    assert m.loc["b", "wiki_youth_national_team"] == 0  # U21 cap is not pre-cutoff-safe
+    assert m.loc["b", "pre_cutoff_recognition_score"] == 0
+    assert m.loc["c", "recognition_count"] == 0
+    assert bool(m.loc["c", "any_recognition"]) is False
+
+
+def test_recognition_columns_pass_leakage_and_are_features():
+    wiki = pd.DataFrame([{"player_id": "a", "article_created_age": 16.0,
+                          "youth_honours_count": 2, "nt_youth_levels": [19]}])
+    m = build_feature_matrix(_players(), _seasons(), wiki=wiki, cutoff_age=19,
+                             as_of_year=2024, cfg=CFG)
+    fcols = feature_columns(m)
+    for c in ("pre_cutoff_recognition_score", "recognition_count", "any_recognition",
+              "wiki_article_pre_cutoff", "wiki_youth_national_team", "wiki_youth_honours"):
+        assert c in fcols
+    for raw in ("wiki_title", "article_created_age", "nt_youth_levels", "honours_years"):
+        assert raw not in fcols
+    assert_matrix_is_clean(m)
+    assert m.set_index("player_id").loc["a", "pre_cutoff_recognition_score"] == 3 + 2 + 2

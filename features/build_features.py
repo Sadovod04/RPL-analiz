@@ -168,6 +168,67 @@ def _trajectory_features(youth: pd.DataFrame, seasons: pd.DataFrame) -> pd.DataF
     return pd.DataFrame(rows)
 
 
+# youth-NT U-levels that are safely *before* the modelling cutoff (a молодёжная /
+# U21 cap can happen at 20-21, so it is not counted here — see wikipedia_players).
+_PRE_CUTOFF_NT_MAX = 19
+
+_RECOGNITION_COLS = (
+    "wiki_article_pre_cutoff",
+    "wiki_youth_national_team",
+    "wiki_youth_honours",
+    "recognition_count",
+    "pre_cutoff_recognition_score",
+    "any_recognition",
+)
+
+
+def _attach_recognition(
+    m: pd.DataFrame, wiki: pd.DataFrame | None, cutoff_age: float
+) -> pd.DataFrame:
+    """Fold ru.wikipedia recognition into the matrix (Phase B).
+
+    Only *pre-cutoff* signals become features: an article created before the
+    player turned ``cutoff_age``, a youth-NT category at U19 or below, and
+    honours dated at/before age 18. "Has an article now" / total honours are
+    post-hoc and deliberately never reach the matrix.
+    """
+    if wiki is None or wiki.empty:
+        for c in _RECOGNITION_COLS:
+            m[c] = 0
+        m["any_recognition"] = False
+        return m
+
+    w = (
+        wiki.drop_duplicates("player_id")
+        .set_index("player_id")
+        .reindex(columns=["article_created_age", "youth_honours_count", "nt_youth_levels"])
+    )
+    idx = m["player_id"]
+
+    created_age = pd.to_numeric(idx.map(w["article_created_age"]), errors="coerce")
+    m["wiki_article_pre_cutoff"] = (created_age.notna() & (created_age < cutoff_age)).astype(int)
+
+    def _min_nt_level(levels) -> float:
+        if isinstance(levels, (list, tuple)) and len(levels):
+            return min(levels)
+        return np.nan
+
+    nt_min = idx.map(w["nt_youth_levels"]).map(_min_nt_level)
+    m["wiki_youth_national_team"] = (nt_min <= _PRE_CUTOFF_NT_MAX).fillna(False).astype(int)
+
+    yh = pd.to_numeric(idx.map(w["youth_honours_count"]), errors="coerce").fillna(0).astype(int)
+    m["wiki_youth_honours"] = yh
+
+    m["recognition_count"] = (
+        m["wiki_article_pre_cutoff"] + m["wiki_youth_national_team"] + yh
+    )
+    m["pre_cutoff_recognition_score"] = (
+        3 * m["wiki_article_pre_cutoff"] + 2 * m["wiki_youth_national_team"] + yh
+    )
+    m["any_recognition"] = m["pre_cutoff_recognition_score"] > 0
+    return m
+
+
 def _academy_conversion_rate(labeled: pd.DataFrame) -> pd.Series:
     """Time-aware: for each player, P(target=1) among SAME academy, EARLIER cohorts
     only, excluding censored. NaN when there is no prior history (SPEC §7 leakage rule).
@@ -204,6 +265,7 @@ def build_feature_matrix(
     seasons: pd.DataFrame,
     market_values: pd.DataFrame | None = None,
     *,
+    wiki: pd.DataFrame | None = None,
     cutoff_age: float | None = None,
     as_of_year: int | None = None,
     cfg: LabelConfig | None = None,
@@ -252,6 +314,7 @@ def build_feature_matrix(
     m["market_value_at_cutoff_eur"] = m["player_id"].map(
         _market_value_at_cutoff(market_values, players, cutoff_age)
     )
+    m = _attach_recognition(m, wiki, cutoff_age)
 
     # static player attributes (categoricals kept raw for CatBoost)
     for col in ("position", "position_detail", "height_cm", "is_foreigner"):
@@ -295,7 +358,15 @@ def from_db(engine):
     )
     seasons["league"] = seasons["league"].replace(_LEAGUE_REMAP)
     market_values = pd.read_sql("select player_id, date, value_eur from market_value", engine)
-    return players, seasons, market_values
+    try:
+        wiki = pd.read_sql(
+            "select player_id, article_created_age, youth_honours_count, nt_youth_levels "
+            "from wiki_recognition",
+            engine,
+        )
+    except Exception:  # noqa: BLE001 — table absent (fresh DB) -> recognition features = 0
+        wiki = None
+    return players, seasons, market_values, wiki
 
 
 def write_parquet(df: pd.DataFrame, path: str | None = None) -> str:

@@ -27,12 +27,18 @@ _NEW_COLS = (
     "matches_share_mean",
     "minutes_dropoff_max",
     "had_minutes_collapse",
+    "wiki_article_pre_cutoff",
+    "wiki_youth_national_team",
+    "wiki_youth_honours",
+    "recognition_count",
+    "pre_cutoff_recognition_score",
+    "any_recognition",
 )
 
 
 def main() -> None:
-    players, seasons, mvs = from_db(get_engine())
-    m = build_feature_matrix(players, seasons, mvs)
+    players, seasons, mvs, wiki = from_db(get_engine())
+    m = build_feature_matrix(players, seasons, mvs, wiki=wiki)
     out = Path(load_settings()["paths"]["data_processed"]) / "features.parquet"
     m.to_parquet(out, index=False)
     print(f"wrote {out}  shape={m.shape}  features={len(feature_columns(m))}")

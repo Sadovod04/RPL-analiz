@@ -101,6 +101,23 @@ market_value = Table(
     UniqueConstraint("player_id", "source", "date", name="uq_mv_point"),
 )
 
+wiki_recognition = Table(
+    # one row per player: does a ru.wikipedia footballer article exist, when was
+    # it created, and youth-age recognition parsed from it. Features derived in
+    # features.build_features._recognition_features (strictly pre-cutoff only).
+    "wiki_recognition",
+    metadata,
+    Column("player_id", String(40), primary_key=True),
+    Column("wiki_title", String(300)),  # NULL = searched, no confident match
+    Column("match_score", Float),
+    Column("article_created", Date),  # first revision timestamp
+    Column("article_created_age", Float),  # player age at first revision
+    Column("youth_honours_count", Integer, server_default="0"),  # honour years <= born+18
+    Column("nt_youth_levels", _JSON),  # U-levels of Russia youth-NT categories (молодёжная=21)
+    Column("honours_years", _JSON),  # raw parsed years, for audit
+    Column("checked_at", DateTime(timezone=True), server_default=func.now()),
+)
+
 wiki_standings = Table(
     "wiki_standings",
     metadata,

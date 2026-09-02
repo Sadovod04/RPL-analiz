@@ -132,6 +132,35 @@ Real gain on the hard RPL target; `pro_target` was already near-saturated. The
 logreg baseline is left on the original feature list — the new inputs hurt it
 (raw `cohort_year` scale, collinear gaps), and its job is to be a stable bar.
 
+### Phase B — "recognition" (ru.wikipedia)
+
+`ingest/sources/wikipedia_players.py` + `scripts/ingest_wikipedia.py`: for each
+resolved player, find a ru.wikipedia footballer article and extract signals that
+only count **before** the cutoff age:
+
+- `wiki_article_pre_cutoff` — an article was first created before the player
+  turned 19. "Has an article now" is post-hoc and never becomes a feature; the
+  raw `article_created_age` / `wiki_title` / `honours_years` are blocked by
+  `eval/leakage_check.py`.
+- `wiki_youth_national_team` — a Russia youth-NT category at **U19 or below**
+  (молодёжная / U21 is excluded — that cap can happen at 20-21).
+- `wiki_youth_honours` — honours in the "Достижения" section dated at/before 18.
+- `pre_cutoff_recognition_score = 3·article + 2·youth_NT + 1·honours`,
+  `recognition_count`, `any_recognition` — the umbrella aggregate B3/B5 will
+  extend later.
+
+Name matching: our `name_home_country` carries a patronymic (Transfermarkt,
+sometimes wrong — e.g. our "Пиняев Сергей *Андреевич*" vs the article "Пиняев,
+Сергей *Максимович*"), so search/match is on **surname + given name only**,
+disambiguated by birth year (intro text or "Родившиеся в YYYY году" category) and
+the "Футболисты…" category.
+
+Status: adapter built and unit-tested (`tests/test_wikipedia_players.py`);
+feature wiring + leakage guards + tests in place. The 3982-player crawl is
+pending — ru.wikipedia rate-limited the dev IP (HTTP 429); it resumes with
+`uv run python scripts/ingest_wikipedia.py` (idempotent, skips done players).
+Metrics land here after the crawl + retrain.
+
 Caveats: the pro-target test window skews positive (most academy kids who reach the
 1999–2003 cohort got at least FNL-2 minutes); `academy_club` is still free-text
 from Transfermarkt's `formerClubsNote`, so that feature is weak.
