@@ -74,6 +74,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         help="after ingest, write data/processed/features.parquet from the DB",
     )
     p.add_argument("--fresh", action="store_true", help="ignore the discovery checkpoint")
+    p.add_argument(
+        "--redo-discovery",
+        action="store_true",
+        help="re-crawl kader pages even if the checkpoint is already populated",
+    )
     p.add_argument("--dry-run", action="store_true")
     return p.parse_args(argv)
 
@@ -126,12 +131,18 @@ def _save_checkpoint(ids: list[str]) -> None:
 
 
 def _discover_player_ids(
-    club_ids: list[str], years: list[int], *, fresh: bool, limit: int | None
+    club_ids: list[str], years: list[int], *, fresh: bool, redo: bool, limit: int | None
 ) -> list[str]:
     from ingest.fetcher import BrowserFetcher
     from ingest.sources.transfermarkt import kader_url, parse_kader_html
 
     found = list(dict.fromkeys(_load_checkpoint(fresh)))
+    if found and not redo:
+        print(
+            f"discovery: using checkpoint as-is ({len(found)} ids); "
+            f"pass --redo-discovery to re-crawl"
+        )
+        return found[:limit] if limit else found
     seen = set(found)
     grid = [(c, y) for c in club_ids for y in years]
     print(f"discovery: {len(grid)} club-seasons, {len(found)} ids already checkpointed")
@@ -258,11 +269,15 @@ def main(argv: list[str] | None = None) -> None:
         print(f"wikipedia: {len(_run_wikipedia(engine, wiki_years))} ЮФЛ participant names")
 
     if "transfermarkt" in args.sources:
-        extra = list(args.academies or cfg["academies"].get("extra", []))
-        universe = _academy_universe(academy_years, extra)
-        print(f"academy universe: {len(universe)} clubs")
+        have_checkpoint = CHECKPOINT.exists() and CHECKPOINT.read_text().strip() and not args.fresh
+        if have_checkpoint and not args.redo_discovery:
+            universe = []  # skip the RUJL universe fetch too
+        else:
+            extra = list(args.academies or cfg["academies"].get("extra", []))
+            universe = _academy_universe(academy_years, extra)
+            print(f"academy universe: {len(universe)} clubs")
         player_ids = _discover_player_ids(
-            universe, academy_years, fresh=args.fresh, limit=args.limit
+            universe, academy_years, fresh=args.fresh, redo=args.redo_discovery, limit=args.limit
         )
         print(f"discovered {len(player_ids)} player ids")
         records = _run_transfermarkt(engine, player_ids)
