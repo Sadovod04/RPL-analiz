@@ -48,24 +48,25 @@ def main(argv: list[str] | None = None) -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("path", nargs="?")
     ap.add_argument("--trials", type=int, default=25)
+    ap.add_argument("--target", default="pro_target")
     args = ap.parse_args(argv)
 
     df, name = _load(args.path)
+    tgt = args.target if args.target in df.columns else "target"
     feats = feature_columns(df)
     assert_matrix_is_clean(df)
 
-    test_from = load_settings()["split"]["test_cohort_from"]
-    train, test = temporal_split(df, test_cohort_from=test_from)
+    train, test = temporal_split(df, target_col=tgt)
     print(
-        f"{name}: train={len(train)} test={len(test)} feats={len(feats)} "
-        f"test base rate={test['target'].mean():.1%}"
+        f"{name}: target={tgt} train={len(train)} test={len(test)} feats={len(feats)} "
+        f"test base rate={test[tgt].mean():.1%}"
     )
 
-    degenerate = train["target"].nunique() < 2 or test["target"].nunique() < 2
+    degenerate = train[tgt].nunique() < 2 or test[tgt].nunique() < 2
     if degenerate:
-        print("!! degenerate split (demo sample) — running for wiring only")
+        print("!! degenerate split — running for wiring only")
 
-    Xtr, ytr, gtr = train[feats], train["target"], train["player_id"]
+    Xtr, ytr, gtr = train[feats], train[tgt], train["player_id"]
 
     Path("mlruns").mkdir(exist_ok=True)
     mlflow.set_tracking_uri(f"sqlite:///{Path('mlruns/mlflow.db').resolve()}")
@@ -76,7 +77,7 @@ def main(argv: list[str] | None = None) -> None:
                 "dataset": name,
                 "n_train": len(train),
                 "n_test": len(test),
-                "test_cohort_from": test_from,
+                "target": tgt,
                 "n_features": len(feats),
             }
         )
@@ -95,12 +96,10 @@ def main(argv: list[str] | None = None) -> None:
 
         base = LogRegBaseline().fit(train, ytr)
         results = {
-            "catboost": evaluate_binary(test["target"], p_gbm, k=min(20, len(test))),
-            "logreg": evaluate_binary(
-                test["target"], base.predict_proba(test), k=min(20, len(test))
-            ),
+            "catboost": evaluate_binary(test[tgt], p_gbm, k=min(20, len(test))),
+            "logreg": evaluate_binary(test[tgt], base.predict_proba(test), k=min(20, len(test))),
             "naive_scout": evaluate_binary(
-                test["target"], naive_scout_scores(test), k=min(20, len(test))
+                test[tgt], naive_scout_scores(test), k=min(20, len(test))
             ),
         }
         for model_name, res in results.items():

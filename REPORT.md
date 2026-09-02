@@ -62,17 +62,35 @@ resolved 1990–2004 cohorts, which supplies the negatives.
 | **CatBoost** | `models/gbm.py` | native categoricals (`academy_club`, `position`), Optuna over GroupKFold, SHAP importance + interactions, MLflow |
 | Cox PH | `models/survival.py` | P(breakthrough by age); RSF optional via `--extra survival` |
 
-## Results (pipeline check only)
+## Results
 
-Real metrics are **pending a full dataset**. On the skewed demo sample every model
-scores PR-AUC ≈ 1.0 (there are almost no negatives) — not informative. What *is*
-visible and points the right way:
+Full academy crawl: **3982 players**, 521 academies, birth years ~1995–2010.
+Resolved outcomes — RPL: 542 made it / 1001 did not (2439 still open); pro
+(RPL/FNL/FNL-2): 1591 / 493 (1898 open). Temporal split: train born < 1999,
+test born 1999–2003.
 
-- **CatBoost SHAP** top features: `youth_minutes_trend`, `minutes_U19`,
-  `minutes_U17`, `youth_minutes_total`, `best_level_pre_cutoff` — i.e. *how much
-  and how fast the youth role grew*, and *how high a level they reached young*.
-- **Cox** concordance ≈ 0.80 (inflated by the sample); P(breakthrough by age) rises
-  monotonically 21 → 23 → 25 as it should.
+**`pro_target` (reached RPL / FNL / FNL-2), test n=770, base rate 0.81**
+
+| model | PR-AUC | ROC-AUC | Brier |
+|---|---|---|---|
+| **CatBoost** | **0.968** | 0.879 | 0.129 |
+| logistic regression | 0.959 | 0.853 | 0.151 |
+| naive scout (market value) | 0.801 | 0.468 | — |
+
+CatBoost CV PR-AUC (GroupKFold by player): 0.86–0.92.
+
+**`target` (RPL, ≥200 min), base rate ~0.2** — logreg PR-AUC **0.687** vs naive
+scout 0.300; ROC-AUC 0.833.
+
+The model clears the market-value baseline on both targets. **Top SHAP features:**
+`best_level_pre_cutoff` (highest level reached young), `position_detail`,
+`played_youth_league`, `height_cm`, `youth_ga_per90` / `ga_per90_U19`,
+`youth_seasons`, `minutes_U19`. i.e. *how high a level they reached young, how much
+they played, and how productive they were*.
+
+Caveats: the pro-target test window skews positive (most academy kids who reach the
+1999–2003 cohort got at least FNL-2 minutes); `academy_club` is still free-text
+from Transfermarkt's `formerClubsNote`, so that feature is weak.
 
 ## Honest limitations (SPEC §14)
 
@@ -93,7 +111,7 @@ visible and points the right way:
 ```bash
 uv sync && uv run playwright install chromium
 docker compose up -d                       # Postgres for raw data
-uv run pytest                              # 70 pass, 1 skip (RSF extra)
+uv run pytest                              # ~77 pass, 1 skip (RSF extra)
 
 # demo pipeline (no Playwright, ~4 min):
 uv run python scripts/demo_dataset.py 140
