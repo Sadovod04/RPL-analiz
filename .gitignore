@@ -25,3 +25,7 @@ mlartifacts/
 
 # catboost training logs
 catboost_info/
+
+# tool-injected skill symlinks (streamlit et al.)
+.agents/
+.claude/
