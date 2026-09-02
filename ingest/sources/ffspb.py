@@ -152,6 +152,32 @@ def _parse_ru_date(text: str | None) -> date | None:
         return None
 
 
+def parse_tournament_stats(payload: dict) -> dict:
+    """A player's ``.../stats/{t}/{team}/props`` payload -> aggregate + patronymic."""
+    req = (payload.get("player") or {}).get("request") or {}
+    games = payload.get("stats") or []
+    goals = yellows = reds = minutes = 0
+    for g in games:
+        minutes += g.get("minutes") or 0
+        for a in g.get("actions") or []:
+            n = a.get("n") or 1
+            typ = a.get("type")
+            if typ == "goal":
+                goals += n
+            elif typ == "yellow":
+                yellows += n
+            elif typ in ("red", "red_direct", "second_yellow"):
+                reds += n
+    return {
+        "patronymic": req.get("second_name"),
+        "games": len(games),
+        "goals": goals,
+        "yellows": yellows,
+        "reds": reds,
+        "minutes": minutes,
+    }
+
+
 def parse_player_profile(html: str) -> dict:
     soup = BeautifulSoup(html, "lxml")
     title = soup.select_one(".person-info__title")
@@ -209,8 +235,24 @@ class FfspbSource:
         gp = render_props(html, "GameProtocolBlock")
         return parse_lineup(gp) if gp else []
 
-    def player_profile(self, tournament_id: int | str, ffspb_id: int | str) -> dict:
+    def player_profile(
+        self, tournament_id: int | str, ffspb_id: int | str, with_stats: bool = False
+    ) -> dict:
         html = self.api.page_html(f"tournament{tournament_id}/player/{ffspb_id}")
         prof = parse_player_profile(html)
         prof["ffspb_id"] = str(ffspb_id)
+        if with_stats:
+            agg = {"games": 0, "goals": 0, "yellows": 0, "reds": 0, "minutes": 0}
+            for trn in prof["tournaments"]:
+                url = trn.get("details_url")
+                if not url:
+                    continue
+                try:
+                    s = parse_tournament_stats(self.api._f.get(url).json())
+                except Exception:  # noqa: BLE001
+                    continue
+                prof.setdefault("patronymic", s.get("patronymic"))
+                for k in agg:
+                    agg[k] += s.get(k, 0)
+            prof["career"] = agg
         return prof

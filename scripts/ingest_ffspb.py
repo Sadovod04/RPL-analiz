@@ -80,18 +80,25 @@ def main(argv: list[str] | None = None) -> None:
 
     for n, (tid, pid) in enumerate(pairs, 1):
         try:
-            prof = src.player_profile(tid, pid)
+            prof = src.player_profile(tid, pid, with_stats=True)
         except Exception as exc:  # noqa: BLE001
             print(f"  player {pid}: {exc}")
             continue
+        car = prof.get("career", {})
         rows.append(
             {
                 "ffspb_id": pid,
                 "full_name": prof["full_name"],
+                "patronymic": prof.get("patronymic"),
                 "birth_date": prof["birth_date"],
                 "age_text": prof["age_text"],
                 "n_tournaments": len(prof["tournaments"]),
                 "teams": ";".join(sorted({x["team"] for x in prof["tournaments"] if x["team"]})),
+                "games": car.get("games", 0),
+                "goals": car.get("goals", 0),
+                "yellows": car.get("yellows", 0),
+                "reds": car.get("reds", 0),
+                "minutes": car.get("minutes", 0),
                 "source": "ffspb",
             }
         )

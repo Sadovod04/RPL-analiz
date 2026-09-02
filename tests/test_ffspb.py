@@ -76,3 +76,14 @@ def test_parse_calendar():
 def test_render_props_brace_matching():
     html = 'foo renderComponent("uid", \'X\', {"a": 1, "b": {"c": [1,2]}, "d": "}"}); bar'
     assert render_props(html, "X") == {"a": 1, "b": {"c": [1, 2]}, "d": "}"}
+
+
+def test_parse_tournament_stats(fx):
+    from ingest.sources.ffspb import parse_tournament_stats
+
+    agg = parse_tournament_stats(fx("ffspb", "player_stats_details.json"))
+    assert agg["patronymic"] == "Амиранович"
+    assert agg["games"] >= 10
+    assert agg["goals"] >= 1
+    assert agg["yellows"] >= 1
+    assert set(agg) == {"patronymic", "games", "goals", "yellows", "reds", "minutes"}
