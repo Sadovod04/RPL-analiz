@@ -221,19 +221,26 @@ def _run_transfermarkt(engine, player_ids: list[str], *, fast: bool = False) -> 
     from ingest.fetcher import TmApiClient
     from ingest.rate_limiter import RateLimiter
     from ingest.sources.transfermarkt import TransfermarktSource
-    from ingest.storage import store_raw
+    from ingest.storage import store_raw_many
 
     done = {r["source_id"] for r in _load_ingested_records(engine)}
     todo = [p for p in player_ids if p not in done]
     print(f"tmapi: {len(todo)} players to fetch ({len(player_ids) - len(todo)} already ingested)")
 
     limiter = (
-        RateLimiter(min_interval=0.5, jitter=0.3)
+        RateLimiter(min_interval=0.15, jitter=0.15)
         if fast
         else RateLimiter.from_config(load_settings())
     )
-    workers = 6 if fast else 2
+    workers = 16 if fast else 2
+    season = collection_season()
     collected: list[dict] = []
+    buffer: list[dict] = []
+
+    def _flush() -> None:
+        if buffer:
+            store_raw_many(engine, buffer)
+            buffer.clear()
 
     with TmApiClient(rate_limiter=limiter) as api:
         src = TransfermarktSource(api)
@@ -251,17 +258,21 @@ def _run_transfermarkt(engine, player_ids: list[str], *, fast: bool = False) -> 
                     print(f"  tm {pid}: {exc}")
                     continue
                 collected.append(_to_record(rec))
-                store_raw(
-                    engine,
-                    source="transfermarkt",
-                    doc_type="profile",
-                    source_id=rec["player"].source_id,
-                    payload=_serialize_rec(rec),
-                    collection_season=collection_season(),
-                    url=rec["player"].profile_url,
+                buffer.append(
+                    {
+                        "source": "transfermarkt",
+                        "doc_type": "profile",
+                        "source_id": rec["player"].source_id,
+                        "payload": _serialize_rec(rec),
+                        "collection_season": season,
+                        "url": rec["player"].profile_url,
+                    }
                 )
-                if i % 100 == 0:
+                if len(buffer) >= 100:
+                    _flush()
+                if i % 200 == 0:
                     print(f"  [{i}/{len(todo)}] fetched", flush=True)
+        _flush()
     return collected
 
 

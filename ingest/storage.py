@@ -75,6 +75,19 @@ def store_raw(
     )
 
 
+def store_raw_many(engine: Engine, rows: list[dict]) -> None:
+    """Bulk upsert into raw_document. Each row: source, doc_type, source_id,
+    payload, collection_season, optional url.
+    """
+    norm = [{"url": None, **r} for r in rows]
+    upsert(
+        engine,
+        tables.raw_document,
+        norm,
+        ["source", "doc_type", "source_id", "collection_season"],
+    )
+
+
 # --- typed tables ----------------------------------------------------
 def store_player(engine: Engine, player_id: str, p: Player) -> None:
     row = {
