@@ -327,11 +327,17 @@ def main(argv: list[str] | None = None) -> None:
     engine = get_engine()
     init_db(engine)
 
-    if "wikipedia" in args.sources:
-        print(f"wikipedia: {len(_run_wikipedia(engine, wiki_years))} ЮФЛ participant names")
+    have_checkpoint = CHECKPOINT.exists() and CHECKPOINT.read_text().strip() and not args.fresh
+
+    # wikipedia is best-effort context; skip on resume, never let it abort the run
+    if "wikipedia" in args.sources and not (have_checkpoint and not args.redo_discovery):
+        try:
+            n = len(_run_wikipedia(engine, wiki_years))
+            print(f"wikipedia: {n} ЮФЛ participant names")
+        except Exception as exc:  # noqa: BLE001
+            print(f"wikipedia: skipped ({exc})")
 
     if "transfermarkt" in args.sources:
-        have_checkpoint = CHECKPOINT.exists() and CHECKPOINT.read_text().strip() and not args.fresh
         if have_checkpoint and not args.redo_discovery:
             universe = []  # skip the RUJL universe fetch too
         else:

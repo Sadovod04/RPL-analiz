@@ -13,7 +13,6 @@ from __future__ import annotations
 import re
 from urllib.parse import quote
 
-import httpx
 from bs4 import BeautifulSoup
 
 from ingest.fetcher import HttpFetcher
@@ -130,7 +129,7 @@ class WikipediaYouthLeague:
         )
         try:
             data = self._fetcher.get_json(url)
-        except httpx.HTTPStatusError:
+        except Exception:  # noqa: BLE001 - wikipedia is best-effort context, never fatal
             return None
         if "error" in data:
             return None
