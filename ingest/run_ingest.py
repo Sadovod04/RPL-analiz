@@ -79,6 +79,9 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         action="store_true",
         help="re-crawl kader pages even if the checkpoint is already populated",
     )
+    p.add_argument(
+        "--fast", action="store_true", help="lighter tmapi rate limit (0.5s) for bulk collection"
+    )
     p.add_argument("--dry-run", action="store_true")
     return p.parse_args(argv)
 
@@ -171,8 +174,9 @@ def _already_ingested(engine) -> set[str]:
     return set(pd.read_sql(q, engine)["source_id"].astype(str))
 
 
-def _run_transfermarkt(engine, player_ids: list[str]) -> list[dict]:
+def _run_transfermarkt(engine, player_ids: list[str], *, fast: bool = False) -> list[dict]:
     from ingest.fetcher import TmApiClient
+    from ingest.rate_limiter import RateLimiter
     from ingest.sources.transfermarkt import TransfermarktSource
     from ingest.storage import store_raw
 
@@ -180,8 +184,9 @@ def _run_transfermarkt(engine, player_ids: list[str]) -> list[dict]:
     todo = [p for p in player_ids if p not in done]
     print(f"tmapi: {len(todo)} players to fetch ({len(player_ids) - len(todo)} already ingested)")
 
+    limiter = RateLimiter(min_interval=0.5, jitter=0.3) if fast else None
     collected: list[dict] = []
-    with TmApiClient() as api:
+    with TmApiClient(rate_limiter=limiter) as api:
         src = TransfermarktSource(api)
         for i, pid in enumerate(todo, 1):
             try:
@@ -280,7 +285,7 @@ def main(argv: list[str] | None = None) -> None:
             universe, academy_years, fresh=args.fresh, redo=args.redo_discovery, limit=args.limit
         )
         print(f"discovered {len(player_ids)} player ids")
-        records = _run_transfermarkt(engine, player_ids)
+        records = _run_transfermarkt(engine, player_ids, fast=args.fast)
         if records:
             resolved = _resolve_and_store(engine, records)
             print(f"resolved {resolved['player_id'].nunique()} players from {len(records)} records")
