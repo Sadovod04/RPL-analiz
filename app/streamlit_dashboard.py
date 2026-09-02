@@ -90,7 +90,6 @@ target_col = st.sidebar.radio(
     format_func=lambda c: _TARGET_LABELS[lang].get(c, c),
     help=t("target_help", lang),
 )
-st.sidebar.caption(t("target_help", lang))
 
 st.title(t("title", lang))
 st.caption(t("subtitle", lang))
@@ -162,8 +161,7 @@ def _filter_widgets(frame: pd.DataFrame) -> dict:
             help=t("ac_help", lang),
             key="f_ac",
         )
-        top_n = st.slider(t("top_n", lang), 10, 300, 50, help=t("top_n_help", lang), key="f_top")
-    return {"pos": pos_sel, "lvl": lvl_sel, "yr": yr, "ac": ac_sel, "top": top_n}
+    return {"pos": pos_sel, "lvl": lvl_sel, "yr": yr, "ac": ac_sel}
 
 
 def _apply(frame: pd.DataFrame, f: dict) -> pd.DataFrame:
@@ -177,7 +175,7 @@ def _apply(frame: pd.DataFrame, f: dict) -> pd.DataFrame:
         m &= d["outcome_level"].isin(f["lvl"])
     if f["ac"]:
         m &= d["academy_club"].astype(str).isin(f["ac"])
-    return d[m].head(f["top"])
+    return d[m]
 
 
 def _table(frame: pd.DataFrame) -> pd.DataFrame:
@@ -408,26 +406,49 @@ def _compare(scored: pd.DataFrame):
         )
     )
 
+    # side-by-side spec sheet: rows = metrics, columns = players, best value bold
     st.markdown(f"**{t('compare_stats', lang)}**")
-    st.table(
-        pd.DataFrame(
-            {
-                feat_label(c, lang): sub[c].map(lambda v, k=c: _fmt(k, v))
-                for c in _CMP_TABLE
-                if c in sub
-            }
-        ).T
+    present = [c for c in _CMP_TABLE if c in sub]
+    disp = pd.DataFrame(
+        {name: [_fmt(c, sub.loc[name, c]) for c in present] for name in sub.index},
+        index=[feat_label(c, lang) for c in present],
     )
+    raw_num = pd.DataFrame(
+        {
+            name: [pd.to_numeric(sub.loc[name, c], errors="coerce") for c in present]
+            for name in sub.index
+        },
+        index=disp.index,
+    )
+    higher_better = {feat_label(c, lang) for c in present if c != "youth_minutes_trend"}
 
-    c1, c2 = st.columns(2)
-    with c1:
-        st.markdown(f"**{t('compare_minutes', lang)}**")
-        mcols = [c for c in _CMP_MIN if c in sub]
-        st.bar_chart(sub[mcols].rename(columns=lambda c: feat_label(c, lang)))
-    with c2:
-        st.markdown(f"**{t('compare_rates', lang)}**")
-        rcols = [c for c in _CMP_RATE if c in sub]
-        st.bar_chart(sub[rcols].rename(columns=lambda c: feat_label(c, lang)))
+    def _bold_best(row):
+        vals = raw_num.loc[row.name]
+        if vals.notna().sum() < 2:
+            return [""] * len(row)
+        best = vals.max() if row.name in higher_better else vals.min()
+        return ["font-weight:700" if v == best else "" for v in vals]
+
+    st.dataframe(disp.style.apply(_bold_best, axis=1), use_container_width=True)
+
+    # one readable chart: each key metric as % of the best player in the group
+    st.markdown(f"**{t('compare_norm', lang)}**")
+    key = [
+        c
+        for c in (
+            "youth_minutes_total",
+            "minutes_U17",
+            "minutes_U19",
+            "youth_goals_total",
+            "youth_ga_per90",
+            "rpl_minutes_ever",
+        )
+        if c in sub
+    ]
+    norm = sub[key].apply(pd.to_numeric, errors="coerce").fillna(0)
+    norm = (norm / norm.max().replace(0, 1) * 100).round(0)
+    norm.columns = [feat_label(c, lang) for c in key]
+    st.bar_chart(norm.T, horizontal=True, stack=False)
 
 
 # -- layout ---------------------------------------------------
@@ -442,7 +463,7 @@ with tab_prospects:
     view = _apply(rank_prospects(df, model=model, target_col=target_col), flt)
     left, right = st.columns([3, 2])
     with left:
-        st.dataframe(_table(view), use_container_width=True, hide_index=True)
+        st.dataframe(_table(view), use_container_width=True, hide_index=True, height=640)
     with right:
         _player_card(view)
 
@@ -456,7 +477,7 @@ with tab_pro:
             "→",
             res["outcome"].map({1: t("outcome_yes", lang), 0: t("outcome_no", lang)}).to_numpy(),
         )
-    st.dataframe(show, use_container_width=True, hide_index=True)
+    st.dataframe(show, use_container_width=True, hide_index=True, height=640)
 
 with tab_compare:
     _compare(_scored_all(df, target_col, _parquet_mtime()))

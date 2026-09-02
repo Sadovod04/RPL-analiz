@@ -120,12 +120,12 @@ STRINGS = {
         "compare_chart": "Ключевые метрики молодёжки",
         "compare_minutes": "Минуты (молодёжка + карьера)",
         "compare_rates": "Результативность (гол+пас за 90)",
+        "compare_norm": "Сравнение по ключевым метрикам (% от лучшего в группе)",
         "target_help": (
             "**Только РПЛ** — вероятность, что игрок дорастёт именно до Премьер-лиги "
             "(≥200 минут в РПЛ). Редкий исход (~20%), жёсткий отбор.\n\n"
             "**Проф. уровень** — вероятность дойти до профессионального футбола вообще: "
-            "РПЛ, ФНЛ или ФНЛ-2. Частый исход (~84%), модель точнее.\n\n"
-            "Переключение заново обучает модель и пересчитывает все оценки и списки."
+            "РПЛ, ФНЛ или ФНЛ-2. Частый исход (~84%), модель точнее."
         ),
         "report_hdr": "Вывод по игроку",
         "report_level": "Предполагаемый уровень",
@@ -217,12 +217,12 @@ STRINGS = {
         "compare_chart": "Key youth metrics",
         "compare_minutes": "Minutes (youth + career)",
         "compare_rates": "Output (goals+assists per 90)",
+        "compare_norm": "Key metrics vs the best in the group (%)",
         "target_help": (
             "**RPL only** — probability of reaching the Premier League specifically "
             "(>=200 RPL minutes). Rare (~20%), a hard bar.\n\n"
             "**Any pro** — probability of reaching professional football at all: RPL, "
-            "FNL or FNL-2. Common (~84%), the model is more accurate here.\n\n"
-            "Switching retrains the model and recomputes every score and list."
+            "FNL or FNL-2. Common (~84%), the model is more accurate here."
         ),
         "report_hdr": "Player takeaway",
         "report_level": "Projected level",
