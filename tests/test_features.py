@@ -6,6 +6,7 @@ import pytest
 
 from eval.leakage_check import LeakageError
 from features.build_features import (
+    _trajectory_features,
     age_bucket,
     assert_matrix_is_clean,
     build_feature_matrix,
@@ -168,3 +169,88 @@ def test_leakage_guard_trips_on_bad_column():
     m["senior_national_team_caps"] = 5
     with pytest.raises(LeakageError):
         assert_matrix_is_clean(m)
+
+
+# --- Phase A: trajectory + cohort features -----------------------------------
+def _peer_seasons():
+    """One league, two seasons, each with a trusted 17-y.o. / 20-match peer norm."""
+    rows = [
+        {
+            "player_id": f"peer{i}_{season}",
+            "season": season,
+            "league": "Russian Youth League",
+            "club": "x",
+            "minutes": 1000,
+            "matches": 20,
+            "goals": 0,
+            "assists": 0,
+            "is_rpl": False,
+            "age_at_season": 17.0,
+        }
+        for season in ("20/21", "21/22")
+        for i in range(9)
+    ]
+    # prospect: two seasons in that league, young for it, then a minutes collapse
+    rows += [
+        {
+            "player_id": "p",
+            "season": "20/21",
+            "league": "Russian Youth League",
+            "club": "x",
+            "minutes": 1200,
+            "matches": 18,
+            "goals": 5,
+            "assists": 2,
+            "is_rpl": False,
+            "age_at_season": 15.0,
+        },
+        {
+            "player_id": "p",
+            "season": "21/22",
+            "league": "Russian Youth League",
+            "club": "x",
+            "minutes": 150,
+            "matches": 3,
+            "goals": 0,
+            "assists": 0,
+            "is_rpl": False,
+            "age_at_season": 16.0,
+        },
+    ]
+    return pd.DataFrame(rows)
+
+
+def test_trajectory_features_age_gap_matches_share_and_collapse():
+    s = _peer_seasons()
+    out = _trajectory_features(s, s).set_index("player_id").loc["p"]
+    # 15 vs a 17.0 peer mean (prospect's own rows barely move it) -> ~ -2
+    assert out["min_age_gap_vs_peers"] == pytest.approx(-2.0, abs=0.3)
+    assert out["mean_age_gap_vs_peers"] < 0
+    # season 2: 3 matches vs a 20-match full season -> low share
+    assert out["matches_share_min"] == pytest.approx(0.15, abs=0.02)
+    # 1200' -> 150' between consecutive pre-cutoff seasons
+    assert out["minutes_dropoff_max"] == pytest.approx(0.875, abs=0.01)
+    assert bool(out["had_minutes_collapse"]) is True
+
+
+def test_trajectory_features_no_history_is_neutral():
+    s = _peer_seasons()
+    out = _trajectory_features(s, s).set_index("player_id")
+    # a peer with a single steady season: no drop, no collapse
+    assert out.loc["peer0_20/21", "minutes_dropoff_max"] == 0.0
+    assert bool(out.loc["peer0_20/21", "had_minutes_collapse"]) is False
+
+
+def test_build_matrix_phase_a_columns_present_and_clean():
+    players = _players().assign(birth_month=[3, 11, 7])  # Q1, Q4, Q3
+    m = build_feature_matrix(players, _seasons(), cutoff_age=19, as_of_year=2024, cfg=CFG)
+    mi = m.set_index("player_id")
+    assert mi.loc["a", "cohort_year"] == 1995
+    assert mi.loc["a", "birth_quarter"] == 1
+    assert mi.loc["b", "birth_quarter"] == 4
+    # born in March => relatively old within the calendar-year cohort => high frac
+    assert mi.loc["a", "rel_age_frac"] > mi.loc["b", "rel_age_frac"]
+    for col in ("cohort_year", "birth_quarter", "rel_age_frac", "min_age_gap_vs_peers",
+                "minutes_dropoff_max", "had_minutes_collapse"):
+        assert col in feature_columns(m)
+    assert_matrix_is_clean(m)  # new columns must not trip the leakage guard

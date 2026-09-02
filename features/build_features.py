@@ -34,6 +34,7 @@ NON_FEATURE_COLS = {
     "player_id",
     "canonical_name",
     "birth_year",
+    "birth_month",  # raw -> birth_quarter / rel_age_frac are the features
     "academy_club",
     "target",
     "pro_target",
@@ -100,6 +101,73 @@ def _youth_features(seasons: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+# a (league, season) needs at least this many player-rows before we trust its
+# average age / match-load as a "peer norm" (small leagues give noisy baselines)
+_MIN_PEER_GROUP = 8
+
+
+def _league_season_norms(seasons: pd.DataFrame) -> pd.DataFrame:
+    """Per (league, season): peer count, mean age, and max matches (a full-season
+    proxy). Groups smaller than ``_MIN_PEER_GROUP`` get NaN norms."""
+    s = seasons[["league", "season", "age_at_season", "matches"]].copy()
+    s["age_at_season"] = pd.to_numeric(s["age_at_season"], errors="coerce")
+    s["matches"] = pd.to_numeric(s["matches"], errors="coerce")
+    norms = (
+        s.groupby(["league", "season"])
+        .agg(peers=("age_at_season", "size"), mean_age=("age_at_season", "mean"),
+             max_matches=("matches", "max"))
+        .reset_index()
+    )
+    norms.loc[norms["peers"] < _MIN_PEER_GROUP, ["mean_age", "max_matches"]] = np.nan
+    return norms
+
+
+def _trajectory_features(youth: pd.DataFrame, seasons: pd.DataFrame) -> pd.DataFrame:
+    """Signals from the *shape* of the pre-cutoff career, one row per player:
+
+    - ``*_age_gap_vs_peers`` — season age minus the mean age of that league/season.
+      Negative = playing above their age group (a strong prospect signal).
+    - ``matches_share_*`` — matches played / the fullest season in that league
+      (a weak availability / injury proxy).
+    - ``minutes_dropoff_max`` — largest season-over-season relative fall in minutes
+      from a meaningful base (>=500'); ``had_minutes_collapse`` flags a >=900' ->
+      <300' fall in consecutive pre-cutoff seasons.
+
+    ``youth`` must already be time-cutoff filtered; ``seasons`` is the full frame
+    (peer norms are contemporaneous, not outcome-derived).
+    """
+    norms = _league_season_norms(seasons)
+    y = youth.merge(norms, on=["league", "season"], how="left")
+    for col in ("minutes", "matches"):
+        y[col] = pd.to_numeric(y.get(col), errors="coerce").fillna(0.0)
+    y["age_at_season"] = pd.to_numeric(y["age_at_season"], errors="coerce")
+    y["age_gap_vs_peers"] = y["age_at_season"] - y["mean_age"]
+    with np.errstate(invalid="ignore", divide="ignore"):
+        share = y["matches"] / y["max_matches"]
+    y["matches_share"] = share.where(y["max_matches"] > 0).clip(upper=1.0)
+
+    rows = []
+    for pid, g in y.sort_values("age_at_season").groupby("player_id"):
+        row: dict[str, object] = {"player_id": pid}
+        gap = g["age_gap_vs_peers"].dropna()
+        row["min_age_gap_vs_peers"] = float(gap.min()) if len(gap) else 0.0
+        row["mean_age_gap_vs_peers"] = float(gap.mean()) if len(gap) else 0.0
+        sh = g["matches_share"].dropna()
+        row["matches_share_min"] = float(sh.min()) if len(sh) else np.nan
+        row["matches_share_mean"] = float(sh.mean()) if len(sh) else np.nan
+        mins = g["minutes"].to_numpy(float)
+        drop, collapse = 0.0, False
+        for prev, cur in zip(mins[:-1], mins[1:], strict=True):
+            if prev >= 500:
+                drop = max(drop, (prev - cur) / prev)
+            if prev >= 900 and cur < 300:
+                collapse = True
+        row["minutes_dropoff_max"] = float(max(drop, 0.0))
+        row["had_minutes_collapse"] = bool(collapse)
+        rows.append(row)
+    return pd.DataFrame(rows)
+
+
 def _academy_conversion_rate(labeled: pd.DataFrame) -> pd.Series:
     """Time-aware: for each player, P(target=1) among SAME academy, EARLIER cohorts
     only, excluding censored. NaN when there is no prior history (SPEC §7 leakage rule).
@@ -156,6 +224,30 @@ def build_feature_matrix(
     m[num_fill] = m[num_fill].fillna(0.0)
     m["played_youth_league"] = m["played_youth_league"].astype("boolean").fillna(False).astype(bool)
 
+    traj = _trajectory_features(youth, seasons)
+    m = m.merge(traj, on="player_id", how="left")
+    for col in ("min_age_gap_vs_peers", "mean_age_gap_vs_peers", "minutes_dropoff_max"):
+        m[col] = m[col].fillna(0.0)
+    m["had_minutes_collapse"] = (
+        m["had_minutes_collapse"].astype("boolean").fillna(False).astype(bool)
+    )
+    # matches_share_* stay NaN when unknown (CatBoost handles NaN; logreg imputes)
+
+    # era control: rule / legionnaire-limit changes shift the base rate by cohort.
+    # In the temporal split test cohorts sit outside the train range, so the model
+    # can only read a trend here, not memorise a cohort -> outcome mapping.
+    m["cohort_year"] = pd.to_numeric(m["birth_year"], errors="coerce")
+    if "birth_month" in players.columns:
+        bm = pd.to_numeric(
+            m["player_id"].map(players.set_index("player_id")["birth_month"]), errors="coerce"
+        )
+        # RFU age groups cut on 1 Jan: born early in the year => oldest in the cohort
+        m["birth_quarter"] = np.ceil(bm / 3).clip(1, 4)
+        m["rel_age_frac"] = (12 - bm) / 11.0
+    else:
+        m["birth_quarter"] = np.nan
+        m["rel_age_frac"] = np.nan
+
     m["academy_conversion_rate"] = _academy_conversion_rate(m).to_numpy()
     m["market_value_at_cutoff_eur"] = m["player_id"].map(
         _market_value_at_cutoff(market_values, players, cutoff_age)
@@ -191,7 +283,8 @@ _LEAGUE_REMAP = {
 def from_db(engine):
     players = pd.read_sql(
         "select p.player_id, p.canonical_name, p.position, p.position_detail, p.height_cm, "
-        "p.is_foreigner, p.academy_club, extract(year from p.birth_date)::int as birth_year "
+        "p.is_foreigner, p.academy_club, extract(year from p.birth_date)::int as birth_year, "
+        "extract(month from p.birth_date)::int as birth_month "
         "from player p",
         engine,
     )

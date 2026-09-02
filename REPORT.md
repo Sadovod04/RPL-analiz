@@ -89,6 +89,49 @@ The model clears the market-value baseline on both targets. **Top SHAP features:
 `youth_seasons`, `minutes_U19`. i.e. *how high a level they reached young, how much
 they played, and how productive they were*.
 
+### Phase A — trajectory & cohort features
+
+Eight features added off the already-crawled DB (no re-scrape,
+`scripts/build_features.py`), 24 → 32 model inputs:
+
+- `birth_quarter`, `rel_age_frac` — relative age within the Jan-1 age group. The
+  academy intake shows a textbook relative-age effect (Q1 37.6% of resolved
+  players vs Q4 14.7%); among those who then reach the RPL it flattens
+  (33 / 27 / 23 / 17), i.e. a late-born player who survives selection is a
+  slightly *better* bet — weak signal, right sign.
+- `min_/mean_age_gap_vs_peers` — season age minus the mean age of that
+  league-season. Negative = playing above their age group. Enters SHAP top-8.
+- `matches_share_min/_mean` — matches played vs the fullest season in that league
+  (availability proxy).
+- `minutes_dropoff_max`, `had_minutes_collapse` — biggest season-over-season fall
+  in minutes. Intended as an injury proxy; in practice it correlates *positively*
+  with success (pro +0.31, rpl +0.27) — it reads as "was pushed up a level early"
+  more than "got hurt". Kept, with that caveat.
+- `cohort_year` — era control (legionnaire-limit / 2022 changes). Dominates SHAP
+  on the RPL target (≈0.86); in the temporal split test cohorts sit outside the
+  train range so it can only extrapolate a trend, but whether it reads "less time
+  elapsed" legitimately vs games the split is the first thing for the Phase 3
+  honest-eval to probe.
+
+Circularity check: all eight correlate weakly with `market_value_at_cutoff_eur`
+(max |0.32|) — not a repackaged scout signal.
+
+**Before → after (temporal split, CatBoost, 12 Optuna trials):**
+
+| target | metric | before (24f) | after (32f) |
+|---|---|---|---|
+| **`target`** (RPL ≥200 min, base 30%) | PR-AUC | 0.688 | **0.750** |
+| | ROC-AUC | 0.839 | 0.867 |
+| | Brier | 0.161 | 0.135 |
+| | CV PR-AUC (GroupKFold) | 0.67 | 0.80 |
+| **`pro_target`** (base 86%) | PR-AUC | 0.972 | 0.977 |
+| | ROC-AUC | 0.852 | 0.875 |
+| | Brier | 0.136 | 0.127 |
+
+Real gain on the hard RPL target; `pro_target` was already near-saturated. The
+logreg baseline is left on the original feature list — the new inputs hurt it
+(raw `cohort_year` scale, collinear gaps), and its job is to be a stable bar.
+
 Caveats: the pro-target test window skews positive (most academy kids who reach the
 1999–2003 cohort got at least FNL-2 minutes); `academy_club` is still free-text
 from Transfermarkt's `formerClubsNote`, so that feature is weak.
@@ -117,6 +160,9 @@ uv run pytest                              # ~77 pass, 1 skip (RSF extra)
 # full academy crawl (~1 h, resumable) -> data/processed/features.parquet
 uv run python -m ingest.run_ingest --academy-seasons 2013-2026 --fast --build
 
+# rebuild features from the existing DB only (no re-scrape) — for feature iteration
+uv run python scripts/build_features.py
+
 # models on whatever parquet is present (real if built, else demo)
 uv run python scripts/run_baseline.py --target pro_target
 uv run python scripts/run_gbm.py --target pro_target --trials 25
@@ -131,7 +177,17 @@ uv run python scripts/demo_dataset.py 140
 
 ## Next
 
+Development plan is phased (see the working plan in chat history):
+
+- **Phase A — trajectory & cohort features.** ✅ done (this commit).
+- **Phase B — "recognition" module** (`ingest/sources/awards.py`): Wikipedia
+  achievements + TM talent tags (data already on disk), then RPL best-young-player
+  of the month, ЮФЛ team-of-the-round (youthleague.ru + VK public), youth national
+  team call-ups. Aggregate → `pre_cutoff_recognition_score` via `time_cutoff`.
+- **Phase C — costlier features.** Academy-to-academy transfers at 15–16
+  (`academy_club` cleanup), `marktwertverlauf` historical market value, first
+  senior-contract age, squad role (starter vs sub).
+- **Phase 3 — honest eval.** Recall@Top-20 vs a properly defined per-year
+  candidate pool; calibration curves; bootstrap CIs (labels are few); probe
+  whether `cohort_year` is a legitimate signal on the RPL target.
 - Full `run_ingest` with `kader` discovery → real training set with negatives.
-- `marktwertverlauf` endpoint for historical market value.
-- Wire M1b sources (РФС youth caps) when run from an unblocked network.
-- Recall@Top-20 against a properly defined per-year candidate pool.

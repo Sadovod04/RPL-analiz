@@ -81,11 +81,11 @@ uv run --extra app streamlit run app/streamlit_dashboard.py
 |---|---|
 | `config/settings.toml` | пороги таргета (200 мин / 26 лет), когорты (1990–2004), cutoff-возраст (11), пути |
 | `ingest/` | скрейперы (`sources/`: transfermarkt, wikipedia, ffspb, mosff), rate limiter, pydantic-схемы, resolver, запись в Postgres |
-| `features/` | `time_cutoff.py` (единый анти-leakage фильтр), `build_features.py`, `labels.py` |
+| `features/` | `time_cutoff.py` (единый анти-leakage фильтр), `build_features.py` (в т.ч. траекторные/когортные фичи: relative age, «молод для лиги», провалы минут, `cohort_year`), `labels.py` |
 | `models/` | `baseline.py` (логрег + наивный скаут), `gbm.py` (CatBoost), `survival.py` (Cox/RSF) |
 | `eval/` | `metrics.py` (PR-AUC, Brier, Recall@TopK), `leakage_check.py`, `shap_analysis.py` |
 | `app/` | Streamlit-дашборд, `ranking.py` (логика), `youth_features.py` (merge региональных пулов), `i18n.py` |
-| `scripts/` | `ingest_ffspb.py`, `ingest_mosff.py`, `refresh_youth.py`, `run_*.py`, `demo_dataset.py` |
+| `scripts/` | `ingest_ffspb.py`, `ingest_mosff.py`, `refresh_youth.py`, `build_features.py` (rebuild parquet from DB, no re-scrape), `run_*.py`, `demo_dataset.py` |
 | `notebooks/` | `01_eda.ipynb`, `02_model_report.ipynb` |
 
 ## Вехи / Milestones
