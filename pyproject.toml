@@ -55,6 +55,8 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 [tool.ruff.lint.per-file-ignores]
 # exploratory notebook cells: allow sys.path juggling, terse one-liners
 "notebooks/*" = ["E402", "E401", "E501", "E702", "I001", "F401"]
+# runnable scripts bootstrap sys.path before importing the package
+"scripts/*" = ["E402"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

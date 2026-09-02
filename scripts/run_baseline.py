@@ -13,6 +13,8 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # run as `python scripts/x.py`
+
 import pandas as pd
 
 from eval.metrics import calibration_table, evaluate_binary

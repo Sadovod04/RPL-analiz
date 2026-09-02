@@ -11,7 +11,10 @@ SHAP importance. Everything logged to the ``rpl-breakthrough`` MLflow experiment
 from __future__ import annotations
 
 import argparse
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))  # run as `python scripts/x.py`
 
 import mlflow
 import pandas as pd
