@@ -1,0 +1,666 @@
+{
+ "tournamentsCount": 11,
+ "sports": [
+  {
+   "id": 66,
+   "name": "Футбол (без ограничения состава)",
+   "columnPresets": [],
+   "defaultColumns": [
+    "matches",
+    "param0",
+    "param3",
+    "param4",
+    "param5",
+    "param6",
+    "param7",
+    "paramwins_in_game"
+   ],
+   "columns": [
+    {
+     "key": "matches",
+     "label": "М",
+     "label2": "Включён в протокол"
+    },
+    {
+     "key": "param0",
+     "label": "Г",
+     "label2": "Голы"
+    },
+    {
+     "key": "param3",
+     "label": "Пен",
+     "label2": "Голы с пенальти"
+    },
+    {
+     "key": "param4",
+     "label": "ЖК",
+     "label2": "Жёлтые карточки"
+    },
+    {
+     "key": "param5",
+     "label": "2ЖК",
+     "label2": "Две жёлтых карточки в матче"
+    },
+    {
+     "key": "param6",
+     "label": "КК",
+     "label2": "Красные карточки"
+    },
+    {
+     "key": "param7",
+     "label": "Игр",
+     "label2": "Участвовал в игре матчей"
+    },
+    {
+     "key": "paramwins_in_game",
+     "label": "Поб",
+     "label2": "Количество победных игр, когда игрок был на поле не менее 1 минуты"
+    }
+   ],
+   "rows": [
+    {
+     "seasonId": 695,
+     "seasonName": "2024",
+     "detailsUrl": "https://stat.ffspb.org/player/7579393/stats/37576/342644/props",
+     "requestId": 7579393,
+     "status": null,
+     "tournament": {
+      "id": 37576,
+      "name": "Турнир. Мальчики до 13 лет (клубы категории \"А\")",
+      "url": "https://stat.ffspb.org/tournament37576"
+     },
+     "team": {
+      "id": 342644,
+      "name": "Локомотив",
+      "img": "https://img.nagradion.ru/images/bf24x24/shields/FSWQhSyu.png",
+      "url": "https://stat.ffspb.org/tournament37576/team/342644/players"
+     },
+     "stats": {
+      "matches": 17,
+      "param0": 1,
+      "param4": 3,
+      "param7": 17,
+      "paramwins_in_game": 8
+     }
+    }
+   ],
+   "hiddenTournamentsCount": 2,
+   "allClubs": [
+    {
+     "name": "Локомотив"
+    }
+   ],
+   "allSeasons": [
+    {
+     "name": "2024"
+    },
+    {
+     "name": "2023"
+    },
+    {
+     "name": "2022"
+    }
+   ],
+   "subsUrl": "https://stat.ffspb.org/login?_domain=stat.ffspb.org"
+  },
+  {
+   "id": 16,
+   "name": "Пляжный футбол",
+   "columnPresets": [],
+   "defaultColumns": [
+    "matches",
+    "param7",
+    "paramwins_in_game",
+    "param0",
+    "param1",
+    "param11",
+    "param12",
+    "param2",
+    "param3",
+    "param4",
+    "param13"
+   ],
+   "columns": [
+    {
+     "key": "matches",
+     "label": "М",
+     "label2": "Включён в протокол"
+    },
+    {
+     "key": "param7",
+     "label": "Игр",
+     "label2": "Сыграно матчей: игрок был в составе на игру"
+    },
+    {
+     "key": "paramwins_in_game",
+     "label": "Поб",
+     "label2": "Количество победных игр, когда игрок был на поле не менее 1 минуты"
+    },
+    {
+     "key": "param0",
+     "label": "Г",
+     "label2": "Голы, в т.ч. с пенальти"
+    },
+    {
+     "key": "param1",
+     "label": "Пен+",
+     "label2": "Реализованные пенальти"
+    },
+    {
+     "key": "param11",
+     "label": "Пен-",
+     "label2": "Незабитые пенальти"
+    },
+    {
+     "key": "param12",
+     "label": "СВ",
+     "label2": "Голы в свои ворота"
+    },
+    {
+     "key": "param2",
+     "label": "ЖК",
+     "label2": "Жёлтые карточки"
+    },
+    {
+     "key": "param3",
+     "label": "2ЖК",
+     "label2": "Две жёлтых карточки в матче"
+    },
+    {
+     "key": "param4",
+     "label": "КК",
+     "label2": "Красные карточки"
+    },
+    {
+     "key": "param13",
+     "label": "У",
+     "label2": "Удаления, в т.ч. за второе предупреждение в матче"
+    }
+   ],
+   "rows": [
+    {
+     "seasonId": 697,
+     "seasonName": "2025",
+     "detailsUrl": "https://stat.ffspb.org/player/9981710/stats/43207/407181/props",
+     "requestId": 9981710,
+     "status": null,
+     "tournament": {
+      "id": 43207,
+      "name": "Пляжный футбол. Турнир. Мальчики до 14 лет",
+      "url": "https://stat.ffspb.org/tournament43207"
+     },
+     "team": {
+      "id": 407181,
+      "name": "Динамо",
+      "img": "https://img.nagradion.ru/images/bf24x24/shields/V8EWtCUB.png",
+      "url": "https://stat.ffspb.org/tournament43207/team/407181/players"
+     },
+     "stats": {
+      "matches": 7,
+      "param7": 7,
+      "paramwins_in_game": 5,
+      "param0": 6,
+      "param11": 1,
+      "param2": 1
+     }
+    }
+   ],
+   "hiddenTournamentsCount": 1,
+   "allClubs": [
+    {
+     "name": "Динамо"
+    },
+    {
+     "name": "Локомотив"
+    }
+   ],
+   "allSeasons": [
+    {
+     "name": "2025"
+    },
+    {
+     "name": "2024"
+    }
+   ],
+   "subsUrl": "https://stat.ffspb.org/login?_domain=stat.ffspb.org"
+  },
+  {
+   "id": 1,
+   "name": "Футбол",
+   "columnPresets": [
+    {
+     "name": "Положительные",
+     "columns": [
+      "matches",
+      "param7",
+      "paramwins_in_game",
+      "param5",
+      "param6",
+      "param8",
+      "param0",
+      "param1"
+     ]
+    },
+    {
+     "name": "Отрицательные",
+     "columns": [
+      "matches",
+      "param7",
+      "param11",
+      "param12",
+      "param2",
+      "param3",
+      "param4",
+      "param13"
+     ]
+    },
+    {
+     "name": "Вратарские",
+     "columns": [
+      "matches",
+      "param7",
+      "paramgoals_conceded",
+      "paramgoals_conceded_penalty",
+      "paramsaved_penalty",
+      "paramno_conceded"
+     ]
+    }
+   ],
+   "defaultColumns": [
+    "matches",
+    "param7",
+    "paramwins_in_game",
+    "param5",
+    "param6",
+    "param8",
+    "param0",
+    "param1",
+    "param11",
+    "param12",
+    "param2",
+    "param3",
+    "param4",
+    "param13",
+    "paramgoals_conceded",
+    "paramgoals_conceded_penalty",
+    "paramsaved_penalty",
+    "paramno_conceded"
+   ],
+   "columns": [
+    {
+     "key": "matches",
+     "label": "М",
+     "label2": "Включён в протокол"
+    },
+    {
+     "key": "param7",
+     "label": "Игр",
+     "label2": "Сыграно матчей: игрок вышел в основном составе или на замену"
+    },
+    {
+     "key": "paramwins_in_game",
+     "label": "Поб",
+     "label2": "Количество победных игр, когда игрок был на поле не менее 1 минуты"
+    },
+    {
+     "key": "param5",
+     "label": "Осн",
+     "label2": "Вышел в основном составе"
+    },
+    {
+     "key": "param6",
+     "label": "Зам",
+     "label2": "Вышел на замену"
+    },
+    {
+     "key": "param8",
+     "label": "Мин",
+     "label2": "Минут игрового времени"
+    },
+    {
+     "key": "param0",
+     "label": "Г",
+     "label2": "Голы, в т.ч. с пенальти"
+    },
+    {
+     "key": "param1",
+     "label": "Пен+",
+     "label2": "Реализованные пенальти"
+    },
+    {
+     "key": "param11",
+     "label": "Пен-",
+     "label2": "Незабитые пенальти"
+    },
+    {
+     "key": "param12",
+     "label": "СВ",
+     "label2": "Голы в свои ворота"
+    },
+    {
+     "key": "param2",
+     "label": "ЖК",
+     "label2": "Жёлтые карточки"
+    },
+    {
+     "key": "param3",
+     "label": "2ЖК",
+     "label2": "Две жёлтых карточки в матче"
+    },
+    {
+     "key": "param4",
+     "label": "КК",
+     "label2": "Красные карточки"
+    },
+    {
+     "key": "param13",
+     "label": "У",
+     "label2": "Удаления, в т.ч. за второе предупреждение в матче"
+    },
+    {
+     "key": "paramgoals_conceded",
+     "label": "ПГ",
+     "label2": "Пропущенные голы, в т.ч. с пенальти (для вратарей)"
+    },
+    {
+     "key": "paramgoals_conceded_penalty",
+     "label": "ППен",
+     "label2": "Пропущенные голы с пенальти (для вратарей)"
+    },
+    {
+     "key": "paramsaved_penalty",
+     "label": "ОПен",
+     "label2": "Отбитые пенальти (для вратарей)"
+    },
+    {
+     "key": "paramno_conceded",
+     "label": "БГ",
+     "label2": "Матчи без пропущенных голов (для вратарей), учитываются только матчи сыгранные без замен"
+    }
+   ],
+   "rows": [
+    {
+     "seasonId": 701,
+     "seasonName": "2026",
+     "detailsUrl": "https://stat.ffspb.org/player/10309006/stats/44347/420611/props",
+     "requestId": 10309006,
+     "status": null,
+     "tournament": {
+      "id": 44347,
+      "name": "Кубок. Мальчики до 15 лет",
+      "url": "https://stat.ffspb.org/tournament44347"
+     },
+     "team": {
+      "id": 420611,
+      "name": "ФК Динамо-СПб",
+      "img": "https://img.nagradion.ru/images/bf24x24/shields/33kzeoR9.png",
+      "url": "https://stat.ffspb.org/tournament44347/team/420611/players"
+     },
+     "stats": {
+      "matches": 1,
+      "param7": 1,
+      "param5": 1,
+      "param8": 36
+     }
+    },
+    {
+     "seasonId": 701,
+     "seasonName": "2026",
+     "detailsUrl": "https://stat.ffspb.org/player/10309006/stats/44325/420611/props",
+     "requestId": 10309006,
+     "status": null,
+     "tournament": {
+      "id": 44325,
+      "name": "Первенство. Мальчики до 15 лет",
+      "url": "https://stat.ffspb.org/tournament44325"
+     },
+     "team": {
+      "id": 420611,
+      "name": "ФК Динамо-СПб",
+      "img": "https://img.nagradion.ru/images/bf24x24/shields/33kzeoR9.png",
+      "url": "https://stat.ffspb.org/tournament44325/team/420611/players"
+     },
+     "stats": {
+      "matches": 8,
+      "param7": 4,
+      "param5": 1,
+      "param6": 3,
+      "param8": 44
+     }
+    }
+   ],
+   "hiddenTournamentsCount": 3,
+   "allClubs": [
+    {
+     "name": "Динамо"
+    },
+    {
+     "name": "Локомотив"
+    }
+   ],
+   "allSeasons": [
+    {
+     "name": "2026"
+    },
+    {
+     "name": "2025-2026"
+    },
+    {
+     "name": "2025"
+    }
+   ],
+   "subsUrl": "https://stat.ffspb.org/login?_domain=stat.ffspb.org"
+  },
+  {
+   "id": 78,
+   "name": "Мини-футбол 5x5",
+   "columnPresets": [],
+   "defaultColumns": [
+    "matches",
+    "param7",
+    "paramwins_in_game",
+    "param5",
+    "param6",
+    "param8",
+    "param0",
+    "param1",
+    "param11",
+    "param12",
+    "param2",
+    "param3",
+    "param4",
+    "param13",
+    "paramgoals_conceded",
+    "paramgoals_conceded_penalty",
+    "paramsaved_penalty",
+    "paramno_conceded"
+   ],
+   "columns": [
+    {
+     "key": "matches",
+     "label": "М",
+     "label2": "Включён в протокол"
+    },
+    {
+     "key": "param7",
+     "label": "Игр",
+     "label2": "Сыграно матчей: игрок вышел в основном составе или на замену"
+    },
+    {
+     "key": "paramwins_in_game",
+     "label": "Поб",
+     "label2": "Количество победных игр, когда игрок был на поле не менее 1 минуты"
+    },
+    {
+     "key": "param5",
+     "label": "Осн",
+     "label2": "Вышел в основном составе"
+    },
+    {
+     "key": "param6",
+     "label": "Зам",
+     "label2": "Вышел на замену"
+    },
+    {
+     "key": "param8",
+     "label": "Мин",
+     "label2": "Минут игрового времени"
+    },
+    {
+     "key": "param0",
+     "label": "Г",
+     "label2": "Голы, в т.ч. с пенальти"
+    },
+    {
+     "key": "param1",
+     "label": "Пен+",
+     "label2": "Реализованные пенальти"
+    },
+    {
+     "key": "param11",
+     "label": "Пен-",
+     "label2": "Незабитые пенальти"
+    },
+    {
+     "key": "param12",
+     "label": "СВ",
+     "label2": "Голы в свои ворота"
+    },
+    {
+     "key": "param2",
+     "label": "ЖК",
+     "label2": "Жёлтые карточки"
+    },
+    {
+     "key": "param3",
+     "label": "2ЖК",
+     "label2": "Две жёлтых карточки в матче"
+    },
+    {
+     "key": "param4",
+     "label": "КК",
+     "label2": "Красные карточки"
+    },
+    {
+     "key": "param13",
+     "label": "У",
+     "label2": "Удаления, в т.ч. за второе предупреждение в матче"
+    },
+    {
+     "key": "paramgoals_conceded",
+     "label": "ПГ",
+     "label2": "Пропущенные голы, в т.ч. с пенальти (для вратарей)"
+    },
+    {
+     "key": "paramgoals_conceded_penalty",
+     "label": "ППен",
+     "label2": "Пропущенные голы с пенальти (для вратарей)"
+    },
+    {
+     "key": "paramsaved_penalty",
+     "label": "ОПен",
+     "label2": "Отбитые пенальти (для вратарей)"
+    },
+    {
+     "key": "paramno_conceded",
+     "label": "БГ",
+     "label2": "Матчи без пропущенных голов (для вратарей), учитываются только матчи сыгранные без замен"
+    }
+   ],
+   "rows": [
+    {
+     "seasonId": 697,
+     "seasonName": "2025",
+     "detailsUrl": "https://stat.ffspb.org/player/9214249/stats/41244/388829/props",
+     "requestId": 9214249,
+     "status": null,
+     "tournament": {
+      "id": 41244,
+      "name": "МФЛ. Мальчики 2011-2012",
+      "url": "https://stat.ffspb.org/tournament41244"
+     },
+     "team": {
+      "id": 388829,
+      "name": "ГБОУ СОШ №99 Петроградского района",
+      "img": "https://img.nagradion.ru/images/bf24x24/shields/noshield.png",
+      "url": "https://stat.ffspb.org/tournament41244/team/388829/players"
+     },
+     "stats": {
+      "matches": 5,
+      "param7": 5,
+      "paramwins_in_game": 4,
+      "param5": 5,
+      "param8": 100,
+      "param0": 7
+     }
+    }
+   ],
+   "hiddenTournamentsCount": 0,
+   "allClubs": [
+    {
+     "name": "МО Петровский школа № 99"
+    }
+   ],
+   "allSeasons": [
+    {
+     "name": "2025"
+    }
+   ],
+   "subsUrl": "https://stat.ffspb.org/login?_domain=stat.ffspb.org"
+  }
+ ],
+ "seasons": [
+  {
+   "id": 0,
+   "name": "Все сезоны",
+   "sportIds": [
+    66,
+    16,
+    1,
+    78
+   ]
+  },
+  {
+   "id": 695,
+   "name": "Сезон 2024",
+   "sportIds": [
+    16
+   ]
+  },
+  {
+   "id": 692,
+   "name": "Сезон 2023",
+   "sportIds": [
+    66
+   ]
+  },
+  {
+   "id": 688,
+   "name": "Сезон 2022",
+   "sportIds": [
+    66
+   ]
+  },
+  {
+   "id": 697,
+   "name": "Сезон 2025",
+   "sportIds": [
+    78
+   ]
+  },
+  {
+   "id": 701,
+   "name": "Сезон 2026",
+   "sportIds": [
+    1
+   ]
+  },
+  {
+   "id": 700,
+   "name": "Сезон 2025-2026",
+   "sportIds": [
+    1
+   ]
+  }
+ ]
+}

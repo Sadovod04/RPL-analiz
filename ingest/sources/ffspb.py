@@ -1,63 +1,65 @@
 """ФФ СПб statistics adapter — stat.ffspb.org (Наградион / Nagradion platform).
 
-This is a SEPARATE source for the youngest players (~12–15 y.o.), where
-Transfermarkt has nothing. It is collected into its own tables/parquet first and
-merged into the main dataset later via :mod:`ingest.resolve`.
+Separate source for the youngest players (~10–16 y.o.) that Transfermarkt lacks.
+Collected into its own parquet first, merged into the main dataset later via
+:mod:`ingest.resolve` (full name + birth date + club).
 
-Mechanism (no browser needed — plain rate-limited httpx):
-  1. GET a page (``/tournament{id}``, ``/tournament{id}/match/{mid}``, …) — it is a
-     React shell whose components mount with ``data-block-id`` attributes.
-  2. POST ``/_anon/{component}/load_props`` with multipart ``{block_id, ...params}``
-     -> JSON props for that component.
-
-Known components / calls (confirmed against tournament 40530 = "Первенство СПб,
-мальчики до 14 лет, 2025"):
-  * ``match_feed``          {block_id, on_screen, tournaments[]}  -> matches[] (with match urls)
-  * ``top_players_block``   {block_id, tournaments[]}             -> top scorers
-  * ``tournament_table``    {block_id, tournaments[]}             -> standings
-
-TODO (next chunk, needed for player-level data + merge):
-  * match lineups   -> per-team rosters (player id, name, shirt no)
-  * player card     -> birth date, position, per-season minutes/goals
-  * tournament discovery -> list youth-tournament ids per season / age group
+All data is plain httpx (no browser, no WAF):
+  * ``/calendar`` -> every tournament id + name (filter by age).
+  * ``POST /_anon/match_feed/load_props`` {block_id, on_screen, tournaments[]}
+    -> matches[] (each with a match-page url).
+  * ``/tournament{tid}/match/{mid}`` -> inline ``renderComponent(.., 'GameProtocolBlock', {...})``
+    -> host/guestProtocol.protocol.start_players + substitute_players -> per player:
+    full_name, number, url = /tournament{tid}/player/{tsid}.
+  * ``/tournament{tid}/player/{tsid}`` -> server-rendered ``.person-info__title`` + a
+    ``<table class="table">`` with «Дата рождения» / «Возраст», plus inline
+    ``PlayerStats`` props (tournament history).
 """
 
 from __future__ import annotations
 
+import json
 import re
+from datetime import date, datetime
+
+from bs4 import BeautifulSoup
 
 from ingest.fetcher import HttpFetcher
 
 FFSPB_BASE = "https://stat.ffspb.org"
 _UA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/124.0 Safari/537.36"
+_MATCH_FEED_BLOCK = "16215"
+
+# tournament-name patterns that mark a youth competition
+_AGE_RE = re.compile(r"до\s*(\d{1,2})\s*лет|мальчики\s*(20\d\d)", re.IGNORECASE)
 
 
 def _snake(component: str) -> str:
     return re.sub(r"(?<!^)(?=[A-Z])", "_", component).lower()
 
 
-class Nagradion:
-    """Thin client over the ``/_anon/{component}/load_props`` RPC."""
+def render_props(html: str, component: str) -> dict | None:
+    """Pull the inline ``renderComponent("uuid", 'Component', {JSON})`` props object."""
+    m = re.search(
+        r'renderComponent\(\s*"[^"]+"\s*,\s*[\'"]' + re.escape(component) + r'[\'"]\s*,\s*',
+        html,
+    )
+    if not m:
+        return None
+    try:  # raw_decode reads exactly one JSON value (string-aware) from the offset
+        obj, _ = json.JSONDecoder().raw_decode(html, m.end())
+        return obj
+    except json.JSONDecodeError:
+        return None
 
+
+class Nagradion:
     def __init__(self, fetcher: HttpFetcher | None = None, base: str = FFSPB_BASE):
         self.base = base
         self._f = fetcher or HttpFetcher(user_agent=_UA)
 
     def page_html(self, path: str) -> str:
         return self._f.get(f"{self.base}/{path.lstrip('/')}").text
-
-    def block_ids(self, html: str) -> dict[str, list[str]]:
-        """component name -> [block_id] (order of appearance in the page)."""
-        out: dict[str, list[str]] = {}
-        for m in re.finditer(
-            r'data-block-id="(\d+)"[^>]*?data-component-name="([A-Za-z]+)"'
-            r'|data-component-name="([A-Za-z]+)"[^>]*?data-block-id="(\d+)"',
-            html,
-        ):
-            bid = m.group(1) or m.group(4)
-            comp = m.group(2) or m.group(3)
-            out.setdefault(comp, []).append(bid)
-        return out
 
     def load_props(self, component: str, block_id: str, **params) -> dict:
         self._f.rate_limiter.wait()
@@ -68,14 +70,34 @@ class Nagradion:
 
 
 # --- parsers ---------------------------------------------------------
+def parse_calendar(html: str, max_age: int = 16) -> list[dict]:
+    """-> [{tournament_id, name, age}] for youth competitions only."""
+    soup = BeautifulSoup(html, "lxml")
+    out, seen = [], set()
+    for a in soup.select('a[href*="/tournament"]'):
+        m = re.search(r"/tournament(\d{4,7})", a.get("href", ""))
+        if not m:
+            continue
+        tid = m.group(1)
+        name = re.sub(r"\s+", " ", a.get_text(" ", strip=True))
+        if not name or tid in seen:
+            continue
+        am = _AGE_RE.search(name)
+        if not am:
+            continue
+        age = int(am.group(1)) if am.group(1) else datetime.now().year - int(am.group(2))
+        if age <= max_age:
+            seen.add(tid)
+            out.append({"tournament_id": tid, "name": name, "age": age})
+    return out
+
+
 def parse_matches(payload: dict) -> list[dict]:
-    """match_feed payload -> [{id, number, home, guest, goals, url, date, finished}]."""
     out = []
     for m in payload.get("matches", []):
         out.append(
             {
                 "match_id": m.get("id"),
-                "number": m.get("number"),
                 "home": m.get("home_team_name"),
                 "guest": m.get("guest_team_name"),
                 "goals": m.get("goals"),
@@ -88,28 +110,107 @@ def parse_matches(payload: dict) -> list[dict]:
     return out
 
 
+def _lineup_side(protocol: dict, side: str) -> list[dict]:
+    rows = []
+    for group in ("start_players", "substitute_players"):
+        for p in protocol.get(group) or []:
+            m = re.search(r"/tournament(\d+)/player/(\d+)", p.get("url", ""))
+            if not m:
+                continue
+            rows.append(
+                {
+                    "tournament_id": m.group(1),
+                    "ffspb_id": m.group(2),  # tournament-scoped player id
+                    "full_name": p.get("full_name"),
+                    "number": p.get("number"),
+                    "side": side,
+                    "started": group == "start_players",
+                }
+            )
+    return rows
+
+
+def parse_lineup(game_protocol: dict) -> list[dict]:
+    """GameProtocolBlock props -> flat list of players (both teams)."""
+    out = []
+    for key, side in (("hostProtocol", "home"), ("guestProtocol", "away")):
+        proto = (game_protocol.get(key) or {}).get("protocol") or {}
+        out.extend(_lineup_side(proto, side))
+    return out
+
+
+def _parse_ru_date(text: str | None) -> date | None:
+    if not text:
+        return None
+    m = re.search(r"(\d{2})\.(\d{2})\.(\d{4})", text)
+    if not m:
+        return None
+    d, mo, y = map(int, m.groups())
+    try:
+        return date(y, mo, d)
+    except ValueError:
+        return None
+
+
+def parse_player_profile(html: str) -> dict:
+    soup = BeautifulSoup(html, "lxml")
+    title = soup.select_one(".person-info__title")
+    name = title.get_text(" ", strip=True) if title else None
+
+    info: dict[str, str] = {}
+    for tr in soup.select(".person-info table tr, .person-info__table tr, table.table tr"):
+        th, td = tr.find("th"), tr.find("td")
+        if th and td:
+            info[th.get_text(strip=True).lower()] = td.get_text(" ", strip=True)
+
+    stats = render_props(html, "PlayerStats") or {}
+    tournaments = []
+    for sport in stats.get("sports", []):
+        for row in sport.get("rows", []):
+            trn = row.get("tournament") or {}
+            team = row.get("team") or {}
+            tournaments.append(
+                {
+                    "season": row.get("seasonName"),
+                    "sport": sport.get("name"),
+                    "tournament_id": trn.get("id"),
+                    "tournament_name": trn.get("name"),
+                    "team": team.get("name"),
+                    "details_url": row.get("detailsUrl"),
+                }
+            )
+
+    return {
+        "full_name": name,
+        "birth_date": _parse_ru_date(info.get("дата рождения")),
+        "age_text": info.get("возраст"),
+        "tournaments": tournaments,
+    }
+
+
+# --- source ----------------------------------------------------------
 class FfspbSource:
     name = "ffspb"
 
     def __init__(self, client: Nagradion | None = None):
         self.api = client or Nagradion()
 
+    def discover_youth_tournaments(self, max_age: int = 16) -> list[dict]:
+        return parse_calendar(self.api.page_html("calendar"), max_age=max_age)
+
     def tournament_matches(self, tournament_id: int | str) -> list[dict]:
-        html = self.api.page_html(f"tournament{tournament_id}")
-        blocks = self.api.block_ids(html)
-        bids = blocks.get("MatchFeed") or ["16215"]
         payload = self.api.load_props(
-            "match_feed", bids[0], on_screen=500, **{"tournaments[]": tournament_id}
+            "match_feed", _MATCH_FEED_BLOCK, on_screen=1000, **{"tournaments[]": tournament_id}
         )
         return parse_matches(payload)
 
-    def match_lineups(self, match_id: int | str) -> dict:
-        raise NotImplementedError(
-            "next chunk: parse the lineup component on /tournament{t}/match/{match_id}"
-        )
+    def match_lineup(self, tournament_id: int | str, match_id: int | str) -> list[dict]:
+        html = self.api.page_html(f"tournament{tournament_id}/match/{match_id}")
+        gp = render_props(html, "GameProtocolBlock")
+        return parse_lineup(gp) if gp else []
 
-    def player_card(self, player_id: int | str) -> dict:
-        raise NotImplementedError("next chunk: birth date + per-season stats from the player page")
-
-    def discover_youth_tournaments(self, season_year: int) -> list[int]:
-        raise NotImplementedError("next chunk: enumerate U11–U15 tournament ids per season")
+    def player_profile(self, tournament_id: int | str, ffspb_id: int | str) -> dict:
+        html = self.api.page_html(f"tournament{tournament_id}/player/{ffspb_id}")
+        prof = parse_player_profile(html)
+        prof["ffspb_id"] = str(ffspb_id)
+        return prof
