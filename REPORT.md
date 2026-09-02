@@ -31,11 +31,12 @@ official youth league). What actually works from a non-RU network:
 Entity resolution merges a player across sources by birth-year block + fuzzy name
 match (Cyrillic transliterated), union-find → stable `player_id`.
 
-**Volume in this repo:** a 140-player convenience sample (`features_demo.parquet`,
-current RPL squads via tmapi) — enough to exercise the whole pipeline end to end.
-It is **heavily skewed to `target = 1`** (current top-flight players); it is **not**
-a training set. A real dataset needs `run_ingest` with `kader` discovery over
-resolved 1990–2004 cohorts, which supplies the negatives.
+**Volume:** the full `run_ingest` crawl (`--academy-seasons 2013-2026 --fast
+--build`) discovers ~4000 player ids from ЮФЛ/academy `kader` pages across all
+divisions and seasons, then pulls each via tmapi → **3982 players** in
+`data/processed/features.parquet` (git-ignored). A 140-player `features_demo.parquet`
+(`scripts/demo_dataset.py`, current RPL squads, no Playwright) is the quick
+pipeline check. The crawl is resumable (checkpoint + skip-already-ingested).
 
 ## Method (the part that makes it defensible)
 
@@ -113,16 +114,19 @@ uv sync && uv run playwright install chromium
 docker compose up -d                       # Postgres for raw data
 uv run pytest                              # ~77 pass, 1 skip (RSF extra)
 
-# demo pipeline (no Playwright, ~4 min):
-uv run python scripts/demo_dataset.py 140
-uv run python scripts/run_baseline.py
-uv run python scripts/run_gbm.py
+# full academy crawl (~1 h, resumable) -> data/processed/features.parquet
+uv run python -m ingest.run_ingest --academy-seasons 2013-2026 --fast --build
+
+# models on whatever parquet is present (real if built, else demo)
+uv run python scripts/run_baseline.py --target pro_target
+uv run python scripts/run_gbm.py --target pro_target --trials 25
 uv run python scripts/run_survival.py
+
+# bilingual dashboard
 uv run --extra app streamlit run app/streamlit_dashboard.py
 
-# real dataset:
-uv run python -m ingest.run_ingest --sources wikipedia transfermarkt \
-    --seasons 2010-2022 --limit 400
+# quick pipeline check without Playwright (~4 min):
+uv run python scripts/demo_dataset.py 140
 ```
 
 ## Next
