@@ -15,7 +15,7 @@ from sklearn.model_selection import GroupKFold
 
 from eval.metrics import pr_auc
 
-CATEGORICAL = ["academy_club", "position"]
+CATEGORICAL = ["academy_club", "position", "position_detail"]
 _CAT_NA = "__NA__"
 
 

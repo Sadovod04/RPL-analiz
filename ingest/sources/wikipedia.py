@@ -13,11 +13,14 @@ from __future__ import annotations
 import re
 from urllib.parse import quote
 
+import httpx
 from bs4 import BeautifulSoup
 
 from ingest.fetcher import HttpFetcher
 
 WIKI_API = "https://ru.wikipedia.org/w/api.php"
+# MediaWiki asks for a descriptive UA (tool; contact) or it throttles hard
+WIKI_UA = "RPL-analiz/0.1 (research, non-commercial; contact: local)"
 
 SEASON_TITLES = (
     "Юношеская футбольная лига {a}/{b}",
@@ -118,14 +121,17 @@ class WikipediaYouthLeague:
     name = "wikipedia"
 
     def __init__(self, fetcher: HttpFetcher | None = None):
-        self._fetcher = fetcher or HttpFetcher()
+        self._fetcher = fetcher or HttpFetcher(user_agent=WIKI_UA)
 
     def fetch_season_html(self, title: str) -> str | None:
         url = (
             f"{WIKI_API}?action=parse&page={quote(title)}"
             "&prop=text&formatversion=2&format=json&redirects=1"
         )
-        data = self._fetcher.get_json(url)
+        try:
+            data = self._fetcher.get_json(url)
+        except httpx.HTTPStatusError:
+            return None
         if "error" in data:
             return None
         return data["parse"]["text"]

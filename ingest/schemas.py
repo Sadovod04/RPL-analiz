@@ -31,6 +31,9 @@ class Player(BaseModel):
     )
     birth_date: _Date | None = None
     position: Position = Position.UNKNOWN
+    position_detail: str | None = Field(
+        default=None, description="fine-grained TM position, e.g. 'Attacking Midfield'"
+    )
     foot: str | None = None
     height_cm: int | None = None
     weight_kg: int | None = None

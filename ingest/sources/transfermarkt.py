@@ -132,7 +132,8 @@ def parse_player_master(payload: dict, source_id: str | None = None) -> Player:
     nat = (d.get("nationalityDetails") or {}).get("nationalities") or {}
     nat_id = nat.get("nationalityId")
     height_m = attrs.get("height")
-    pos = map_position((attrs.get("position") or {}).get("name"))
+    pos_detail = (attrs.get("position") or {}).get("name")
+    pos = map_position(pos_detail)
     if pos is Position.UNKNOWN:
         pos = _POSITION_GROUP_MAP.get((attrs.get("positionGroup") or "").upper(), Position.UNKNOWN)
     mv = ((d.get("marketValueDetails") or {}).get("current") or {}).get("value")
@@ -144,6 +145,7 @@ def parse_player_master(payload: dict, source_id: str | None = None) -> Player:
         name_home_country=(d.get("nationalityDetails") or {}).get("passportName") or None,
         birth_date=parse_tm_date((d.get("lifeDates") or {}).get("dateOfBirth")),
         position=pos,
+        position_detail=pos_detail,
         foot=(attrs.get("preferredFoot") or {}).get("name"),
         height_cm=round(height_m * 100)
         if isinstance(height_m, (int, float)) and height_m

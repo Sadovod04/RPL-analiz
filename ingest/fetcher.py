@@ -41,6 +41,13 @@ class WafChallengeError(RuntimeError):
     """Page still shows the AWS WAF challenge after load."""
 
 
+class RetryableHTTP(RuntimeError):
+    """Transient HTTP failure worth retrying (429 / 5xx / transport)."""
+
+
+_RETRY_STATUS = {429, 500, 502, 503, 504}
+
+
 class HttpFetcher:
     """Thin rate-limited ``httpx`` client for sources without bot protection."""
 
@@ -55,15 +62,17 @@ class HttpFetcher:
         )
 
     @retry(
-        retry=retry_if_exception_type(httpx.HTTPError),
-        stop=stop_after_attempt(4),
-        wait=wait_exponential(multiplier=1, max=30),
+        retry=retry_if_exception_type((RetryableHTTP, httpx.TransportError)),
+        stop=stop_after_attempt(5),
+        wait=wait_exponential(multiplier=2, max=60),
         reraise=True,
     )
     def get(self, url: str, **kwargs) -> httpx.Response:
         self.rate_limiter.wait()
         resp = self._client.get(url, **kwargs)
-        resp.raise_for_status()
+        if resp.status_code in _RETRY_STATUS:
+            raise RetryableHTTP(f"{resp.status_code} for {url}")
+        resp.raise_for_status()  # 4xx (except 429) -> hard fail, no retry
         return resp
 
     def get_json(self, url: str, **kwargs) -> dict:

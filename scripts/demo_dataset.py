@@ -53,6 +53,7 @@ def main(max_players: int = 200) -> None:
                     "canonical_name": p.full_name,
                     "birth_year": by,
                     "position": p.position.value,
+                    "position_detail": p.position_detail,
                     "height_cm": p.height_cm,
                     "is_foreigner": p.is_foreigner,
                     "academy_club": (p.youth_clubs[0] if p.youth_clubs else None),

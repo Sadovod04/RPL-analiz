@@ -57,6 +57,8 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 "notebooks/*" = ["E402", "E401", "E501", "E702", "I001", "F401"]
 # runnable scripts bootstrap sys.path before importing the package
 "scripts/*" = ["E402"]
+"app/streamlit_dashboard.py" = ["E402"]
+"app/i18n.py" = ["E501"]  # translation strings
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

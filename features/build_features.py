@@ -36,6 +36,7 @@ NON_FEATURE_COLS = {
     "birth_year",
     "academy_club",
     "target",
+    "pro_target",
     "ordinal_target",
     "duration",
     "event_observed",
@@ -157,7 +158,7 @@ def build_feature_matrix(
     )
 
     # static player attributes (categoricals kept raw for CatBoost)
-    for col in ("position", "height_cm", "is_foreigner"):
+    for col in ("position", "position_detail", "height_cm", "is_foreigner"):
         if col in players.columns:
             m[col] = m["player_id"].map(players.set_index("player_id")[col])
 
@@ -176,13 +177,14 @@ def assert_matrix_is_clean(df: pd.DataFrame) -> None:
 # --- I/O -------------------------------------------------------------
 def from_db(engine):
     players = pd.read_sql(
-        "select p.player_id, p.canonical_name, p.position, p.height_cm, p.is_foreigner, "
-        "p.academy_club, extract(year from p.birth_date)::int as birth_year from player p",
+        "select p.player_id, p.canonical_name, p.position, p.position_detail, p.height_cm, "
+        "p.is_foreigner, p.academy_club, extract(year from p.birth_date)::int as birth_year "
+        "from player p",
         engine,
     )
     seasons = pd.read_sql(
-        "select player_id, season, league, club, minutes, matches, goals, assists, "
-        "is_rpl, null::float as age_at_season from season_stats",
+        "select player_id, season, league, club, age_at_season, minutes, matches, "
+        "goals, assists, is_rpl from season_stats",
         engine,
     )
     market_values = pd.read_sql("select player_id, date, value_eur from market_value", engine)

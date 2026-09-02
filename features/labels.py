@@ -107,6 +107,11 @@ def attach_labels(
         binary_target(m, a, cfg)
         for m, a in zip(out["rpl_minutes_ever"], out["current_age"], strict=True)
     ]
+    # broader target: reached ANY professional level (RPL / FNL / FNL-2)
+    out["pro_target"] = [
+        1 if pro else (0 if a >= cfg.settled_age else CENSORED)
+        for pro, a in zip(out["reached_pro_level"], out["current_age"], strict=True)
+    ]
     out["ordinal_target"] = [
         ordinal_target(m, bool(p), cfg)
         for m, p in zip(out["rpl_minutes_ever"], out["reached_pro_level"], strict=True)
