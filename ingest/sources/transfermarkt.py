@@ -36,9 +36,13 @@ COMPETITION_NAMES = {
     "RU1": "Premier Liga",
     "RU2": "Pervaya Liga",
     "RU3": "Vtoraya Liga",
+    "2DVB": "Vtoraya Liga",  # Вторая лига Б
+    "R3D1": "Vtoraya Liga",  # 3rd division, group 1
+    "R3D2": "Vtoraya Liga",  # 3rd division, group 2
     "RUP": "Russian Cup",
     "RUSS": "Russian Super Cup",
     "RUJL": "Russian Youth League",
+    "RJL2": "Russian Youth League",  # ЮФЛ-2
     "RPLW": "Premier Liga (relegation)",
     "CL": "UEFA Champions League",
     "EL": "UEFA Europa League",

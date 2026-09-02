@@ -17,6 +17,22 @@ CENSORED = -1  # binary target value for "outcome still open"
 # competitions that count as "reached a professional level" for the ordinal target
 PRO_LEAGUE_NAMES = {"Premier Liga", "Pervaya Liga", "Vtoraya Liga", "Premier Liga (relegation)"}
 
+# highest career league reached -> label (rank for ordering)
+_LEVEL_LABELS = {
+    "Premier Liga": ("РПЛ", 4),
+    "Premier Liga (relegation)": ("РПЛ", 4),
+    "Pervaya Liga": ("ФНЛ", 3),
+    "Vtoraya Liga": ("ФНЛ-2", 2),
+}
+OUTCOME_LEVELS = ("РПЛ", "ФНЛ", "ФНЛ-2", "не дошёл")
+
+
+def outcome_level(leagues_with_minutes: set[str]) -> str:
+    best = max(
+        (_LEVEL_LABELS[lg][1] for lg in leagues_with_minutes if lg in _LEVEL_LABELS), default=0
+    )
+    return {4: "РПЛ", 3: "ФНЛ", 2: "ФНЛ-2"}.get(best, "не дошёл")
+
 
 @dataclass(frozen=True)
 class LabelConfig:
@@ -102,6 +118,9 @@ def attach_labels(
     out["rpl_debut_age"] = out["player_id"].map(debut_age)
     out["reached_pro_level"] = out["player_id"].isin(pro_ids)
     out["current_age"] = out["birth_year"].map(lambda by: _current_age(by, as_of_year))
+
+    played = s[s["minutes"] > 0].groupby("player_id")["league"].agg(lambda x: set(x.dropna()))
+    out["outcome_level"] = out["player_id"].map(lambda pid: outcome_level(played.get(pid, set())))
 
     out["target"] = [
         binary_target(m, a, cfg)

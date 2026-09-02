@@ -38,6 +38,7 @@ NON_FEATURE_COLS = {
     "target",
     "pro_target",
     "ordinal_target",
+    "outcome_level",
     "duration",
     "event_observed",
     "rpl_minutes_ever",
@@ -174,6 +175,15 @@ def assert_matrix_is_clean(df: pd.DataFrame) -> None:
     assert_no_leakage(feature_columns(df))
 
 
+# raw tmapi competition codes that older crawls stored unmapped -> readable name
+_LEAGUE_REMAP = {
+    "2DVB": "Vtoraya Liga",
+    "R3D1": "Vtoraya Liga",
+    "R3D2": "Vtoraya Liga",
+    "RJL2": "Russian Youth League",
+}
+
+
 # --- I/O -------------------------------------------------------------
 def from_db(engine):
     players = pd.read_sql(
@@ -187,6 +197,7 @@ def from_db(engine):
         "goals, assists, is_rpl from season_stats",
         engine,
     )
+    seasons["league"] = seasons["league"].replace(_LEAGUE_REMAP)
     market_values = pd.read_sql("select player_id, date, value_eur from market_value", engine)
     return players, seasons, market_values
 

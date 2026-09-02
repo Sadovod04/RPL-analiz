@@ -89,6 +89,7 @@ def _table(frame: pd.DataFrame) -> pd.DataFrame:
         "canonical_name": t("col_name", lang),
         "birth_year": t("col_birth", lang),
         "academy_club": t("col_academy", lang),
+        "outcome_level": t("col_level_reached", lang),
         "youth_minutes_total": t("col_minutes", lang),
         "youth_ga_per90": t("col_ga90", lang),
         "best_level_pre_cutoff": t("col_level", lang),
@@ -98,6 +99,7 @@ def _table(frame: pd.DataFrame) -> pd.DataFrame:
         t("col_birth", lang),
         t("col_pos", lang),
         t("score", lang),
+        t("col_level_reached", lang),
         t("col_academy", lang),
         t("col_minutes", lang),
         t("col_ga90", lang),
@@ -118,6 +120,14 @@ def _sidebar_filters(frame: pd.DataFrame, key: str):
         pos_sel = st.multiselect(
             t("position", lang), poss, placeholder=t("all_ph", lang), key=f"{key}_pos"
         )
+        lvl_sel = []
+        if "outcome_level" in frame.columns:
+            lvls = [
+                x for x in ("РПЛ", "ФНЛ", "ФНЛ-2", "не дошёл") if x in set(frame["outcome_level"])
+            ]
+            lvl_sel = st.multiselect(
+                t("level_reached", lang), lvls, placeholder=t("all_ph", lang), key=f"{key}_lvl"
+            )
         yr = (
             st.slider(t("birth_range", lang), lo, hi, (lo, hi), key=f"{key}_yr")
             if lo < hi
@@ -135,6 +145,8 @@ def _sidebar_filters(frame: pd.DataFrame, key: str):
         m &= frame["_pos"].isin(pos_sel)
     if ac_sel:
         m &= frame["academy_club"].astype(str).isin(ac_sel)
+    if lvl_sel:
+        m &= frame["outcome_level"].isin(lvl_sel)
     return frame[m].head(top_n)
 
 
