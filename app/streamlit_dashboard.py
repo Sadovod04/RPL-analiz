@@ -474,6 +474,25 @@ def _load_youth() -> pd.DataFrame | None:
         .reset_index()
     )
     agg["gpg"] = (agg["goals"] / agg["games"].replace(0, 1)).round(2)
+
+    # transparent 0-100 "potential" score from what the kids' DB has
+    _STRONG = ("зенит", "спартак", "цска", "краснодар", "локомотив", "динамо", "чертаново", "рубин")
+
+    def _club_tier(teams: str) -> float:
+        low = str(teams).lower()
+        if any(k in low for k in _STRONG):
+            return 1.0
+        if "сшор" in low or "сш " in low or "спортивн" in low:
+            return 0.6
+        return 0.3
+
+    gpg_pct = agg["gpg"].rank(pct=True)
+    games_pct = agg["games"].rank(pct=True)
+    tier = agg["teams"].map(_club_tier)
+    agg["pers_score"] = (100 * (0.45 * gpg_pct + 0.30 * games_pct + 0.25 * tier)).round(0)
+    agg["proj_level"] = pd.cut(
+        agg["pers_score"], [-1, 40, 60, 80, 101], labels=["yl_low", "yl_fnl2", "yl_fnl", "yl_rpl"]
+    ).astype(str)
     return agg
 
 
@@ -484,6 +503,7 @@ def _youth_tab():
         st.info(t("youth_none", lang))
         return
     st.caption(t("youth_note", lang))
+    st.caption("ℹ️ " + t("y_score_help", lang))
     with st.expander(t("filters", lang), expanded=True):
         c1, c2, c3 = st.columns(3)
         years = sorted(int(y) for y in d["birth_year"].dropna().unique())
@@ -495,17 +515,19 @@ def _youth_tab():
         v = v[v["birth_year"].isin(yr)]
     if q:
         v = v[v["full_name"].str.contains(q, case=False, na=False)]
-    v = v.sort_values(["goals", "gpg"], ascending=False)
-    show = v.rename(
+    v = v.sort_values("pers_score", ascending=False)
+
+    show = v.assign(proj=v["proj_level"].map(lambda k: t(k, lang))).rename(
         columns={
             "full_name": t("y_name", lang),
             "patronymic": t("y_patr", lang),
             "birth_year": t("col_birth", lang),
             "teams": t("y_teams", lang),
-            "n_tournaments": t("y_trn", lang),
             "games": t("y_games", lang),
             "goals": t("y_goals", lang),
             "gpg": t("y_gpg", lang),
+            "pers_score": t("y_score", lang),
+            "proj": t("y_level", lang),
         }
     )
     st.caption(f"{len(v)} / {len(d)}")
@@ -515,8 +537,9 @@ def _youth_tab():
                 t("y_name", lang),
                 t("y_patr", lang),
                 t("col_birth", lang),
+                t("y_score", lang),
+                t("y_level", lang),
                 t("y_teams", lang),
-                t("y_trn", lang),
                 t("y_games", lang),
                 t("y_goals", lang),
                 t("y_gpg", lang),
@@ -524,8 +547,27 @@ def _youth_tab():
         ],
         use_container_width=True,
         hide_index=True,
-        height=640,
+        height=560,
     )
+
+    # compare a few kids
+    st.markdown(f"**{t('y_compare', lang)}**")
+    names = dict(zip(v["full_name"] + " · " + v["birth_year"].astype(str), v.index, strict=False))
+    picks = st.multiselect(t("y_compare_pick", lang), list(names), max_selections=6)
+    if len(picks) >= 2:
+        sub = v.loc[[names[p] for p in picks]].set_index("full_name")
+        cmp = pd.DataFrame(
+            {
+                t("y_score", lang): sub["pers_score"].astype(int),
+                t("y_level", lang): sub["proj_level"].map(lambda k: t(k, lang)),
+                t("col_birth", lang): sub["birth_year"].astype("Int64"),
+                t("y_games", lang): sub["games"].astype(int),
+                t("y_goals", lang): sub["goals"].astype(int),
+                t("y_gpg", lang): sub["gpg"],
+                t("y_teams", lang): sub["teams"],
+            }
+        )
+        st.table(cmp.T)
 
 
 # -- layout ---------------------------------------------------

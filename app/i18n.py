@@ -134,6 +134,15 @@ STRINGS = {
         "y_gpg": "Голов/игра",
         "y_min_games": "Мин. игр",
         "y_search": "Поиск по фамилии",
+        "y_score": "Перспективность",
+        "y_level": "Прогноз уровня",
+        "y_score_help": "Простая оценка 0–100 по тому, что есть в детской базе: голов за игру (percentile), сколько игр сыграл, сила клуба. Не ML-модель — у детей ещё нет карьеры. Смещена в сторону атакующих (позиции в базе ФФ СПб нет).",
+        "yl_rpl": "потенциал РПЛ",
+        "yl_fnl": "потенциал ФНЛ",
+        "yl_fnl2": "ФНЛ-2 / низшие",
+        "yl_low": "пока низкий",
+        "y_compare": "Сравнить юных",
+        "y_compare_pick": "Выбери 2–6 детей",
         "target_help": (
             "**Только РПЛ** — вероятность, что игрок дорастёт именно до Премьер-лиги "
             "(≥200 минут в РПЛ). Редкий исход (~20%), жёсткий отбор.\n\n"
@@ -244,6 +253,15 @@ STRINGS = {
         "y_gpg": "Goals/game",
         "y_min_games": "Min games",
         "y_search": "Search by surname",
+        "y_score": "Potential",
+        "y_level": "Level projection",
+        "y_score_help": "A simple 0–100 score from what the kids' DB has: goals per game (percentile), games played, club strength. Not an ML model — no career yet. Biased toward attackers (SPb FF data has no position).",
+        "yl_rpl": "RPL potential",
+        "yl_fnl": "FNL potential",
+        "yl_fnl2": "FNL-2 / lower",
+        "yl_low": "low for now",
+        "y_compare": "Compare youth",
+        "y_compare_pick": "Pick 2–6 kids",
         "target_help": (
             "**RPL only** — probability of reaching the Premier League specifically "
             "(>=200 RPL minutes). Rare (~20%), a hard bar.\n\n"
