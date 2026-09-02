@@ -121,6 +121,19 @@ STRINGS = {
         "compare_minutes": "Минуты (молодёжка + карьера)",
         "compare_rates": "Результативность (гол+пас за 90)",
         "compare_norm": "Сравнение по ключевым метрикам (% от лучшего в группе)",
+        "tab_youth": "Юные (ФФ СПб)",
+        "youth_hdr": "Юные футболисты СПб (10–13 лет)",
+        "youth_note": "Данные ФФ СПб (детские турниры). У этих детей ещё нет карьеры для модели — это отдельный пул талантов: сортируй по голам за игру и объёму игр.",
+        "youth_none": "Файл data/processed/ffspb_players.parquet не найден. Запусти scripts/ingest_ffspb.py.",
+        "y_name": "Игрок",
+        "y_patr": "Отчество",
+        "y_teams": "Команды",
+        "y_trn": "Турниров",
+        "y_games": "Игр",
+        "y_goals": "Голов",
+        "y_gpg": "Голов/игра",
+        "y_min_games": "Мин. игр",
+        "y_search": "Поиск по фамилии",
         "target_help": (
             "**Только РПЛ** — вероятность, что игрок дорастёт именно до Премьер-лиги "
             "(≥200 минут в РПЛ). Редкий исход (~20%), жёсткий отбор.\n\n"
@@ -218,6 +231,19 @@ STRINGS = {
         "compare_minutes": "Minutes (youth + career)",
         "compare_rates": "Output (goals+assists per 90)",
         "compare_norm": "Key metrics vs the best in the group (%)",
+        "tab_youth": "Youth (SPb FF)",
+        "youth_hdr": "SPb youth footballers (age 10–13)",
+        "youth_note": "SPb FF data (kids' tournaments). No career yet for the model — a separate talent pool: sort by goals per game and games played.",
+        "youth_none": "data/processed/ffspb_players.parquet not found. Run scripts/ingest_ffspb.py.",
+        "y_name": "Player",
+        "y_patr": "Patronymic",
+        "y_teams": "Teams",
+        "y_trn": "Tournaments",
+        "y_games": "Games",
+        "y_goals": "Goals",
+        "y_gpg": "Goals/game",
+        "y_min_games": "Min games",
+        "y_search": "Search by surname",
         "target_help": (
             "**RPL only** — probability of reaching the Premier League specifically "
             "(>=200 RPL minutes). Rare (~20%), a hard bar.\n\n"

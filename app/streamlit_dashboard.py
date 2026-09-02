@@ -451,11 +451,88 @@ def _compare(scored: pd.DataFrame):
     st.bar_chart(norm.T, horizontal=True, stack=False)
 
 
+# -- youth (ФФ СПб) ------------------------------------------------
+@st.cache_data
+def _load_youth() -> pd.DataFrame | None:
+    p = ROOT / load_settings()["paths"]["data_processed"] / "ffspb_players.parquet"
+    if not p.exists():
+        return None
+    d = pd.read_parquet(p)
+    d["birth_year"] = pd.to_datetime(d["birth_date"], errors="coerce").dt.year.astype("Int64")
+    # ffspb_id is tournament-scoped -> one row per (name, patronymic, birth_date)
+    agg = (
+        d.groupby(["full_name", "patronymic", "birth_date", "birth_year"], dropna=False)
+        .agg(
+            teams=(
+                "teams",
+                lambda s: ";".join(sorted({x for v in s for x in str(v).split(";") if x})),
+            ),
+            n_tournaments=("n_tournaments", "max"),
+            games=("games", "sum"),
+            goals=("goals", "sum"),
+        )
+        .reset_index()
+    )
+    agg["gpg"] = (agg["goals"] / agg["games"].replace(0, 1)).round(2)
+    return agg
+
+
+def _youth_tab():
+    d = _load_youth()
+    st.subheader(t("youth_hdr", lang))
+    if d is None:
+        st.info(t("youth_none", lang))
+        return
+    st.caption(t("youth_note", lang))
+    with st.expander(t("filters", lang), expanded=True):
+        c1, c2, c3 = st.columns(3)
+        years = sorted(int(y) for y in d["birth_year"].dropna().unique())
+        yr = c1.multiselect(t("birth_range", lang), years, placeholder=t("all_ph", lang))
+        min_g = c2.number_input(t("y_min_games", lang), 0, 200, 10)
+        q = c3.text_input(t("y_search", lang), "")
+    v = d[d["games"] >= min_g]
+    if yr:
+        v = v[v["birth_year"].isin(yr)]
+    if q:
+        v = v[v["full_name"].str.contains(q, case=False, na=False)]
+    v = v.sort_values(["goals", "gpg"], ascending=False)
+    show = v.rename(
+        columns={
+            "full_name": t("y_name", lang),
+            "patronymic": t("y_patr", lang),
+            "birth_year": t("col_birth", lang),
+            "teams": t("y_teams", lang),
+            "n_tournaments": t("y_trn", lang),
+            "games": t("y_games", lang),
+            "goals": t("y_goals", lang),
+            "gpg": t("y_gpg", lang),
+        }
+    )
+    st.caption(f"{len(v)} / {len(d)}")
+    st.dataframe(
+        show[
+            [
+                t("y_name", lang),
+                t("y_patr", lang),
+                t("col_birth", lang),
+                t("y_teams", lang),
+                t("y_trn", lang),
+                t("y_games", lang),
+                t("y_goals", lang),
+                t("y_gpg", lang),
+            ]
+        ],
+        use_container_width=True,
+        hide_index=True,
+        height=640,
+    )
+
+
 # -- layout ---------------------------------------------------
 flt = _filter_widgets(df)
 
-tab_prospects, tab_pro, tab_compare = st.tabs(
-    [t("tab_prospects", lang), t("tab_pro", lang), t("tab_compare", lang)]
+tab_prospects, tab_pro, tab_compare, tab_youth = st.tabs(
+    [t("tab_prospects", lang), t("tab_pro", lang), t("tab_compare", lang), t("tab_youth", lang)]
 )
 
 with tab_prospects:
@@ -481,3 +558,6 @@ with tab_pro:
 
 with tab_compare:
     _compare(_scored_all(df, target_col, _parquet_mtime()))
+
+with tab_youth:
+    _youth_tab()
