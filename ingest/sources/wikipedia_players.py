@@ -127,7 +127,7 @@ class WikiPlayerBios:
             from ingest.fetcher import HttpFetcher
 
             fetcher = HttpFetcher(
-                rate_limiter=rate_limiter or RateLimiter(min_interval=1.0, jitter=0.5),
+                rate_limiter=rate_limiter or RateLimiter(min_interval=1.3, jitter=0.6),
                 user_agent=WIKI_UA,
             )
         self._f = fetcher

@@ -20,6 +20,7 @@ import pandas as pd
 from sqlalchemy import text
 
 from ingest.db import get_engine
+from ingest.rate_limiter import RateLimiter
 from ingest.sources.wikipedia_players import WikiPlayerBios
 from ingest.storage import store_raw, store_wiki_recognition
 from ingest.tables import init_db
@@ -45,14 +46,20 @@ def main(argv: list[str] | None = None) -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--limit", type=int)
     ap.add_argument("--refresh", action="store_true", help="re-check players already done")
+    ap.add_argument(
+        "--rate",
+        type=float,
+        default=1.3,
+        help="min seconds between MediaWiki API calls (raise if you hit HTTP 429)",
+    )
     args = ap.parse_args(argv)
 
     engine = get_engine()
     init_db(engine)
     todo = _todo(engine, args.limit, args.refresh)
-    print(f"wikipedia bios: {len(todo)} player(s) to check")
+    print(f"wikipedia bios: {len(todo)} player(s) to check  (rate={args.rate}s)")
 
-    bios = WikiPlayerBios()
+    bios = WikiPlayerBios(rate_limiter=RateLimiter(min_interval=args.rate, jitter=args.rate / 2))
     hits = errors = 0
     for i, r in enumerate(todo.itertuples(index=False), 1):
         bd = r.birth_date if pd.notna(r.birth_date) else None
