@@ -33,7 +33,7 @@ from app.ranking import (  # noqa: E402
     split_resolved_open,
     train_ranker,
 )
-from app.youth_features import combined_frame, youth_frame  # noqa: E402
+from app.youth_features import YOUTH_SOURCES, combined_frame, youth_frame, youth_paths  # noqa: E402
 from settings import load_settings  # noqa: E402
 
 st.set_page_config(page_title="RPL-analiz", layout="wide")
@@ -58,8 +58,8 @@ def _proc() -> Path:
     return ROOT / load_settings()["paths"]["data_processed"]
 
 
-def _ffspb_path() -> Path:
-    return _proc() / "ffspb_players.parquet"
+def _youth_paths() -> list[Path]:
+    return youth_paths(_proc())
 
 
 @st.cache_data
@@ -68,18 +68,14 @@ def _load(mtime: float) -> tuple[pd.DataFrame, str]:
     path = proc / "features.parquet"
     if not path.exists():
         path = proc / "features_demo.parquet"
-    ff = _ffspb_path()
-    return combined_frame(path, ff if ff.exists() else None), path.name
+    return combined_frame(path, _youth_paths() or None), path.name
 
 
 def _parquet_mtime() -> float:
     proc = _proc()
-    m = 0.0
-    for name in ("features.parquet", "features_demo.parquet", "ffspb_players.parquet"):
-        p = proc / name
-        if p.exists():
-            m = max(m, p.stat().st_mtime)
-    return m
+    names = ["features.parquet", "features_demo.parquet"]
+    names += [f"{s}_players.parquet" for s in YOUTH_SOURCES]
+    return max((p.stat().st_mtime for n in names if (p := proc / n).exists()), default=0.0)
 
 
 @st.cache_resource
@@ -178,10 +174,15 @@ def _filter_widgets(frame: pd.DataFrame) -> dict:
         )
         src_sel = []
         if "source" in frame.columns and frame["source"].nunique() > 1:
-            src_map = {"tm": t("src_tm", lang), "ffspb": t("src_ffspb", lang)}
+            src_map = {
+                "tm": t("src_tm", lang),
+                "ffspb": t("src_ffspb", lang),
+                "mosff": t("src_mosff", lang),
+            }
+            present = [s for s in src_map if (frame["source"] == s).any()]
             src_sel = st.multiselect(
                 t("source", lang),
-                list(src_map),
+                present,
                 format_func=lambda s: src_map.get(s, s),
                 placeholder=t("all_ph", lang),
                 help=t("src_help", lang),
@@ -218,7 +219,11 @@ def _table(frame: pd.DataFrame) -> pd.DataFrame:
     )
     if "source" in d:
         d[t("col_method", lang)] = d["source"].map(
-            {"tm": t("method_model", lang), "ffspb": t("method_heur", lang)}
+            {
+                "tm": t("method_model", lang),
+                "ffspb": t("method_heur", lang),
+                "mosff": t("method_heur", lang),
+            }
         )
     # level column: reached-level for TM players, ≈projection for youth
     lvl_txt = d.get("outcome_level")
@@ -372,7 +377,7 @@ def _player_card(view: pd.DataFrame):
     prow = df[df["player_id"] == pick].iloc[0]
     pscore = float(view.loc[view["player_id"] == pick, "breakthrough_score"].iloc[0])
 
-    if str(prow.get("source")) == "ffspb":
+    if str(prow.get("source")) in ("ffspb", "mosff"):
         _youth_player_card(prow, pscore)
         return
 
@@ -531,13 +536,13 @@ def _compare(scored: pd.DataFrame):
     )
 
 
-# -- youth (ФФ СПб) ------------------------------------------------
+# -- youth (regional federations) --------------------------------
 @st.cache_data
 def _load_youth(mtime: float) -> pd.DataFrame | None:
-    p = _ffspb_path()
-    if not p.exists():
+    paths = _youth_paths()
+    if not paths:
         return None
-    return youth_frame(p)
+    return youth_frame(paths)
 
 
 def _youth_tab():
@@ -548,17 +553,23 @@ def _youth_tab():
         return
     st.caption(t("youth_note", lang))
     st.caption("ℹ️ " + t("y_score_help", lang))
+    _REGION = {"ffspb": t("src_ffspb", lang), "mosff": t("src_mosff", lang)}
+    d = d.assign(region=d["source"].str.split(";").str[0].map(lambda s: _REGION.get(s, s)))
     with st.expander(t("filters", lang), expanded=True):
-        c1, c2, c3 = st.columns(3)
+        c1, c2, c3, c4 = st.columns(4)
         years = sorted(int(y) for y in d["birth_year"].dropna().unique())
         yr = c1.multiselect(t("birth_range", lang), years, placeholder=t("all_ph", lang))
         min_g = c2.number_input(t("y_min_games", lang), 0, 200, 10)
         q = c3.text_input(t("y_search", lang), "")
+        regs = sorted(d["region"].dropna().unique())
+        reg_sel = c4.multiselect(t("source", lang), regs, placeholder=t("all_ph", lang))
     v = d[d["games"] >= min_g]
     if yr:
         v = v[v["birth_year"].isin(yr)]
     if q:
         v = v[v["full_name"].str.contains(q, case=False, na=False)]
+    if reg_sel:
+        v = v[v["region"].isin(reg_sel)]
     v = v.sort_values("pers_score", ascending=False)
 
     show = v.assign(proj=v["proj_level"].map(lambda k: t(k, lang))).rename(
@@ -566,6 +577,7 @@ def _youth_tab():
             "full_name": t("y_name", lang),
             "patronymic": t("y_patr", lang),
             "birth_year": t("col_birth", lang),
+            "region": t("source", lang),
             "teams": t("y_teams", lang),
             "games": t("y_games", lang),
             "goals": t("y_goals", lang),
@@ -581,6 +593,7 @@ def _youth_tab():
                 t("y_name", lang),
                 t("y_patr", lang),
                 t("col_birth", lang),
+                t("source", lang),
                 t("y_score", lang),
                 t("y_level", lang),
                 t("y_teams", lang),

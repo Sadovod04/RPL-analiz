@@ -1,6 +1,6 @@
-"""Bring the ФФ СПб youth pool (``ffspb_players.parquet``) into the main feature
-schema so the kids show up in the same tables / filters / compare as the
-Transfermarkt players.
+"""Bring the regional youth pools (``<source>_players.parquet``: ФФ СПб, Москва …)
+into the main feature schema so the kids show up in the same tables / filters /
+compare as the Transfermarkt players.
 
 They have no career yet, so their outcome labels are all ``CENSORED`` (they can
 never enter the training set) and most model features are missing. Their score in
@@ -19,6 +19,9 @@ import pandas as pd
 
 from features.build_features import feature_columns
 from features.labels import CENSORED
+
+# regional youth parquets live next to features.parquet as "<source>_players.parquet"
+YOUTH_SOURCES = ("ffspb", "mosff")
 
 _STRONG = ("зенит", "спартак", "цска", "краснодар", "локомотив", "динамо", "чертаново", "рубин")
 
@@ -41,31 +44,59 @@ def _primary_club(teams: str) -> str | None:
 
 
 def _pid(name: str, dob) -> str:
-    return "ffspb_" + hashlib.sha1(f"{name}|{dob}".encode()).hexdigest()[:12]
+    return "youth_" + hashlib.sha1(f"{name}|{dob}".encode()).hexdigest()[:12]
 
 
-def youth_frame(path: Path) -> pd.DataFrame:
-    """Deduped one-row-per-kid table with games/goals/gpg + ``pers_score`` / ``proj_level``."""
+def youth_paths(processed_dir: Path) -> list[Path]:
+    return [
+        p for s in YOUTH_SOURCES if (p := Path(processed_dir) / f"{s}_players.parquet").exists()
+    ]
+
+
+def _read_youth_parquet(path: Path) -> pd.DataFrame:
     d = pd.read_parquet(path)
-    d["birth_year"] = pd.to_datetime(d["birth_date"], errors="coerce").dt.year.astype("Int64")
+    src = path.stem.replace("_players", "")
+    if "source" not in d.columns:
+        d["source"] = src
+    # birth_year: explicit column wins (mosff has no DOB), else derive from birth_date
+    if "birth_year" not in d.columns or d["birth_year"].isna().all():
+        d["birth_year"] = pd.to_datetime(d.get("birth_date"), errors="coerce").dt.year
+    for c in ("patronymic", "birth_date", "minutes", "n_tournaments"):
+        if c not in d.columns:
+            d[c] = pd.NA
+    return d
+
+
+def youth_frame(paths: Path | list[Path]) -> pd.DataFrame:
+    """One deduped row per kid across every regional source, with games/goals/gpg
+    + ``pers_score`` / ``proj_level``."""
+    if isinstance(paths, (str, Path)):
+        paths = [Path(paths)]
+    d = pd.concat([_read_youth_parquet(Path(p)) for p in paths], ignore_index=True)
+    d["birth_year"] = pd.to_numeric(d["birth_year"], errors="coerce").astype("Int64")
     agg = (
-        d.groupby(["full_name", "patronymic", "birth_date", "birth_year"], dropna=False)
+        d.groupby(["full_name", "patronymic", "birth_year"], dropna=False)
         .agg(
+            birth_date=("birth_date", "first"),
+            source=("source", lambda s: ";".join(sorted({str(x) for x in s if pd.notna(x)}))),
             teams=(
                 "teams",
                 lambda s: ";".join(sorted({x for v in s for x in str(v).split(";") if x})),
             ),
             n_tournaments=("n_tournaments", "max"),
-            games=("games", "sum"),
-            goals=("goals", "sum"),
-            minutes=("minutes", "sum"),
+            games=("games", "max"),
+            goals=("goals", "max"),
+            minutes=("minutes", "max"),
         )
         .reset_index()
     )
     agg["gpg"] = (agg["goals"] / agg["games"].replace(0, 1)).round(2)
 
-    gpg_pct = agg["gpg"].rank(pct=True)
-    games_pct = agg["games"].rank(pct=True)
+    # percentiles WITHIN each source — ффспб rows carry career totals, mosff rows a
+    # single season, so a global rank would just reward "more games logged".
+    grp = agg.groupby(agg["source"].str.split(";").str[0])
+    gpg_pct = grp["gpg"].rank(pct=True)
+    games_pct = grp["games"].rank(pct=True)
     tier = agg["teams"].map(_club_tier)
     agg["pers_score"] = (100 * (0.45 * gpg_pct + 0.30 * games_pct + 0.25 * tier)).round(0)
     agg["proj_level"] = pd.cut(
@@ -74,13 +105,13 @@ def youth_frame(path: Path) -> pd.DataFrame:
     return agg
 
 
-def youth_feature_rows(path: Path, template: pd.DataFrame) -> pd.DataFrame:
+def youth_feature_rows(paths: Path | list[Path], template: pd.DataFrame) -> pd.DataFrame:
     """Map :func:`youth_frame` onto ``template``'s columns (the main feature schema).
 
-    Returns rows with ``source == "ffspb"``, all labels ``CENSORED``, model features
-    mostly NaN, and ``pers_score`` / ``proj_level`` carried through for scoring.
+    Returns rows with ``source`` in {ffspb, mosff, …}, all labels ``CENSORED``,
+    model features mostly NaN, ``pers_score`` / ``proj_level`` carried through.
     """
-    y = youth_frame(path)
+    y = youth_frame(paths)
     n = len(y)
     # start every model feature as float NaN so an all-missing column stays numeric
     out = pd.DataFrame(
@@ -92,7 +123,7 @@ def youth_feature_rows(path: Path, template: pd.DataFrame) -> pd.DataFrame:
             out[c] = pd.NA
 
     out["player_id"] = [
-        _pid(nm, db) for nm, db in zip(y["full_name"], y["birth_date"], strict=True)
+        _pid(nm, by) for nm, by in zip(y["full_name"], y["birth_year"], strict=True)
     ]
     out["canonical_name"] = y["full_name"].to_numpy()
     out["birth_year"] = y["birth_year"].astype("Int64").to_numpy()
@@ -123,7 +154,8 @@ def youth_feature_rows(path: Path, template: pd.DataFrame) -> pd.DataFrame:
     out["event_observed"] = False
     out["current_age"] = (2026 - y["birth_year"].astype("float")).to_numpy()
 
-    out["source"] = "ffspb"
+    # "ffspb", "mosff", or "ffspb;mosff" if a kid shows up in both regions
+    out["source"] = y["source"].str.split(";").str[0].to_numpy()
     out["pers_score"] = y["pers_score"].to_numpy()
     out["proj_level"] = y["proj_level"].to_numpy()
 
@@ -131,16 +163,29 @@ def youth_feature_rows(path: Path, template: pd.DataFrame) -> pd.DataFrame:
     return out[list(template.columns) + extras]
 
 
-def combined_frame(features_path: Path, ffspb_path: Path | None) -> pd.DataFrame:
-    """Transfermarkt feature matrix + (optionally) the ФФ СПб youth rows, one table."""
+def combined_frame(features_path: Path, youth: Path | list[Path] | None) -> pd.DataFrame:
+    """Transfermarkt feature matrix + every regional youth pool, one table.
+
+    ``youth`` may be the processed-data directory (auto-discovers
+    ``<source>_players.parquet``), an explicit list of parquet paths, or None.
+    """
     base = pd.read_parquet(features_path)
     if "source" not in base.columns:
         base = base.assign(source="tm")
     if "pers_score" not in base.columns:
         base = base.assign(pers_score=np.nan, proj_level=pd.NA)
-    if not ffspb_path or not Path(ffspb_path).exists():
+
+    if youth is None:
         return base
-    kids = youth_feature_rows(Path(ffspb_path), base).reindex(columns=base.columns)
+    if isinstance(youth, (str, Path)) and Path(youth).is_dir():
+        paths = youth_paths(Path(youth))
+    else:
+        paths = [Path(p) for p in ([youth] if isinstance(youth, (str, Path)) else youth)]
+        paths = [p for p in paths if p.exists()]
+    if not paths:
+        return base
+
+    kids = youth_feature_rows(paths, base).reindex(columns=base.columns)
     with warnings.catch_warnings():
         # kids legitimately have all-NA columns (age-bucket minutes, market value,
         # career labels the kids can't have yet); the resulting dtypes are correct.
