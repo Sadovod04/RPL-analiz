@@ -169,53 +169,99 @@ def _discover_player_ids(
 
 
 # --- tmapi fetch + store ---------------------------------------
-def _already_ingested(engine) -> set[str]:
-    q = "select source_id from raw_document where source='transfermarkt' and doc_type='profile'"
-    return set(pd.read_sql(q, engine)["source_id"].astype(str))
+def _serialize_rec(rec: dict) -> dict:
+    return {
+        "player": rec["player"].model_dump(mode="json"),
+        "seasons": [s.model_dump(mode="json") for s in rec.get("seasons", [])],
+        "market_values": [m.model_dump(mode="json") for m in rec.get("market_values", [])],
+    }
+
+
+def _deserialize_rec(payload: dict) -> dict:
+    from ingest.schemas import MarketValuePoint, Player, SeasonStats
+
+    return {
+        "player": Player(**payload["player"]),
+        "seasons": [SeasonStats(**s) for s in payload.get("seasons", [])],
+        "market_values": [MarketValuePoint(**m) for m in payload.get("market_values", [])],
+    }
+
+
+def _to_record(rec: dict) -> dict:
+    p = rec["player"]
+    return {
+        "source": "transfermarkt",
+        "source_id": p.source_id,
+        "full_name": p.full_name,
+        "name_home_country": p.name_home_country,
+        "birth_date": p.birth_date,
+        "_payload": rec,
+    }
+
+
+def _load_ingested_records(engine) -> list[dict]:
+    """Reconstruct records for players already stored in raw_document (resume)."""
+    q = (
+        "select source_id, payload from raw_document "
+        "where source='transfermarkt' and doc_type='profile'"
+    )
+    df = pd.read_sql(q, engine)
+    out = []
+    for payload in df["payload"]:
+        try:
+            out.append(_to_record(_deserialize_rec(payload)))
+        except Exception:  # noqa: BLE001 - skip a malformed old-format row
+            continue
+    return out
 
 
 def _run_transfermarkt(engine, player_ids: list[str], *, fast: bool = False) -> list[dict]:
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+
     from ingest.fetcher import TmApiClient
     from ingest.rate_limiter import RateLimiter
     from ingest.sources.transfermarkt import TransfermarktSource
     from ingest.storage import store_raw
 
-    done = _already_ingested(engine)
+    done = {r["source_id"] for r in _load_ingested_records(engine)}
     todo = [p for p in player_ids if p not in done]
     print(f"tmapi: {len(todo)} players to fetch ({len(player_ids) - len(todo)} already ingested)")
 
-    limiter = RateLimiter(min_interval=0.5, jitter=0.3) if fast else None
+    limiter = (
+        RateLimiter(min_interval=0.5, jitter=0.3)
+        if fast
+        else RateLimiter.from_config(load_settings())
+    )
+    workers = 6 if fast else 2
     collected: list[dict] = []
+
     with TmApiClient(rate_limiter=limiter) as api:
         src = TransfermarktSource(api)
-        for i, pid in enumerate(todo, 1):
-            try:
-                rec = src.fetch_player(pid)
-            except Exception as exc:  # noqa: BLE001
-                print(f"  tm {pid}: {exc}")
-                continue
-            player = rec["player"]
-            collected.append(
-                {
-                    "source": "transfermarkt",
-                    "source_id": player.source_id,
-                    "full_name": player.full_name,
-                    "name_home_country": player.name_home_country,
-                    "birth_date": player.birth_date,
-                    "_payload": rec,
-                }
-            )
-            store_raw(
-                engine,
-                source="transfermarkt",
-                doc_type="profile",
-                source_id=player.source_id,
-                payload=player.model_dump(mode="json"),
-                collection_season=collection_season(),
-                url=player.profile_url,
-            )
-            if i % 50 == 0:
-                print(f"  [{i}/{len(todo)}] fetched")
+
+        def _fetch(pid: str):
+            return pid, src.fetch_player(pid)
+
+        with ThreadPoolExecutor(max_workers=workers) as pool:
+            futures = {pool.submit(_fetch, pid): pid for pid in todo}
+            for i, fut in enumerate(as_completed(futures), 1):
+                pid = futures[fut]
+                try:
+                    _, rec = fut.result()
+                except Exception as exc:  # noqa: BLE001
+                    print(f"  tm {pid}: {exc}")
+                    continue
+                collected.append(_to_record(rec))
+                store_raw(
+                    engine,
+                    source="transfermarkt",
+                    doc_type="profile",
+                    source_id=rec["player"].source_id,
+                    payload=_serialize_rec(rec),
+                    collection_season=collection_season(),
+                    url=rec["player"].profile_url,
+                )
+                if i % 100 == 0:
+                    print(f"  [{i}/{len(todo)}] fetched", flush=True)
     return collected
 
 
@@ -285,10 +331,15 @@ def main(argv: list[str] | None = None) -> None:
             universe, academy_years, fresh=args.fresh, redo=args.redo_discovery, limit=args.limit
         )
         print(f"discovered {len(player_ids)} player ids")
-        records = _run_transfermarkt(engine, player_ids, fast=args.fast)
-        if records:
-            resolved = _resolve_and_store(engine, records)
-            print(f"resolved {resolved['player_id'].nunique()} players from {len(records)} records")
+        fresh = _run_transfermarkt(engine, player_ids, fast=args.fast)
+        # resolve over the COMPLETE set (freshly fetched + everything already stored)
+        all_records = _load_ingested_records(engine)
+        if all_records:
+            resolved = _resolve_and_store(engine, all_records)
+            print(
+                f"resolved {resolved['player_id'].nunique()} players from "
+                f"{len(all_records)} records ({len(fresh)} new this run)"
+            )
 
     if args.build:
         _build_features(engine)
