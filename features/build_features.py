@@ -45,6 +45,9 @@ NON_FEATURE_COLS = {
     "rpl_debut_age",
     "reached_pro_level",
     "current_age",
+    "source",  # "tm" | "ffspb" — provenance, not a feature
+    "pers_score",  # ffspb youth heuristic (0-100), not a model input
+    "proj_level",
 }
 
 

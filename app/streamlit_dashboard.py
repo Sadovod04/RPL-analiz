@@ -1,9 +1,12 @@
 """Streamlit dashboard (M7).
 
-Bilingual (RU/EN). Tabs: prospects · already pro/RPL · compare. Sidebar filters
-(position, level reached, birth year, minutes, academy) apply to both list tabs.
-Per-player card: raw youth stats, explained SHAP breakdown, closest breakthrough
-players (the analogy).
+Bilingual (RU/EN). Tabs: prospects · already pro/RPL · compare · youth (ФФ СПб).
+One combined dataset: Transfermarkt academy players (CatBoost score) + ФФ СПб kids
+2012–2015 (transparent 0–100 heuristic). A "Источник / Source" filter and a
+"Метод" column tell them apart. Sidebar filters (position, level reached, birth
+year, academy, source) apply to both list tabs. Per-player card: raw youth stats,
+explained SHAP breakdown, closest breakthrough players — or, for a kid, a plain
+projected-level card (no career yet -> no SHAP).
 
     uv run --extra app streamlit run app/streamlit_dashboard.py
 """
@@ -21,6 +24,7 @@ import streamlit as st  # noqa: E402
 
 from app.i18n import feat_label, position_label, t  # noqa: E402
 from app.ranking import (  # noqa: E402
+    _score_frame,
     explain_player,
     player_raw_stats,
     rank_prospects,
@@ -29,6 +33,7 @@ from app.ranking import (  # noqa: E402
     split_resolved_open,
     train_ranker,
 )
+from app.youth_features import combined_frame, youth_frame  # noqa: E402
 from settings import load_settings  # noqa: E402
 
 st.set_page_config(page_title="RPL-analiz", layout="wide")
@@ -49,22 +54,32 @@ _INT_KEYS = {
 }
 
 
+def _proc() -> Path:
+    return ROOT / load_settings()["paths"]["data_processed"]
+
+
+def _ffspb_path() -> Path:
+    return _proc() / "ffspb_players.parquet"
+
+
 @st.cache_data
 def _load(mtime: float) -> tuple[pd.DataFrame, str]:
-    proc = ROOT / load_settings()["paths"]["data_processed"]
+    proc = _proc()
     path = proc / "features.parquet"
     if not path.exists():
         path = proc / "features_demo.parquet"
-    return pd.read_parquet(path), path.name
+    ff = _ffspb_path()
+    return combined_frame(path, ff if ff.exists() else None), path.name
 
 
 def _parquet_mtime() -> float:
-    proc = ROOT / load_settings()["paths"]["data_processed"]
-    for name in ("features.parquet", "features_demo.parquet"):
+    proc = _proc()
+    m = 0.0
+    for name in ("features.parquet", "features_demo.parquet", "ffspb_players.parquet"):
         p = proc / name
         if p.exists():
-            return p.stat().st_mtime
-    return 0.0
+            m = max(m, p.stat().st_mtime)
+    return m
 
 
 @st.cache_resource
@@ -161,7 +176,18 @@ def _filter_widgets(frame: pd.DataFrame) -> dict:
             help=t("ac_help", lang),
             key="f_ac",
         )
-    return {"pos": pos_sel, "lvl": lvl_sel, "yr": yr, "ac": ac_sel}
+        src_sel = []
+        if "source" in frame.columns and frame["source"].nunique() > 1:
+            src_map = {"tm": t("src_tm", lang), "ffspb": t("src_ffspb", lang)}
+            src_sel = st.multiselect(
+                t("source", lang),
+                list(src_map),
+                format_func=lambda s: src_map.get(s, s),
+                placeholder=t("all_ph", lang),
+                help=t("src_help", lang),
+                key="f_src",
+            )
+    return {"pos": pos_sel, "lvl": lvl_sel, "yr": yr, "ac": ac_sel, "src": src_sel}
 
 
 def _apply(frame: pd.DataFrame, f: dict) -> pd.DataFrame:
@@ -175,6 +201,8 @@ def _apply(frame: pd.DataFrame, f: dict) -> pd.DataFrame:
         m &= d["outcome_level"].isin(f["lvl"])
     if f["ac"]:
         m &= d["academy_club"].astype(str).isin(f["ac"])
+    if f.get("src") and "source" in d:
+        m &= d["source"].isin(f["src"])
     return d[m]
 
 
@@ -184,8 +212,22 @@ def _table(frame: pd.DataFrame) -> pd.DataFrame:
         position_label(r.position, r.position_detail, lang) for r in d.itertuples()
     ]
     d[t("score", lang)] = (d["breakthrough_score"] * 100).round(1)
-    d[t("col_ga90", lang)] = d["youth_ga_per90"].round(2)
-    d[t("col_minutes", lang)] = d["youth_minutes_total"].round(0).astype("Int64")
+    d[t("col_ga90", lang)] = pd.to_numeric(d["youth_ga_per90"], errors="coerce").round(2)
+    d[t("col_minutes", lang)] = (
+        pd.to_numeric(d["youth_minutes_total"], errors="coerce").round(0).astype("Int64")
+    )
+    if "source" in d:
+        d[t("col_method", lang)] = d["source"].map(
+            {"tm": t("method_model", lang), "ffspb": t("method_heur", lang)}
+        )
+    # level column: reached-level for TM players, ≈projection for youth
+    lvl_txt = d.get("outcome_level")
+    if "proj_level" in d and lvl_txt is not None:
+        proj = d["proj_level"].map(
+            lambda k: "≈ " + t(k, lang) if isinstance(k, str) and k.startswith("yl_") else None
+        )
+        lvl_txt = lvl_txt.where(lvl_txt.notna(), proj)
+        d["outcome_level"] = lvl_txt
     ren = {
         "canonical_name": t("col_name", lang),
         "birth_year": t("col_birth", lang),
@@ -198,6 +240,7 @@ def _table(frame: pd.DataFrame) -> pd.DataFrame:
         t("col_birth", lang),
         t("col_pos", lang),
         t("score", lang),
+        t("col_method", lang),
         t("col_level_reached", lang),
         t("col_academy", lang),
         t("col_minutes", lang),
@@ -290,6 +333,32 @@ def _player_report(row: pd.Series, score: float):
     st.divider()
 
 
+def _youth_player_card(row: pd.Series, score: float):
+    lvl_key = row.get("proj_level") if isinstance(row.get("proj_level"), str) else "yl_low"
+    st.markdown(f"**{t('report_hdr', lang)}**")
+    st.markdown(f"{t('report_level', lang)}: **≈ {t(lvl_key, lang)}** ({score * 100:.0f}/100)")
+    st.caption(t("youth_card_note", lang))
+    g = pd.to_numeric(pd.Series([row.get("youth_goals_total")]), errors="coerce").iloc[0]
+    mins = pd.to_numeric(pd.Series([row.get("youth_minutes_total")]), errors="coerce").iloc[0]
+    trn = pd.to_numeric(pd.Series([row.get("youth_seasons")]), errors="coerce").iloc[0]
+    by = row.get("birth_year")
+    st.table(
+        pd.Series(
+            {
+                t("y_teams", lang): str(row.get("academy_club") or "—"),
+                t("col_birth", lang): "—" if pd.isna(by) else str(int(by)),
+                t("y_goals", lang): "—" if pd.isna(g) else f"{g:.0f}",
+                t("col_minutes", lang): "—" if pd.isna(mins) else f"{mins:,.0f}".replace(",", " "),
+                t("y_gpg", lang): str(_fmt("youth_ga_per90", row.get("youth_ga_per90"))),
+                t("y_trn", lang): "—" if pd.isna(trn) else str(int(trn)),
+            },
+            name="",
+        )
+    )
+    st.caption(t("y_score_help", lang))
+    st.divider()
+
+
 def _player_card(view: pd.DataFrame):
     st.subheader(t("why", lang))
     if not len(view):
@@ -302,6 +371,11 @@ def _player_card(view: pd.DataFrame):
     )
     prow = df[df["player_id"] == pick].iloc[0]
     pscore = float(view.loc[view["player_id"] == pick, "breakthrough_score"].iloc[0])
+
+    if str(prow.get("source")) == "ffspb":
+        _youth_player_card(prow, pscore)
+        return
+
     _player_report(prow, pscore)
 
     raw = player_raw_stats(df, pick)
@@ -371,11 +445,7 @@ _CMP_TABLE = [
 
 @st.cache_resource
 def _scored_all(_df: pd.DataFrame, tc: str, mtime: float) -> pd.DataFrame:
-    from features.build_features import feature_columns
-
-    out = _df.copy()
-    out["breakthrough_score"] = model.predict_proba(out[feature_columns(_df)])
-    return out
+    return _score_frame(model, _df, _df)
 
 
 def _compare(scored: pd.DataFrame):
@@ -431,7 +501,8 @@ def _compare(scored: pd.DataFrame):
 
     st.dataframe(disp.style.apply(_bold_best, axis=1), use_container_width=True)
 
-    # one readable chart: each key metric as % of the best player in the group
+    # one readable view: each key metric as % of the best player in the group.
+    # A dataframe with per-player progress bars — always grouped, never stacked.
     st.markdown(f"**{t('compare_norm', lang)}**")
     key = [
         c
@@ -448,56 +519,29 @@ def _compare(scored: pd.DataFrame):
     norm = sub[key].apply(pd.to_numeric, errors="coerce").fillna(0)
     norm = (norm / norm.max().replace(0, 1) * 100).round(0)
     norm.columns = [feat_label(c, lang) for c in key]
-    st.bar_chart(norm.T, horizontal=True, stack=False)
+    norm_t = norm.T
+    norm_t.index.name = t("compare_stats", lang)
+    st.dataframe(
+        norm_t,
+        use_container_width=True,
+        column_config={
+            c: st.column_config.ProgressColumn(c, min_value=0, max_value=100, format="%d%%")
+            for c in norm_t.columns
+        },
+    )
 
 
 # -- youth (ФФ СПб) ------------------------------------------------
 @st.cache_data
-def _load_youth() -> pd.DataFrame | None:
-    p = ROOT / load_settings()["paths"]["data_processed"] / "ffspb_players.parquet"
+def _load_youth(mtime: float) -> pd.DataFrame | None:
+    p = _ffspb_path()
     if not p.exists():
         return None
-    d = pd.read_parquet(p)
-    d["birth_year"] = pd.to_datetime(d["birth_date"], errors="coerce").dt.year.astype("Int64")
-    # ffspb_id is tournament-scoped -> one row per (name, patronymic, birth_date)
-    agg = (
-        d.groupby(["full_name", "patronymic", "birth_date", "birth_year"], dropna=False)
-        .agg(
-            teams=(
-                "teams",
-                lambda s: ";".join(sorted({x for v in s for x in str(v).split(";") if x})),
-            ),
-            n_tournaments=("n_tournaments", "max"),
-            games=("games", "sum"),
-            goals=("goals", "sum"),
-        )
-        .reset_index()
-    )
-    agg["gpg"] = (agg["goals"] / agg["games"].replace(0, 1)).round(2)
-
-    # transparent 0-100 "potential" score from what the kids' DB has
-    _STRONG = ("зенит", "спартак", "цска", "краснодар", "локомотив", "динамо", "чертаново", "рубин")
-
-    def _club_tier(teams: str) -> float:
-        low = str(teams).lower()
-        if any(k in low for k in _STRONG):
-            return 1.0
-        if "сшор" in low or "сш " in low or "спортивн" in low:
-            return 0.6
-        return 0.3
-
-    gpg_pct = agg["gpg"].rank(pct=True)
-    games_pct = agg["games"].rank(pct=True)
-    tier = agg["teams"].map(_club_tier)
-    agg["pers_score"] = (100 * (0.45 * gpg_pct + 0.30 * games_pct + 0.25 * tier)).round(0)
-    agg["proj_level"] = pd.cut(
-        agg["pers_score"], [-1, 40, 60, 80, 101], labels=["yl_low", "yl_fnl2", "yl_fnl", "yl_rpl"]
-    ).astype(str)
-    return agg
+    return youth_frame(p)
 
 
 def _youth_tab():
-    d = _load_youth()
+    d = _load_youth(_parquet_mtime())
     st.subheader(t("youth_hdr", lang))
     if d is None:
         st.info(t("youth_none", lang))

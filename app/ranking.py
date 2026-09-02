@@ -80,11 +80,7 @@ def rank_prospects(
             raise ValueError("need both classes in the resolved set to train a ranker")
         model = train_ranker(resolved, target_col)
 
-    feats = feature_columns(df)
-    scored = open_cohort.copy()
-    scored["breakthrough_score"] = (
-        model.predict_proba(scored[feats]) if len(scored) else np.array([])
-    )
+    scored = _score_frame(model, df, open_cohort)
     keep = [
         "player_id",
         "canonical_name",
@@ -94,6 +90,8 @@ def rank_prospects(
         "position_detail",
         "outcome_level",
         "breakthrough_score",
+        "source",
+        "proj_level",
         "youth_minutes_total",
         "youth_ga_per90",
         "best_level_pre_cutoff",
@@ -103,6 +101,25 @@ def rank_prospects(
         "breakthrough_score", ascending=False
     )
     return out.head(top) if top else out
+
+
+def _score_frame(
+    model: CatBoostBreakthrough, schema_df: pd.DataFrame, rows: pd.DataFrame
+) -> pd.DataFrame:
+    """Add ``breakthrough_score``: CatBoost for TM players, the 0–100 youth heuristic
+    (``pers_score`` / 100) for ффспб rows the model has no real features for."""
+    feats = feature_columns(schema_df)
+    out = rows.copy()
+    if not len(out):
+        out["breakthrough_score"] = np.array([])
+        return out
+    out["breakthrough_score"] = model.predict_proba(out[feats])
+    if "source" in out.columns and "pers_score" in out.columns:
+        is_youth = out["source"].eq("ffspb") & out["pers_score"].notna()
+        out.loc[is_youth, "breakthrough_score"] = (
+            pd.to_numeric(out.loc[is_youth, "pers_score"], errors="coerce") / 100.0
+        )
+    return out
 
 
 def rank_resolved(
