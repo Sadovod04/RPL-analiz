@@ -150,7 +150,7 @@ def build_feature_matrix(
     # players with zero pre-cutoff seasons -> explicit zeros, keep the row
     num_fill = [c for c in feats.columns if c not in ("player_id", "played_youth_league")]
     m[num_fill] = m[num_fill].fillna(0.0)
-    m["played_youth_league"] = m["played_youth_league"].fillna(False).astype(bool)
+    m["played_youth_league"] = m["played_youth_league"].astype("boolean").fillna(False).astype(bool)
 
     m["academy_conversion_rate"] = _academy_conversion_rate(m).to_numpy()
     m["market_value_at_cutoff_eur"] = m["player_id"].map(

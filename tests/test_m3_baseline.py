@@ -57,10 +57,17 @@ def test_calibration_table_shape():
 def test_temporal_split_partitions_and_drops_censored():
     df = _synthetic(200)
     df.loc[:9, "target"] = -1  # censored
-    train, test = temporal_split(df, test_cohort_from=2001)
+    train, test = temporal_split(df, test_cohort_from=2001, test_cohort_to=9999)
     assert train["birth_year"].max() < 2001 <= test["birth_year"].min()
     assert (train["target"] != -1).all() and (test["target"] != -1).all()
     assert len(train) + len(test) == (df["target"] != -1).sum()
+
+
+def test_temporal_split_caps_test_window():
+    df = _synthetic(300)
+    train, test = temporal_split(df, test_cohort_from=1999, test_cohort_to=2001)
+    assert test["birth_year"].between(1999, 2001).all()
+    assert train["birth_year"].max() < 1999
 
 
 def test_logreg_beats_naive_scout_on_pr_auc():

@@ -20,8 +20,11 @@ modeling_cutoff_age = 19       # features use ONLY seasons observed strictly bef
 age_buckets = ["U13", "U15", "U17", "U19", "U21"]
 
 [split]
-# temporal split: train = outcome resolved before this cohort year, test = at/after
-test_cohort_from = 2001
+# temporal split: train = cohorts before `from`, test = [from, to].
+# `to` caps the test window at cohorts old enough for a negative outcome to be
+# possible (younger "resolved" rows are almost all successes -> inflated base rate).
+test_cohort_from = 1999
+test_cohort_to = 2003
 
 [scrape]
 min_interval_seconds = 2.0

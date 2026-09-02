@@ -23,7 +23,7 @@ from models.baseline import LogRegBaseline, naive_scout_scores
 from settings import load_settings
 
 
-def main(path: str | None = None) -> None:
+def main(path: str | None = None, target: str = "pro_target") -> None:
     proc = Path(load_settings()["paths"]["data_processed"])
     src = (
         Path(path)
@@ -35,34 +35,41 @@ def main(path: str | None = None) -> None:
         )
     )
     df = pd.read_parquet(src)
-    print(f"loaded {src.name}  {df.shape}")
+    if target not in df.columns:
+        target = "target"
+    print(f"loaded {src.name}  {df.shape}  target={target}")
 
-    test_from = load_settings()["split"]["test_cohort_from"]
-    train, test = temporal_split(df, test_cohort_from=test_from)
+    train, test = temporal_split(df, target_col=target)
     print(
-        f"temporal split @ birth_year {test_from}:  train={len(train)}  test={len(test)}  "
-        f"test base rate={test['target'].mean():.1%}"
+        f"temporal split:  train={len(train)}  test={len(test)}  "
+        f"test base rate={test[target].mean():.1%}"
     )
-    if test["target"].nunique() < 2 or train["target"].nunique() < 2:
-        print("!! not enough class variety for a meaningful eval (expected with the demo sample)")
+    if test[target].nunique() < 2 or train[target].nunique() < 2:
+        print("!! not enough class variety for a meaningful eval")
 
-    model = LogRegBaseline().fit(train, train["target"])
+    model = LogRegBaseline().fit(train, train[target])
     p_model = model.predict_proba(test)
     s_scout = naive_scout_scores(test)
 
     k = min(20, len(test))
     print("\n            model (logreg)   naive scout (market value)")
-    m_res = evaluate_binary(test["target"], p_model, k=k)
-    s_res = evaluate_binary(test["target"], s_scout, k=k)
+    m_res = evaluate_binary(test[target], p_model, k=k)
+    s_res = evaluate_binary(test[target], s_scout, k=k)
     for key in ("pr_auc", "roc_auc", f"recall_at_{k}", "brier"):
         mv = m_res.get(key, float("nan"))
         sv = s_res.get(key, float("nan"))
         print(f"  {key:14} {mv:>8.3f}        {sv:>8.3f}")
 
     print("\ncalibration (model):  bin  n  mean_pred  frac_pos")
-    for lo, hi, n, mp, fp in calibration_table(test["target"], p_model, n_bins=5):
+    for lo, hi, n, mp, fp in calibration_table(test[target], p_model, n_bins=5):
         print(f"  [{lo:.1f},{hi:.1f})  n={n:<4} pred={mp:.2f}  obs={fp:.2f}")
 
 
 if __name__ == "__main__":
-    main(sys.argv[1] if len(sys.argv) > 1 else None)
+    import argparse
+
+    ap = argparse.ArgumentParser()
+    ap.add_argument("path", nargs="?")
+    ap.add_argument("--target", default="pro_target")
+    a = ap.parse_args()
+    main(a.path, target=a.target)
