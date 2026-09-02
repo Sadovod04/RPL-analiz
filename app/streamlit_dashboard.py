@@ -109,20 +109,32 @@ def _table(frame: pd.DataFrame) -> pd.DataFrame:
 
 
 def _sidebar_filters(frame: pd.DataFrame, key: str):
+    frame = frame.assign(_pos=frame.apply(_pos, axis=1))
+    by = frame["birth_year"].dropna().astype(int)
+    lo, hi = (int(by.min()), int(by.max())) if len(by) else (1990, 2013)
     with st.sidebar:
         st.header(t("filters", lang))
-        frame = frame.assign(_pos=frame.apply(_pos, axis=1))
-        poss = sorted(frame["_pos"].dropna().unique())
-        pos_sel = st.multiselect(t("position", lang), poss, default=poss, key=f"{key}_pos")
+        poss = sorted({str(x) for x in frame["_pos"].dropna()})
+        pos_sel = st.multiselect(
+            t("position", lang), poss, placeholder=t("all_ph", lang), key=f"{key}_pos"
+        )
+        yr = (
+            st.slider(t("birth_range", lang), lo, hi, (lo, hi), key=f"{key}_yr")
+            if lo < hi
+            else (lo, hi)
+        )
         mm = st.slider(t("min_minutes", lang), 0, 5000, 0, 100, key=f"{key}_min")
-        acs = sorted(x for x in frame["academy_club"].dropna().unique())
-        ac_sel = st.multiselect(t("academy", lang), acs, default=acs, key=f"{key}_ac")
+        acs = sorted({str(x) for x in frame["academy_club"].dropna()})
+        ac_sel = st.multiselect(
+            t("academy", lang), acs, placeholder=t("all_ph", lang), key=f"{key}_ac"
+        )
         top_n = st.slider(t("top_n", lang), 5, 200, 30, key=f"{key}_top")
-    m = (
-        frame["_pos"].isin(pos_sel)
-        & (frame["youth_minutes_total"] >= mm)
-        & (frame["academy_club"].isin(ac_sel) | frame["academy_club"].isna() | (len(acs) == 0))
-    )
+
+    m = (frame["youth_minutes_total"] >= mm) & (frame["birth_year"].fillna(0).between(yr[0], yr[1]))
+    if pos_sel:  # empty selection = no filter (show all)
+        m &= frame["_pos"].isin(pos_sel)
+    if ac_sel:
+        m &= frame["academy_club"].astype(str).isin(ac_sel)
     return frame[m].head(top_n)
 
 
@@ -182,7 +194,74 @@ def _fmt(key: str, v) -> str:
     return "—" if v is None or (isinstance(v, float) and pd.isna(v)) else str(v)
 
 
-tab_pro, tab_prospects = st.tabs([t("tab_pro", lang), t("tab_prospects", lang)])
+_COMPARE_METRICS = [
+    "youth_minutes_total",
+    "youth_goals_total",
+    "youth_ga_per90",
+    "youth_minutes_trend",
+    "youth_seasons",
+    "best_level_pre_cutoff",
+    "minutes_U15",
+    "minutes_U17",
+    "minutes_U19",
+    "ga_per90_U17",
+    "ga_per90_U19",
+    "height_cm",
+]
+
+
+@st.cache_resource
+def _scored_all(_df: pd.DataFrame, target_col: str) -> pd.DataFrame:
+    from features.build_features import feature_columns
+
+    feats = feature_columns(_df)
+    out = _df.copy()
+    out["breakthrough_score"] = model.predict_proba(out[feats])
+    return out
+
+
+def _compare(scored: pd.DataFrame):
+    st.subheader(t("compare_hdr", lang))
+    opts = scored.sort_values("canonical_name")["player_id"].tolist()
+    names = dict(zip(scored["player_id"], scored["canonical_name"], strict=False))
+    picked = st.multiselect(
+        t("compare_pick", lang),
+        opts,
+        format_func=lambda p: names.get(p, p),
+        max_selections=5,
+    )
+    if len(picked) < 2:
+        st.info(t("compare_need", lang))
+        return
+
+    sub = scored[scored["player_id"].isin(picked)].set_index("canonical_name")
+    hdr = pd.DataFrame(
+        {
+            t("score", lang): (sub["breakthrough_score"] * 100).round(1),
+            t("col_birth", lang): sub["birth_year"].astype("Int64"),
+            t("col_pos", lang): sub.apply(_pos, axis=1),
+            t("col_academy", lang): sub["academy_club"],
+        }
+    )
+    st.table(hdr)
+
+    st.markdown(f"**{t('compare_stats', lang)}**")
+    rows = {
+        feat_label(c, lang): sub[c].map(lambda v, k=c: _fmt(k, v))
+        for c in _COMPARE_METRICS
+        if c in sub
+    }
+    st.table(pd.DataFrame(rows).T)
+
+    st.markdown(f"**{t('compare_chart', lang)}**")
+    chart_cols = ["youth_minutes_total", "youth_goals_total", "minutes_U17", "minutes_U19"]
+    chart = sub[[c for c in chart_cols if c in sub]].rename(columns=lambda c: feat_label(c, lang))
+    st.bar_chart(chart.T)
+
+
+tab_prospects, tab_pro, tab_compare = st.tabs(
+    [t("tab_prospects", lang), t("tab_pro", lang), t("tab_compare", lang)]
+)
 
 with tab_prospects:
     st.subheader(t("prospects_hdr", lang))
@@ -201,3 +280,6 @@ with tab_pro:
     show = _table(res)
     show.insert(3, "→", res["_outcome"].to_numpy())
     st.dataframe(show, use_container_width=True, hide_index=True)
+
+with tab_compare:
+    _compare(_scored_all(df, target_col))
