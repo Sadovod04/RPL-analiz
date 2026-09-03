@@ -1,126 +1,128 @@
-# RPL-analiz — report
+# RPL-analiz — отчёт
 
-## What it does
+## Что делает
 
-Given a Russian academy footballer's career up to a cutoff age (default 19), the
-project estimates the probability that they will **ever reach ≥ 200 minutes in the
-Russian Premier League**. It is a **candidate-ranking** tool with calibrated
-probabilities — a shortlist of prospects, not a verdict on any one player.
+По карьере футболиста из российской академии до cutoff-возраста (по умолчанию 19
+лет) проект оценивает вероятность того, что игрок **когда-либо наберёт ≥ 200 минут
+в РПЛ**. Это инструмент **ранжирования потока кандидатов** с калиброванными
+вероятностями — шорт-лист перспективных, а не вердикт по одному игроку.
 
-Three views of the same question (SPEC §3):
+Три взгляда на один вопрос (SPEC §3):
 
-| target | definition | used by |
+| таргет | определение | кто использует |
 |---|---|---|
-| **binary** | `1` ≥ 200 RPL min ever · `0` below and age ≥ 26 · else *censored* | CatBoost, logreg |
-| **ordinal** | none / lower leagues / RPL | auxiliary signal |
-| **survival** | age at RPL debut, right-censored | Cox PH — P(breakthrough by any age) |
+| **binary** | `1` — ≥ 200 мин РПЛ когда-либо · `0` — меньше и возраст ≥ 26 · иначе *цензурировано* | CatBoost, logreg |
+| **ordinal** | нет / низшие лиги / РПЛ | вспомогательный сигнал |
+| **survival** | возраст дебюта в РПЛ, право-цензурировано | Cox PH — P(прорыв к любому возрасту) |
 
-## Data
+## Данные
 
-Planned core sources were **Transfermarkt** (career stats) and **youfl.ru** (the
-official youth league). What actually works from a non-RU network:
+Планировались как основные источники **Transfermarkt** (карьерная статистика) и
+**youfl.ru** (официальная ЮФЛ). Что реально работает из не-RU сети:
 
-| source | status | role |
+| источник | статус | роль |
 |---|---|---|
-| **`tmapi.transfermarkt.technology`** | ✅ open JSON, no WAF | **primary** — per-game minutes/goals/assists/age by competition (incl. `RUJL` youth league), master data, market value |
-| **www.transfermarkt.com** (`kader`) | ⚠️ AWS WAF → headless Chromium | historical squad pages, for player-id discovery only |
-| **ru.wikipedia** (ЮФЛ season articles) | ✅ | youth-league participants (academy universe) + standings |
-| **youfl.ru** | ❌ TLS-rejected off RU IPs | deferred to M1b |
-| РФС / Sofascore / FBref | ❌ 403 / low ROI | adapter skeletons only |
+| **`tmapi.transfermarkt.technology`** | ✅ открытый JSON, без WAF | **основной** — поматчевые минуты/голы/ассисты/возраст по турнирам (вкл. молодёжную `RUJL`), мастер-данные, рыночная стоимость |
+| **www.transfermarkt.com** (`kader`) | ⚠️ AWS WAF → headless Chromium | исторические страницы составов, только для поиска player-id |
+| **ru.wikipedia** (статьи сезонов ЮФЛ) | ✅ | участники молодёжной лиги (набор академий) + турнирные таблицы |
+| **youfl.ru** | ❌ TLS-отказ с не-RU IP | отложено в M1b |
+| РФС / Sofascore / FBref | ❌ 403 / низкий ROI | только скелеты адаптеров |
 
-Entity resolution merges a player across sources by birth-year block + fuzzy name
-match (Cyrillic transliterated), union-find → stable `player_id`.
+Entity resolution склеивает игрока между источниками по блоку года рождения +
+fuzzy-match имён (кириллица транслитерируется), union-find → стабильный
+`player_id`.
 
-**Volume:** the full `run_ingest` crawl (`--academy-seasons 2013-2026 --fast
---build`) discovers ~4000 player ids from ЮФЛ/academy `kader` pages across all
-divisions and seasons, then pulls each via tmapi → **3982 players** in
-`data/processed/features.parquet` (git-ignored). A 140-player `features_demo.parquet`
-(`scripts/demo_dataset.py`, current RPL squads, no Playwright) is the quick
-pipeline check. The crawl is resumable (checkpoint + skip-already-ingested).
+**Объём:** полный краул `run_ingest` (`--academy-seasons 2013-2026 --fast
+--build`) находит ~4000 player-id со страниц `kader` ЮФЛ/академий по всем
+дивизионам и сезонам, затем тянет каждого через tmapi → **3982 игрока** в
+`data/processed/features.parquet` (git-ignored). 140-строчный
+`features_demo.parquet` (`scripts/demo_dataset.py`, текущие составы РПЛ, без
+Playwright) — быстрая проверка пайплайна. Краул resumable (чекпойнт + пропуск
+уже собранных).
 
-## Method (the part that makes it defensible)
+## Метод (то, что делает проект защищаемым)
 
-- **Strict time cutoff** — every season row goes through one tested function
-  (`features/time_cutoff.py`) before it becomes a feature; nothing observed at/after
-  the cutoff age can enter.
-- **Temporal split** — train on cohorts resolved before `split.test_cohort_from`,
-  test after. Imitates real use.
-- **GroupKFold by `player_id`** for tuning — a player never straddles folds.
-- **Leakage guard** (`eval/leakage_check.py`) — a test that fails if a post-outcome
-  column (`target`, `rpl_minutes_*`, `current_age`, `reached_pro`, …) reaches the
-  matrix. Run before every `fit`.
-- **Time-aware `academy_conversion_rate`** — P(breakthrough) for an academy is
-  computed from *earlier* cohorts only.
-- **Imbalance** — PR-AUC / Recall@Top-K / Brier, class weights; never accuracy.
-- **Censored players** are dropped for the binary model, kept for survival.
+- **Строгий time cutoff** — каждая строка сезона проходит через одну
+  протестированную функцию (`features/time_cutoff.py`), прежде чем стать фичей;
+  ничто, наблюдённое в/после cutoff-возраста, не попадает внутрь.
+- **Временной сплит** — train на когортах, разрешённых до `split.test_cohort_from`,
+  test после. Имитирует реальное использование.
+- **GroupKFold по `player_id`** при тюнинге — игрок никогда не попадает в разные
+  фолды.
+- **Защита от утечки** (`eval/leakage_check.py`) — тест падает, если пост-исходная
+  колонка (`target`, `rpl_minutes_*`, `current_age`, `reached_pro`, …) доходит до
+  матрицы. Запускается перед каждым `fit`.
+- **Time-aware `academy_conversion_rate`** — P(прорыв) для академии считается
+  только по *более ранним* когортам.
+- **Дисбаланс** — PR-AUC / Recall@Top-K / Brier, веса классов; никогда не accuracy.
+- **Цензурированные игроки** выбрасываются для binary-модели, остаются для survival.
 
-## Models
+## Модели
 
-| model | file | notes |
+| модель | файл | заметки |
 |---|---|---|
-| naive scout | `models/baseline.py` | rank by market value at cutoff — the bar to beat |
-| logistic regression | `models/baseline.py` | simple youth features + position, class-weighted |
-| **CatBoost** | `models/gbm.py` | native categoricals (`academy_club`, `position`), Optuna over GroupKFold, SHAP importance + interactions, MLflow |
-| Cox PH | `models/survival.py` | P(breakthrough by age); RSF optional via `--extra survival` |
+| наивный скаут | `models/baseline.py` | ранжирование по рыночной стоимости на cutoff — планка, которую надо побить |
+| логистическая регрессия | `models/baseline.py` | простые юношеские фичи + позиция, взвешивание классов |
+| **CatBoost** | `models/gbm.py` | нативные категориалы (`academy_club`, `position`), Optuna по GroupKFold, SHAP importance + interactions, MLflow |
+| Cox PH | `models/survival.py` | P(прорыв к возрасту); RSF опционально через `--extra survival` |
 
-## Results
+## Результаты
 
-Full academy crawl: **3982 players**, 521 academies, birth years ~1995–2010.
-Resolved outcomes — RPL: 542 made it / 1001 did not (2439 still open); pro
-(RPL/FNL/FNL-2): 1591 / 493 (1898 open). Temporal split: train born < 1999,
-test born 1999–2003.
+Полный краул академий: **3982 игрока**, 521 академия, годы рождения ~1995–2010.
+Разрешённые исходы — РПЛ: 542 дошли / 1001 нет (2439 ещё открыты); проф.
+(РПЛ/ФНЛ/ФНЛ-2): 1591 / 493 (1898 открыто). Временной сплит: train г.р. < 1999,
+test г.р. 1999–2003.
 
-**`pro_target` (reached RPL / FNL / FNL-2), test n=770, base rate 0.81**
+**`pro_target` (дошёл до РПЛ / ФНЛ / ФНЛ-2), test n=770, base rate 0.81**
 
-| model | PR-AUC | ROC-AUC | Brier |
+| модель | PR-AUC | ROC-AUC | Brier |
 |---|---|---|---|
 | **CatBoost** | **0.968** | 0.879 | 0.129 |
-| logistic regression | 0.959 | 0.853 | 0.151 |
-| naive scout (market value) | 0.801 | 0.468 | — |
+| логистическая регрессия | 0.959 | 0.853 | 0.151 |
+| наивный скаут (рыночная стоимость) | 0.801 | 0.468 | — |
 
-CatBoost CV PR-AUC (GroupKFold by player): 0.86–0.92.
+CatBoost CV PR-AUC (GroupKFold по игроку): 0.86–0.92.
 
-**`target` (RPL, ≥200 min), base rate ~0.2** — logreg PR-AUC **0.687** vs naive
-scout 0.300; ROC-AUC 0.833.
+**`target` (РПЛ, ≥200 мин), base rate ~0.2** — logreg PR-AUC **0.687** vs наивный
+скаут 0.300; ROC-AUC 0.833.
 
-The model clears the market-value baseline on both targets. **Top SHAP features:**
-`best_level_pre_cutoff` (highest level reached young), `position_detail`,
+Модель бьёт планку по рыночной стоимости на обоих таргетах. **Топ SHAP-фич:**
+`best_level_pre_cutoff` (самый высокий уровень в юном возрасте), `position_detail`,
 `played_youth_league`, `height_cm`, `youth_ga_per90` / `ga_per90_U19`,
-`youth_seasons`, `minutes_U19`. i.e. *how high a level they reached young, how much
-they played, and how productive they were*.
+`youth_seasons`, `minutes_U19`. То есть *насколько высокий уровень достигнут молодым,
+сколько играл и насколько результативно*.
 
-### Phase A — trajectory & cohort features
+### Фаза A — траекторные и когортные фичи
 
-Eight features added off the already-crawled DB (no re-scrape,
-`scripts/build_features.py`), 24 → 32 model inputs:
+Восемь фич добавлено на уже собранной БД (без рескрейпа,
+`scripts/build_features.py`), 24 → 32 входа модели:
 
-- `birth_quarter`, `rel_age_frac` — relative age within the Jan-1 age group. The
-  academy intake shows a textbook relative-age effect (Q1 37.6% of resolved
-  players vs Q4 14.7%); among those who then reach the RPL it flattens
-  (33 / 27 / 23 / 17), i.e. a late-born player who survives selection is a
-  slightly *better* bet — weak signal, right sign.
-- `min_/mean_age_gap_vs_peers` — season age minus the mean age of that
-  league-season. Negative = playing above their age group. Enters SHAP top-8.
-- `matches_share_min/_mean` — matches played vs the fullest season in that league
-  (availability proxy).
-- `minutes_dropoff_max`, `had_minutes_collapse` — biggest season-over-season fall
-  in minutes. Intended as an injury proxy; in practice it correlates *positively*
-  with success (pro +0.31, rpl +0.27) — it reads as "was pushed up a level early"
-  more than "got hurt". Kept, with that caveat.
-- `cohort_year` — era control (legionnaire-limit / 2022 changes). Dominates SHAP
-  on the RPL target (≈0.86); in the temporal split test cohorts sit outside the
-  train range so it can only extrapolate a trend, but whether it reads "less time
-  elapsed" legitimately vs games the split is the first thing for the Phase 3
-  honest-eval to probe.
+- `birth_quarter`, `rel_age_frac` — относительный возраст внутри возрастной группы
+  с отсечкой 1 января. В наборе академий виден классический relative-age effect
+  (Q1 — 37.6% разрешённых игроков против Q4 — 14.7%); среди тех, кто затем дошёл
+  до РПЛ, распределение выравнивается (33 / 27 / 23 / 17), т.е. поздно рождённый,
+  прошедший отбор, — чуть *лучшая* ставка. Слабый сигнал, знак верный.
+- `min_/mean_age_gap_vs_peers` — возраст в сезоне минус средний возраст той
+  лиги-сезона. Отрицательное = играет на возраст выше своего. Входит в топ-8 SHAP.
+- `matches_share_min/_mean` — сыграно матчей vs самый полный сезон в той лиге
+  (прокси доступности).
+- `minutes_dropoff_max`, `had_minutes_collapse` — самый большой обвал минут между
+  сезонами. Задумывалось как прокси травм; на практике коррелирует *положительно*
+  с успехом (pro +0.31, rpl +0.27) — читается скорее как «рано подняли на уровень»,
+  чем «получил травму». Оставлено с этой оговоркой.
+- `cohort_year` — контроль эпохи (лимит легионеров / изменения 2022). Доминирует в
+  SHAP на RPL-таргете (≈0.86); во временном сплите тестовые когорты вне train-диапазона,
+  так что модель может только экстраполировать тренд — но легитимно ли это «меньше
+  времени прошло» или игра со сплитом, проверяет Фаза 3.
 
-Circularity check: all eight correlate weakly with `market_value_at_cutoff_eur`
-(max |0.32|) — not a repackaged scout signal.
+Проверка на циркулярность: все восемь слабо коррелируют с
+`market_value_at_cutoff_eur` (макс |0.32|) — не переупакованный скаут-сигнал.
 
-**Before → after (temporal split, CatBoost, 12 Optuna trials):**
+**До → после (временной сплит, CatBoost, 12 трайлов Optuna):**
 
-| target | metric | before (24f) | after (32f) |
+| таргет | метрика | до (24 фичи) | после (32 фичи) |
 |---|---|---|---|
-| **`target`** (RPL ≥200 min, base 30%) | PR-AUC | 0.688 | **0.750** |
+| **`target`** (РПЛ ≥200 мин, base 30%) | PR-AUC | 0.688 | **0.750** |
 | | ROC-AUC | 0.839 | 0.867 |
 | | Brier | 0.161 | 0.135 |
 | | CV PR-AUC (GroupKFold) | 0.67 | 0.80 |
@@ -128,160 +130,162 @@ Circularity check: all eight correlate weakly with `market_value_at_cutoff_eur`
 | | ROC-AUC | 0.852 | 0.875 |
 | | Brier | 0.136 | 0.127 |
 
-Real gain on the hard RPL target; `pro_target` was already near-saturated. The
-logreg baseline is left on the original feature list — the new inputs hurt it
-(raw `cohort_year` scale, collinear gaps), and its job is to be a stable bar.
+Реальный прирост на сложном RPL-таргете; `pro_target` был уже почти насыщен.
+logreg-бейзлайн оставлен на исходном списке фич — новые входы ему вредят (сырой
+масштаб `cohort_year`, коллинеарные gap'ы), его задача — быть стабильной планкой.
 
-### Phase B — "recognition" (ru.wikipedia)
+### Фаза B — «признание» (ru.wikipedia)
 
-`ingest/sources/wikipedia_players.py` + `scripts/ingest_wikipedia.py`: for each
-resolved player, find a ru.wikipedia footballer article and extract signals that
-only count **before** the cutoff age:
+`ingest/sources/wikipedia_players.py` + `scripts/ingest_wikipedia.py`: для каждого
+разрешённого игрока ищем статью-футболиста в ru.wikipedia и достаём сигналы,
+которые засчитываются только **до** cutoff-возраста:
 
-- `wiki_article_pre_cutoff` — an article was first created before the player
-  turned 19. "Has an article now" is post-hoc and never becomes a feature; the
-  raw `article_created_age` / `wiki_title` / `honours_years` are blocked by
+- `wiki_article_pre_cutoff` — статья создана до того, как игроку исполнилось 19.
+  «Статья есть сейчас» — пост-фактум и никогда не становится фичей; сырые
+  `article_created_age` / `wiki_title` / `honours_years` заблокированы в
   `eval/leakage_check.py`.
-- `wiki_youth_national_team` — a Russia youth-NT category at **U19 or below**
-  (молодёжная / U21 is excluded — that cap can happen at 20-21).
-- `wiki_youth_honours` — honours in the "Достижения" section dated at/before 18.
-- `pre_cutoff_recognition_score = 3·article + 2·youth_NT + 1·honours`,
-  `recognition_count`, `any_recognition` — the umbrella aggregate B3/B5 will
-  extend later.
+- `wiki_youth_national_team` — категория юношеской сборной России **U19 и ниже**
+  (молодёжная / U21 исключены — такой кэп бывает в 20–21).
+- `wiki_youth_honours` — достижения из раздела «Достижения» с годом ≤ возраст 18.
+- `pre_cutoff_recognition_score = 3·статья + 2·youth_NT + 1·honours`,
+  `recognition_count`, `any_recognition` — общий агрегат, который расширят B3/B5.
 
-Name matching: our `name_home_country` carries a patronymic (Transfermarkt,
-sometimes wrong — e.g. our "Пиняев Сергей *Андреевич*" vs the article "Пиняев,
-Сергей *Максимович*"), so search/match is on **surname + given name only**,
-disambiguated by birth year (intro text or "Родившиеся в YYYY году" category) and
-the "Футболисты…" category.
+Матчинг имён: наш `name_home_country` несёт отчество (из Transfermarkt, иногда
+неверное — напр. наш «Пиняев Сергей *Андреевич*» vs статья «Пиняев, Сергей
+*Максимович*»), поэтому поиск/матч идёт по **фамилии + имени**, с дизамбигуацией
+по году рождения (текст интро или категория «Родившиеся в YYYY году») и категории
+«Футболисты…».
 
-Status: adapter built and unit-tested (`tests/test_wikipedia_players.py`);
-feature wiring + leakage guards + tests in place. The 3982-player crawl runs at
-`--rate 1.3` (ru.wikipedia 429s the dev IP under bursts); resumable via
-`scripts/ingest_wikipedia.py` (skips done players). Metrics land here after the
-crawl + retrain.
+Статус: адаптер собран и покрыт юнит-тестами (`tests/test_wikipedia_players.py`);
+проводка фич + защита от утечки + тесты на месте. Краул на 3982 игрока идёт на
+`--rate 1.3` (ru.wikipedia отдаёт 429 dev-IP при всплесках); resumable через
+`scripts/ingest_wikipedia.py` (пропускает готовых). Метрики появятся здесь после
+краула + переобучения.
 
-### Phase C — costlier trajectory features
+### Фаза C — более дорогие траекторные фичи
 
-Added off the DB (no new scrape), 32 → 42 model inputs:
+Добавлено на БД (без нового скрейпа), 32 → 42 входа модели:
 
-- `first_senior_age` / `played_senior_pre_cutoff` — age at the first *pre-cutoff*
-  season in a senior pro league (RPL / FNL / FNL-2). ~32% of players reach men's
-  football before the cutoff.
-- `min_per_appearance` — pre-cutoff minutes / appearances (starter-vs-sub proxy).
-- `starter_share` — fraction of pre-cutoff seasons averaging >60'/match.
+- `first_senior_age` / `played_senior_pre_cutoff` — возраст в первом *до-cutoff*
+  сезоне во взрослой проф-лиге (РПЛ / ФНЛ / ФНЛ-2). ~32% игроков попадают во
+  взрослый футбол до cutoff.
+- `min_per_appearance` — до-cutoff минуты / появления (прокси старт-vs-замена).
+- `starter_share` — доля до-cutoff сезонов со средним > 60 мин/матч.
 
-**No measurable gain** (CatBoost, 12 trials): RPL `target` PR-AUC 0.750 → 0.744
-(within noise), `pro_target` 0.977 → 0.978. The "reached men's football young"
-signal is already carried by `best_level_pre_cutoff` and the age-gap features.
-Kept — cheap, interpretable, no harm — but not pulling weight yet.
+**Измеримого прироста нет** (CatBoost, 12 трайлов): RPL `target` PR-AUC
+0.750 → 0.744 (в пределах шума), `pro_target` 0.977 → 0.978. Сигнал «рано попал во
+взрослый футбол» уже несут `best_level_pre_cutoff` и age-gap фичи. Оставлено —
+дёшево, интерпретируемо, не вредит — но пока не тянет.
 
-Still open in Phase C: academy-to-academy transfers at 15–16 (needs `academy_club`
-cleanup — it is `formerClubsNote` free text), `marktwertverlauf` for a historical
-market-value series.
+Открыто в Фазе C: переходы между академиями в 15–16 (нужна чистка `academy_club` —
+это свободный текст `formerClubsNote`), `marktwertverlauf` для исторического ряда
+рыночной стоимости.
 
-### Phase 3 — honest evaluation
+### Фаза 3 — честная оценка
 
-`scripts/run_honest_eval.py` (RPL `target`, temporal split, CatBoost default
-params, features = Phase A + C; re-run after the Phase B crawl):
+`scripts/run_honest_eval.py` (RPL `target`, временной сплит, CatBoost на дефолтных
+параметрах, фичи = Фаза A + C; перезапустить после краула Фазы B):
 
-**Recall@Top-20, per test cohort year** — the pooled number is misleading:
+**Recall@Top-20, по годам тестовых когорт** — объединённое число обманчиво:
 
-| cohort | n | positives | model | scout |
+| когорта | n | плюсов | модель | скаут |
 |---|---|---|---|---|
 | 1999 | 173 | 27 | **0.63** | 0.07 |
 | 2000 | 181 | 26 | 0.15 | 0.12 |
 | 2001–2003 | 77 | 77 | — | — |
 
-2001–2003 have *no negatives* (every resolved player is a success — the
-`test_cohort_to` cap is not tight enough), so recall there is meaningless. Only
-**1999–2000** are real test years: the model crushes the market-value scout on
-1999 (0.63 vs 0.07) and barely beats it on 2000 (0.15 vs 0.12). n = 2 usable
-cohorts — this *is* the "tiny, noisy" limitation, made visible.
+У 2001–2003 *нет отрицательных* (каждый разрешённый игрок — успех, порог
+`test_cohort_to` недостаточно жёсткий), так что recall там бессмысленен. Реальны
+только **1999–2000**: на 1999 модель разносит скаут по рыночной стоимости
+(0.63 vs 0.07), на 2000 едва обходит (0.15 vs 0.12). n = 2 пригодные когорты — это
+и есть ограничение «мало и шумно», сделанное видимым.
 
-**Calibration:** ECE 0.068, Brier 0.141 — roughly diagonal, some wobble at the
-extremes. Acceptable for the sample size.
+**Калибровка:** ECE 0.068, Brier 0.141 — примерно по диагонали, немного шатается
+на краях. Приемлемо для размера выборки.
 
-**Bootstrap 90% CI (test n = 431, 130 positives):**
+**Bootstrap 90% ДИ (test n = 431, 130 плюсов):**
 
-| | mean | 90% CI |
+| | среднее | 90% ДИ |
 |---|---|---|
-| PR-AUC model | 0.70 | [0.63, 0.78] |
-| PR-AUC scout | 0.30 | [0.26, 0.34] |
-| ROC-AUC model | 0.85 | [0.82, 0.88] |
+| PR-AUC модель | 0.70 | [0.63, 0.78] |
+| PR-AUC скаут | 0.30 | [0.26, 0.34] |
+| ROC-AUC модель | 0.85 | [0.82, 0.88] |
 
-Wide, but the model and scout CIs do not overlap — the lift is real.
+Широко, но ДИ модели и скаута не пересекаются — лифт реальный.
 
-**`cohort_year` probe:** refit without it → PR-AUC 0.70 → 0.66, ROC 0.85 → 0.82,
-but Recall@20 0.115 → 0.138 (it *hurts* top-K). Permutation importance ≈ **0.00**
-— shuffling `cohort_year` does nothing to PR-AUC even though it is SHAP #1, i.e.
-it is a proxy the model reconstructs from correlated features, not an independent
-lever, and it is **not** gaming the temporal split. Verdict: keep it (small
-honest PR-AUC/ROC lift), but it is not the star SHAP implies.
+**Проба `cohort_year`:** переобучение без неё → PR-AUC 0.70 → 0.66, ROC 0.85 → 0.82,
+но Recall@20 0.115 → 0.138 (она *вредит* топ-K). Permutation importance ≈ **0.00**
+— перемешивание `cohort_year` не меняет PR-AUC, хотя она #1 по SHAP, т.е. это
+прокси, который модель восстанавливает из коррелирующих фич, а не самостоятельный
+рычаг, и она **не** играет со временным сплитом. Вердикт: оставить (небольшой
+честный прирост PR-AUC/ROC), но это не звезда, как рисует SHAP.
 
-Caveats: the pro-target test window skews positive (most academy kids who reach the
-1999–2003 cohort got at least FNL-2 minutes); `academy_club` is still free-text
-from Transfermarkt's `formerClubsNote`, so that feature is weak.
+Оговорки: тестовое окно pro-таргета перекошено в плюс (большинство детей академий,
+доживших до когорты 1999–2003, получили хотя бы минуты в ФНЛ-2); `academy_club`
+по-прежнему свободный текст из `formerClubsNote` Transfermarkt, так что эта фича
+слабая.
 
-## Honest limitations (SPEC §14)
+## Честные ограничения (SPEC §14)
 
-- **Tiny, noisy target.** Even with all Russian academies, breakthroughs are a few
-  hundred players historically. Injuries, form, and coach decisions are not in the
-  numbers. This is ranking a stream, not calling one career.
-- **Sub-U15 data barely exists** — features at ages 11–14 will be sparse; real
-  signal starts ~14–16.
-- **`academy_club` from `formerClubsNote`** is free text — for the conversion-rate
-  feature to work, the real run must key academy off the discovery club, not the note.
-- **Market value at cutoff age** is mostly missing (tmapi master gives only
-  recent points); a full time series needs the `marktwertverlauf` endpoint.
-- **youfl.ru** unreachable here — youth-league coverage currently leans on tmapi's
-  `RUJL` rows and Wikipedia standings.
+- **Маленький, шумный таргет.** Даже со всеми российскими академиями прорывов
+  исторически — пара сотен игроков. Травмы, форма, решения тренеров — не в цифрах.
+  Это ранжирование потока, а не предсказание одной карьеры.
+- **Данных до U15 почти нет** — фичи в 11–14 лет будут разреженными; реальный
+  сигнал начинается ~14–16.
+- **`academy_club` из `formerClubsNote`** — свободный текст; чтобы conversion-rate
+  фича работала, реальный запуск должен брать академию по клубу обнаружения, а не
+  по заметке.
+- **Рыночная стоимость на cutoff-возрасте** почти везде отсутствует (tmapi master
+  даёт только недавние точки); полный ряд нужен через эндпойнт `marktwertverlauf`.
+- **youfl.ru** отсюда недоступен — покрытие молодёжной лиги сейчас держится на
+  строках `RUJL` из tmapi и таблицах Wikipedia.
 
-## Reproduce
+## Воспроизведение
 
 ```bash
 uv sync && uv run playwright install chromium
-docker compose up -d                       # Postgres for raw data
+docker compose up -d                       # Postgres для сырых данных
 uv run pytest                              # ~77 pass, 1 skip (RSF extra)
 
-# full academy crawl (~1 h, resumable) -> data/processed/features.parquet
+# полный краул академий (~1 ч, resumable) -> data/processed/features.parquet
 uv run python -m ingest.run_ingest --academy-seasons 2013-2026 --fast --build
 
-# rebuild features from the existing DB only (no re-scrape) — for feature iteration
+# пересборка фич только из БД (без рескрейпа) — для итераций по фичам
 uv run python scripts/build_features.py
 
-# recognition signal (Phase B): ru.wikipedia bios -> wiki_recognition table
-uv run python scripts/ingest_wikipedia.py --rate 1.3      # resumable; raise --rate on 429
+# сигнал «признания» (Фаза B): био ru.wikipedia -> таблица wiki_recognition
+uv run python scripts/ingest_wikipedia.py --rate 1.3      # resumable; поднять --rate при 429
 
-# models on whatever parquet is present (real if built, else demo)
+# модели на том parquet, что есть (реальный если собран, иначе demo)
 uv run python scripts/run_baseline.py --target pro_target
 uv run python scripts/run_gbm.py --target pro_target --trials 25
-uv run python scripts/run_honest_eval.py --target target  # Phase 3: per-year recall, calibration, CIs
+uv run python scripts/run_honest_eval.py --target target  # Фаза 3: recall по годам, калибровка, ДИ
 uv run python scripts/run_survival.py
 
-# bilingual dashboard
+# двуязычный дашборд
 uv run --extra app streamlit run app/streamlit_dashboard.py
 
-# quick pipeline check without Playwright (~4 min):
+# быстрая проверка пайплайна без Playwright (~4 мин):
 uv run python scripts/demo_dataset.py 140
 ```
 
-## Next
+## Дальше
 
-Development plan is phased:
+План развития фазовый:
 
-- **Phase A — trajectory & cohort features.** ✅ done.
-- **Phase B — "recognition".** ✅ code + ru.wikipedia adapter; ⏳ 3982-player crawl
-  running. TM talent tags dropped (tmapi has no such field). Later sources: RPL
-  best-young-player of the month, ЮФЛ team-of-the-round (youthleague.ru is
-  geo-blocked here; VK needs a token), RFS youth call-ups (`ingest/sources/rfs.py`
-  skeleton).
-- **Phase C — costlier features.** ✅ `first_senior_age`, `played_senior_pre_cutoff`,
-  `min_per_appearance`, `starter_share`. ⏳ academy-to-academy transfers
-  (`academy_club` cleanup), `marktwertverlauf` historical market value.
-- **Phase 3 — honest eval.** ✅ `scripts/run_honest_eval.py` — per-year
-  Recall@Top-20, calibration/ECE, bootstrap CIs, `cohort_year` probe. Finding:
-  only 2 test cohorts (1999–2000) have a real candidate pool; `test_cohort_to`
-  needs tightening; `cohort_year` is a proxy, not a leak.
-- Re-run the eval + `run_gbm` after the Phase B crawl; fill Phase B metrics.
-- Full `run_ingest` with `kader` discovery → real training set with negatives.
+- **Фаза A — траекторные и когортные фичи.** ✅ сделано.
+- **Фаза B — «признание».** ✅ код + адаптер ru.wikipedia; ⏳ краул на 3982 игрока
+  идёт. TM talent-теги отброшены (в tmapi нет такого поля). Более поздние
+  источники: РПЛ «лучший молодой игрок месяца», символическая сборная тура ЮФЛ
+  (youthleague.ru гео-заблокирован отсюда; VK нужен токен), вызовы в юношеские
+  сборные РФС (скелет `ingest/sources/rfs.py`).
+- **Фаза C — более дорогие фичи.** ✅ `first_senior_age`, `played_senior_pre_cutoff`,
+  `min_per_appearance`, `starter_share`. ⏳ переходы между академиями (чистка
+  `academy_club`), `marktwertverlauf` — история рыночной стоимости.
+- **Фаза 3 — честный eval.** ✅ `scripts/run_honest_eval.py` — Recall@Top-20 по
+  годам, калибровка/ECE, bootstrap ДИ, проба `cohort_year`. Вывод: только 2
+  тестовые когорты (1999–2000) имеют реальный пул кандидатов; `test_cohort_to`
+  надо ужимать; `cohort_year` — прокси, а не утечка.
+- Перезапустить eval + `run_gbm` после краула Фазы B; вписать метрики Фазы B.
+- Полный `run_ingest` с `kader`-discovery → реальный обучающий набор с
+  отрицательными примерами.
