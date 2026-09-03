@@ -156,10 +156,68 @@ disambiguated by birth year (intro text or "Родившиеся в YYYY год�
 the "Футболисты…" category.
 
 Status: adapter built and unit-tested (`tests/test_wikipedia_players.py`);
-feature wiring + leakage guards + tests in place. The 3982-player crawl is
-pending — ru.wikipedia rate-limited the dev IP (HTTP 429); it resumes with
-`uv run python scripts/ingest_wikipedia.py` (idempotent, skips done players).
-Metrics land here after the crawl + retrain.
+feature wiring + leakage guards + tests in place. The 3982-player crawl runs at
+`--rate 1.3` (ru.wikipedia 429s the dev IP under bursts); resumable via
+`scripts/ingest_wikipedia.py` (skips done players). Metrics land here after the
+crawl + retrain.
+
+### Phase C — costlier trajectory features
+
+Added off the DB (no new scrape), 32 → 42 model inputs:
+
+- `first_senior_age` / `played_senior_pre_cutoff` — age at the first *pre-cutoff*
+  season in a senior pro league (RPL / FNL / FNL-2). ~32% of players reach men's
+  football before the cutoff.
+- `min_per_appearance` — pre-cutoff minutes / appearances (starter-vs-sub proxy).
+- `starter_share` — fraction of pre-cutoff seasons averaging >60'/match.
+
+**No measurable gain** (CatBoost, 12 trials): RPL `target` PR-AUC 0.750 → 0.744
+(within noise), `pro_target` 0.977 → 0.978. The "reached men's football young"
+signal is already carried by `best_level_pre_cutoff` and the age-gap features.
+Kept — cheap, interpretable, no harm — but not pulling weight yet.
+
+Still open in Phase C: academy-to-academy transfers at 15–16 (needs `academy_club`
+cleanup — it is `formerClubsNote` free text), `marktwertverlauf` for a historical
+market-value series.
+
+### Phase 3 — honest evaluation
+
+`scripts/run_honest_eval.py` (RPL `target`, temporal split, CatBoost default
+params, features = Phase A + C; re-run after the Phase B crawl):
+
+**Recall@Top-20, per test cohort year** — the pooled number is misleading:
+
+| cohort | n | positives | model | scout |
+|---|---|---|---|---|
+| 1999 | 173 | 27 | **0.63** | 0.07 |
+| 2000 | 181 | 26 | 0.15 | 0.12 |
+| 2001–2003 | 77 | 77 | — | — |
+
+2001–2003 have *no negatives* (every resolved player is a success — the
+`test_cohort_to` cap is not tight enough), so recall there is meaningless. Only
+**1999–2000** are real test years: the model crushes the market-value scout on
+1999 (0.63 vs 0.07) and barely beats it on 2000 (0.15 vs 0.12). n = 2 usable
+cohorts — this *is* the "tiny, noisy" limitation, made visible.
+
+**Calibration:** ECE 0.068, Brier 0.141 — roughly diagonal, some wobble at the
+extremes. Acceptable for the sample size.
+
+**Bootstrap 90% CI (test n = 431, 130 positives):**
+
+| | mean | 90% CI |
+|---|---|---|
+| PR-AUC model | 0.70 | [0.63, 0.78] |
+| PR-AUC scout | 0.30 | [0.26, 0.34] |
+| ROC-AUC model | 0.85 | [0.82, 0.88] |
+
+Wide, but the model and scout CIs do not overlap — the lift is real.
+
+**`cohort_year` probe:** refit without it → PR-AUC 0.70 → 0.66, ROC 0.85 → 0.82,
+but Recall@20 0.115 → 0.138 (it *hurts* top-K). Permutation importance ≈ **0.00**
+— shuffling `cohort_year` does nothing to PR-AUC even though it is SHAP #1, i.e.
+it is a proxy the model reconstructs from correlated features, not an independent
+lever, and it is **not** gaming the temporal split. Verdict: keep it (small
+honest PR-AUC/ROC lift), but it is not the star SHAP implies.
 
 Caveats: the pro-target test window skews positive (most academy kids who reach the
 1999–2003 cohort got at least FNL-2 minutes); `academy_club` is still free-text
@@ -192,9 +250,13 @@ uv run python -m ingest.run_ingest --academy-seasons 2013-2026 --fast --build
 # rebuild features from the existing DB only (no re-scrape) — for feature iteration
 uv run python scripts/build_features.py
 
+# recognition signal (Phase B): ru.wikipedia bios -> wiki_recognition table
+uv run python scripts/ingest_wikipedia.py --rate 1.3      # resumable; raise --rate on 429
+
 # models on whatever parquet is present (real if built, else demo)
 uv run python scripts/run_baseline.py --target pro_target
 uv run python scripts/run_gbm.py --target pro_target --trials 25
+uv run python scripts/run_honest_eval.py --target target  # Phase 3: per-year recall, calibration, CIs
 uv run python scripts/run_survival.py
 
 # bilingual dashboard
@@ -206,17 +268,20 @@ uv run python scripts/demo_dataset.py 140
 
 ## Next
 
-Development plan is phased (see the working plan in chat history):
+Development plan is phased:
 
-- **Phase A — trajectory & cohort features.** ✅ done (this commit).
-- **Phase B — "recognition" module** (`ingest/sources/awards.py`): Wikipedia
-  achievements + TM talent tags (data already on disk), then RPL best-young-player
-  of the month, ЮФЛ team-of-the-round (youthleague.ru + VK public), youth national
-  team call-ups. Aggregate → `pre_cutoff_recognition_score` via `time_cutoff`.
-- **Phase C — costlier features.** Academy-to-academy transfers at 15–16
-  (`academy_club` cleanup), `marktwertverlauf` historical market value, first
-  senior-contract age, squad role (starter vs sub).
-- **Phase 3 — honest eval.** Recall@Top-20 vs a properly defined per-year
-  candidate pool; calibration curves; bootstrap CIs (labels are few); probe
-  whether `cohort_year` is a legitimate signal on the RPL target.
+- **Phase A — trajectory & cohort features.** ✅ done.
+- **Phase B — "recognition".** ✅ code + ru.wikipedia adapter; ⏳ 3982-player crawl
+  running. TM talent tags dropped (tmapi has no such field). Later sources: RPL
+  best-young-player of the month, ЮФЛ team-of-the-round (youthleague.ru is
+  geo-blocked here; VK needs a token), RFS youth call-ups (`ingest/sources/rfs.py`
+  skeleton).
+- **Phase C — costlier features.** ✅ `first_senior_age`, `played_senior_pre_cutoff`,
+  `min_per_appearance`, `starter_share`. ⏳ academy-to-academy transfers
+  (`academy_club` cleanup), `marktwertverlauf` historical market value.
+- **Phase 3 — honest eval.** ✅ `scripts/run_honest_eval.py` — per-year
+  Recall@Top-20, calibration/ECE, bootstrap CIs, `cohort_year` probe. Finding:
+  only 2 test cohorts (1999–2000) have a real candidate pool; `test_cohort_to`
+  needs tightening; `cohort_year` is a proxy, not a leak.
+- Re-run the eval + `run_gbm` after the Phase B crawl; fill Phase B metrics.
 - Full `run_ingest` with `kader` discovery → real training set with negatives.

@@ -132,10 +132,17 @@ def _trajectory_features(youth: pd.DataFrame, seasons: pd.DataFrame) -> pd.DataF
     - ``minutes_dropoff_max`` — largest season-over-season relative fall in minutes
       from a meaningful base (>=500'); ``had_minutes_collapse`` flags a >=900' ->
       <300' fall in consecutive pre-cutoff seasons.
+    - ``first_senior_age`` — age at the first *pre-cutoff* season in a senior pro
+      league (RPL / FNL / FNL-2); ``played_senior_pre_cutoff`` flags it. Reaching
+      men's football young, before the cutoff, is a strong prospect signal.
+    - ``min_per_appearance`` — pre-cutoff minutes / appearances (a starter-vs-sub
+      proxy); ``starter_share`` — fraction of pre-cutoff seasons averaging >60'.
 
     ``youth`` must already be time-cutoff filtered; ``seasons`` is the full frame
     (peer norms are contemporaneous, not outcome-derived).
     """
+    from features.labels import PRO_LEAGUE_NAMES
+
     norms = _league_season_norms(seasons)
     y = youth.merge(norms, on=["league", "season"], how="left")
     for col in ("minutes", "matches"):
@@ -145,6 +152,7 @@ def _trajectory_features(youth: pd.DataFrame, seasons: pd.DataFrame) -> pd.DataF
     with np.errstate(invalid="ignore", divide="ignore"):
         share = y["matches"] / y["max_matches"]
     y["matches_share"] = share.where(y["max_matches"] > 0).clip(upper=1.0)
+    y["is_senior"] = y["league"].isin(PRO_LEAGUE_NAMES)
 
     rows = []
     for pid, g in y.sort_values("age_at_season").groupby("player_id"):
@@ -164,6 +172,18 @@ def _trajectory_features(youth: pd.DataFrame, seasons: pd.DataFrame) -> pd.DataF
                 collapse = True
         row["minutes_dropoff_max"] = float(max(drop, 0.0))
         row["had_minutes_collapse"] = bool(collapse)
+
+        senior = g[g["is_senior"] & g["age_at_season"].notna()]
+        row["played_senior_pre_cutoff"] = int(len(senior) > 0)
+        row["first_senior_age"] = float(senior["age_at_season"].min()) if len(senior) else np.nan
+
+        tot_matches = g["matches"].sum()
+        row["min_per_appearance"] = (
+            float(g["minutes"].sum() / tot_matches) if tot_matches else np.nan
+        )
+        ps = g.groupby("season")[["minutes", "matches"]].sum()
+        ratio = ps["minutes"] / ps["matches"].where(ps["matches"] > 0)
+        row["starter_share"] = float((ratio > 60).mean()) if ratio.notna().any() else np.nan
         rows.append(row)
     return pd.DataFrame(rows)
 
@@ -293,7 +313,9 @@ def build_feature_matrix(
     m["had_minutes_collapse"] = (
         m["had_minutes_collapse"].astype("boolean").fillna(False).astype(bool)
     )
-    # matches_share_* stay NaN when unknown (CatBoost handles NaN; logreg imputes)
+    m["played_senior_pre_cutoff"] = m["played_senior_pre_cutoff"].fillna(0).astype(int)
+    # matches_share_* / first_senior_age / min_per_appearance / starter_share stay
+    # NaN when undefined (CatBoost handles NaN; logreg imputes)
 
     # era control: rule / legionnaire-limit changes shift the base rate by cohort.
     # In the temporal split test cohorts sit outside the train range, so the model

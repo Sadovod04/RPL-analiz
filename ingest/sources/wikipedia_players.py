@@ -139,7 +139,7 @@ class WikiPlayerBios:
         params.setdefault("maxlag", 5)  # MediaWiki etiquette: back off when servers are busy
         return self._f.get(WIKI_API, params=params).json()
 
-    def _search(self, query: str, limit: int = 5) -> list[str]:
+    def _search(self, query: str, limit: int = 4) -> list[str]:
         j = self._api(action="query", list="search", srsearch=query, srlimit=limit, srprop="")
         return [h["title"] for h in j.get("query", {}).get("search", [])]
 
@@ -182,6 +182,9 @@ class WikiPlayerBios:
         want = normalize_name(sname)
         year_cat = f"Родившиеся в {birth_year} году" if birth_year else None
 
+        # search ranks by relevance, so take the first candidate that clears the
+        # fuzzy threshold AND the footballer + birth-year gates (no need to page
+        # every hit).
         best: tuple[float, dict, str] | None = None
         for title in self._search(f"{sname} футболист"):
             score = fuzz.token_set_ratio(want, normalize_name(title))
@@ -196,10 +199,9 @@ class WikiPlayerBios:
             year_ok = birth_year is None or (
                 str(birth_year) in intro or any(year_cat == c for c in cats)
             )
-            if not (is_footballer and year_ok):
-                continue
-            if best is None or score > best[0]:
+            if is_footballer and year_ok:
                 best = (score, pg, title)
+                break
 
         if best is None:
             return WikiBio.not_found(player_id)

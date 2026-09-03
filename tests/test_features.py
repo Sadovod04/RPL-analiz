@@ -242,6 +242,26 @@ def test_trajectory_features_no_history_is_neutral():
     assert bool(out.loc["peer0_20/21", "had_minutes_collapse"]) is False
 
 
+def test_trajectory_first_senior_age_and_role():
+    rows = _peer_seasons().to_dict("records")
+    # prospect "p" already has two youth seasons; add a senior FNL-2 season at 16
+    # (a sub role: 400' over 10 games) and a starter youth season
+    rows += [
+        {"player_id": "p", "season": "20/21", "league": "Vtoraya Liga", "club": "x",
+         "minutes": 400, "matches": 10, "goals": 0, "assists": 0, "is_rpl": False,
+         "age_at_season": 16.0},
+    ]
+    df = pd.DataFrame(rows)
+    out = _trajectory_features(df, df).set_index("player_id").loc["p"]
+    assert out["played_senior_pre_cutoff"] == 1
+    assert out["first_senior_age"] == 16.0
+    # p total across kept rows: youth 1200'/18 + 150'/3 + senior 400'/10 -> ~50'/app
+    assert 40 < out["min_per_appearance"] < 60
+    # peers never touch a senior league
+    assert _trajectory_features(df, df).set_index("player_id").loc["peer0_20/21",
+                                                                   "played_senior_pre_cutoff"] == 0
+
+
 def test_build_matrix_phase_a_columns_present_and_clean():
     players = _players().assign(birth_month=[3, 11, 7])  # Q1, Q4, Q3
     m = build_feature_matrix(players, _seasons(), cutoff_age=19, as_of_year=2024, cfg=CFG)
