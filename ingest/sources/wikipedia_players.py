@@ -127,7 +127,7 @@ class WikiPlayerBios:
             from ingest.fetcher import HttpFetcher
 
             fetcher = HttpFetcher(
-                rate_limiter=rate_limiter or RateLimiter(min_interval=1.3, jitter=0.6),
+                rate_limiter=rate_limiter or RateLimiter(min_interval=0.6, jitter=0.4),
                 user_agent=WIKI_UA,
             )
         self._f = fetcher
@@ -139,20 +139,18 @@ class WikiPlayerBios:
         params.setdefault("maxlag", 5)  # MediaWiki etiquette: back off when servers are busy
         return self._f.get(WIKI_API, params=params).json()
 
-    def _search(self, query: str, limit: int = 4) -> list[str]:
-        j = self._api(action="query", list="search", srsearch=query, srlimit=limit, srprop="")
-        return [h["title"] for h in j.get("query", {}).get("search", [])]
-
-    def _page(self, title: str) -> dict:
-        """First-revision date, categories, intro plaintext — one call."""
+    def _search_pages(self, query: str, limit: int = 4) -> list[dict]:
+        """Search + each hit's categories / intro in ONE call
+        (``generator=search``). Ordered by search rank. (First-revision date needs
+        a separate single-page call — revision-list params can't span a generator.)
+        """
         j = self._api(
             action="query",
-            titles=title,
-            redirects=1,
-            prop="revisions|categories|extracts",
-            rvlimit=1,
-            rvdir="newer",
-            rvprop="timestamp",
+            generator="search",
+            gsrsearch=query,
+            gsrlimit=limit,
+            gsrnamespace=0,
+            prop="categories|extracts",
             cllimit="max",
             clshow="!hidden",
             explaintext=1,
@@ -160,7 +158,21 @@ class WikiPlayerBios:
             exchars=800,
         )
         pages = j.get("query", {}).get("pages", [])
-        return pages[0] if pages else {}
+        return sorted(pages, key=lambda p: p.get("index", 999))
+
+    def _first_revision(self, title: str) -> date | None:
+        j = self._api(
+            action="query",
+            titles=title,
+            redirects=1,
+            prop="revisions",
+            rvlimit=1,
+            rvdir="newer",
+            rvprop="timestamp",
+        )
+        pages = j.get("query", {}).get("pages", [])
+        ts = (pages[0].get("revisions") or [{}])[0].get("timestamp") if pages else None
+        return _parse_ts(ts)
 
     def _wikitext(self, title: str) -> str:
         j = self._api(action="parse", page=title, prop="wikitext", redirects=1)
@@ -183,14 +195,13 @@ class WikiPlayerBios:
         year_cat = f"Родившиеся в {birth_year} году" if birth_year else None
 
         # search ranks by relevance, so take the first candidate that clears the
-        # fuzzy threshold AND the footballer + birth-year gates (no need to page
-        # every hit).
+        # fuzzy threshold AND the footballer + birth-year gates.
         best: tuple[float, dict, str] | None = None
-        for title in self._search(f"{sname} футболист"):
+        for pg in self._search_pages(f"{sname} футболист"):
+            title = pg.get("title", "")
             score = fuzz.token_set_ratio(want, normalize_name(title))
             if score < _TITLE_MATCH_MIN:
                 continue
-            pg = self._page(title)
             cats = [c.get("title", "") for c in pg.get("categories", [])]
             intro = pg.get("extract", "") or ""
             is_footballer = any(_FOOTBALLER_CAT in c for c in cats)
@@ -207,7 +218,7 @@ class WikiPlayerBios:
             return WikiBio.not_found(player_id)
 
         score, pg, title = best
-        created = _parse_ts((pg.get("revisions") or [{}])[0].get("timestamp"))
+        created = self._first_revision(title)
         created_age = (
             round((created - birth_date).days / 365.25, 2)
             if created and birth_date

@@ -60,11 +60,22 @@ def test_not_found_sentinel():
     assert b.article_created_age is None
 
 
-class _FakeFetcher:
-    """Serves canned MediaWiki API JSON keyed by the 'action'/'list' of the call."""
+_PAGE = {
+    "index": 1,
+    "title": "Пиняев, Сергей Максимович",
+    "extract": "Сергей Максимович Пиняев (род. 2 ноября 2004) — российский футболист.",
+    "categories": [
+        {"title": "Категория:Футболисты России"},
+        {"title": "Категория:Игроки сборной России по футболу (до 19 лет)"},
+    ],
+    "revisions": [{"timestamp": "2021-08-01T10:00:00Z"}],
+}
 
-    def __init__(self, pages):
-        self._pages = pages
+
+class _FakeFetcher:
+    """Canned MediaWiki API JSON: one generator=search call + one parse call."""
+
+    def __init__(self):
         self.calls = []
 
     def get(self, url, params=None, **kw):
@@ -74,32 +85,23 @@ class _FakeFetcher:
         class _R:
             @staticmethod
             def json():
-                if p.get("list") == "search":
-                    return {"query": {"search": [{"title": "Пиняев, Сергей Максимович"}]}}
                 if p.get("action") == "parse":
                     return {"parse": {"wikitext": "== Достижения ==\n* Кубок ЮФЛ: 2019\n"}}
-                return {"query": {"pages": _FakeFetcher_pages}}
+                return {"query": {"pages": [_PAGE]}}
 
         return _R()
 
 
 def test_lookup_happy_path_with_fake_fetcher():
-    global _FakeFetcher_pages
-    _FakeFetcher_pages = [
-        {
-            "title": "Пиняев, Сергей Максимович",
-            "extract": "Сергей Максимович Пиняев (род. 2 ноября 2004) — российский футболист.",
-            "categories": [
-                {"title": "Категория:Футболисты России"},
-                {"title": "Категория:Игроки сборной России по футболу (до 19 лет)"},
-            ],
-            "revisions": [{"timestamp": "2021-08-01T10:00:00Z"}],
-        }
-    ]
-    bios = WikiPlayerBios(fetcher=_FakeFetcher(_FakeFetcher_pages))
+    f = _FakeFetcher()
+    bios = WikiPlayerBios(fetcher=f)
     bio = bios.lookup("pid1", "Пиняев Сергей Андреевич", "Sergey Pinyaev", date(2004, 11, 2))
     assert bio.wiki_title == "Пиняев, Сергей Максимович"
     assert bio.article_created == date(2021, 8, 1)
     assert round(bio.article_created_age, 1) == 16.7
     assert bio.nt_youth_levels == [19]
     assert bio.youth_honours_count == 1  # 2019 <= 2004 + 18
+    # 1 generator=search (categories/extract for all hits) + 1 first-revision on
+    # the match + 1 honours wikitext = 3 (vs ~5 before the generator rewrite)
+    assert len(f.calls) == 3
+    assert f.calls[0]["generator"] == "search"
