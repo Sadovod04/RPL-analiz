@@ -28,6 +28,9 @@ SIMPLE_NUMERIC = [
     "minutes_U19",
     "height_cm",
 ]
+# NB: the Phase-A trajectory/cohort features are deliberately left out here — they
+# hurt this linear baseline (raw cohort_year scale, collinear gaps). They pay off
+# in CatBoost; the baseline stays a simple, stable bar to clear.
 SIMPLE_CATEGORICAL = ["position"]
 
 

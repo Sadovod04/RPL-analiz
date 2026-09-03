@@ -111,6 +111,9 @@ class TmApiClient(HttpFetcher):
     def performance_game(self, player_id: str | int) -> dict:
         return self.get_json(f"{self.BASE}/player/{player_id}/performance-game")
 
+    def market_value_history(self, player_id: str | int) -> dict:
+        return self.get_json(f"{self.BASE}/player/{player_id}/market-value-history")
+
     def club_squad(self, club_id: str | int) -> dict:
         return self.get_json(f"{self.BASE}/club/{club_id}/squad")
 

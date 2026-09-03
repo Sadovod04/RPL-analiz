@@ -34,6 +34,7 @@ NON_FEATURE_COLS = {
     "player_id",
     "canonical_name",
     "birth_year",
+    "birth_month",  # raw -> birth_quarter / rel_age_frac are the features
     "academy_club",
     "target",
     "pro_target",
@@ -100,6 +101,139 @@ def _youth_features(seasons: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+# a (league, season) needs at least this many player-rows before we trust its
+# average age / match-load as a "peer norm" (small leagues give noisy baselines)
+_MIN_PEER_GROUP = 8
+
+
+def _league_season_norms(seasons: pd.DataFrame) -> pd.DataFrame:
+    """Per (league, season): peer count, mean age, and max matches (a full-season
+    proxy). Groups smaller than ``_MIN_PEER_GROUP`` get NaN norms."""
+    s = seasons[["league", "season", "age_at_season", "matches"]].copy()
+    s["age_at_season"] = pd.to_numeric(s["age_at_season"], errors="coerce")
+    s["matches"] = pd.to_numeric(s["matches"], errors="coerce")
+    norms = (
+        s.groupby(["league", "season"])
+        .agg(peers=("age_at_season", "size"), mean_age=("age_at_season", "mean"),
+             max_matches=("matches", "max"))
+        .reset_index()
+    )
+    norms.loc[norms["peers"] < _MIN_PEER_GROUP, ["mean_age", "max_matches"]] = np.nan
+    return norms
+
+
+def _trajectory_features(youth: pd.DataFrame, seasons: pd.DataFrame) -> pd.DataFrame:
+    """Signals from the *shape* of the pre-cutoff career, one row per player:
+
+    - ``*_age_gap_vs_peers`` — season age minus the mean age of that league/season.
+      Negative = playing above their age group (a strong prospect signal).
+    - ``matches_share_*`` — matches played / the fullest season in that league
+      (a weak availability / injury proxy).
+    - ``minutes_dropoff_max`` — largest season-over-season relative fall in minutes
+      from a meaningful base (>=500'); ``had_minutes_collapse`` flags a >=900' ->
+      <300' fall in consecutive pre-cutoff seasons.
+    - ``first_senior_age`` — age at the first *pre-cutoff* season in a senior pro
+      league (RPL / FNL / FNL-2); ``played_senior_pre_cutoff`` flags it. Reaching
+      men's football young, before the cutoff, is a strong prospect signal.
+    - ``min_per_appearance`` — pre-cutoff minutes / appearances (a starter-vs-sub
+      proxy); ``starter_share`` — fraction of pre-cutoff seasons averaging >60'.
+
+    ``youth`` must already be time-cutoff filtered; ``seasons`` is the full frame
+    (peer norms are contemporaneous, not outcome-derived).
+    """
+    from features.labels import PRO_LEAGUE_NAMES
+
+    norms = _league_season_norms(seasons)
+    y = youth.merge(norms, on=["league", "season"], how="left")
+    for col in ("minutes", "matches"):
+        y[col] = pd.to_numeric(y.get(col), errors="coerce").fillna(0.0)
+    y["age_at_season"] = pd.to_numeric(y["age_at_season"], errors="coerce")
+    y["age_gap_vs_peers"] = y["age_at_season"] - y["mean_age"]
+    with np.errstate(invalid="ignore", divide="ignore"):
+        share = y["matches"] / y["max_matches"]
+    y["matches_share"] = share.where(y["max_matches"] > 0).clip(upper=1.0)
+    y["is_senior"] = y["league"].isin(PRO_LEAGUE_NAMES)
+
+    rows = []
+    for pid, g in y.sort_values("age_at_season").groupby("player_id"):
+        row: dict[str, object] = {"player_id": pid}
+        gap = g["age_gap_vs_peers"].dropna()
+        row["min_age_gap_vs_peers"] = float(gap.min()) if len(gap) else 0.0
+        row["mean_age_gap_vs_peers"] = float(gap.mean()) if len(gap) else 0.0
+        sh = g["matches_share"].dropna()
+        row["matches_share_min"] = float(sh.min()) if len(sh) else np.nan
+        row["matches_share_mean"] = float(sh.mean()) if len(sh) else np.nan
+        mins = g["minutes"].to_numpy(float)
+        drop, collapse = 0.0, False
+        for prev, cur in zip(mins[:-1], mins[1:], strict=True):
+            if prev >= 500:
+                drop = max(drop, (prev - cur) / prev)
+            if prev >= 900 and cur < 300:
+                collapse = True
+        row["minutes_dropoff_max"] = float(max(drop, 0.0))
+        row["had_minutes_collapse"] = bool(collapse)
+
+        senior = g[g["is_senior"] & g["age_at_season"].notna()]
+        row["played_senior_pre_cutoff"] = int(len(senior) > 0)
+        row["first_senior_age"] = float(senior["age_at_season"].min()) if len(senior) else np.nan
+
+        tot_matches = g["matches"].sum()
+        row["min_per_appearance"] = (
+            float(g["minutes"].sum() / tot_matches) if tot_matches else np.nan
+        )
+        ps = g.groupby("season")[["minutes", "matches"]].sum()
+        ratio = ps["minutes"] / ps["matches"].where(ps["matches"] > 0)
+        row["starter_share"] = float((ratio > 60).mean()) if ratio.notna().any() else np.nan
+        rows.append(row)
+    return pd.DataFrame(rows)
+
+
+_RECOGNITION_COLS = (
+    "wiki_article_pre_cutoff",
+    "wiki_youth_honours",
+    "recognition_count",
+    "pre_cutoff_recognition_score",
+    "any_recognition",
+)
+
+
+def _attach_recognition(
+    m: pd.DataFrame, wiki: pd.DataFrame | None, cutoff_age: float
+) -> pd.DataFrame:
+    """Fold ru.wikipedia recognition into the matrix (Phase B).
+
+    Only *pre-cutoff* signals become features: an article created before the
+    player turned ``cutoff_age``, and honours dated at/before age 18. "Has an
+    article now" / total honours are post-hoc and deliberately never reach the
+    matrix. (A youth-NT feature was dropped: ru.wikipedia only carries the
+    "молодёжная (до 21)" category, not U17/U19, so it can't be made pre-cutoff
+    clean — that signal is left for the RFS source in a later phase.)
+    """
+    if wiki is None or wiki.empty:
+        for c in _RECOGNITION_COLS:
+            m[c] = 0
+        m["any_recognition"] = False
+        return m
+
+    w = (
+        wiki.drop_duplicates("player_id")
+        .set_index("player_id")
+        .reindex(columns=["article_created_age", "youth_honours_count"])
+    )
+    idx = m["player_id"]
+
+    created_age = pd.to_numeric(idx.map(w["article_created_age"]), errors="coerce")
+    m["wiki_article_pre_cutoff"] = (created_age.notna() & (created_age < cutoff_age)).astype(int)
+
+    yh = pd.to_numeric(idx.map(w["youth_honours_count"]), errors="coerce").fillna(0).astype(int)
+    m["wiki_youth_honours"] = yh
+
+    m["recognition_count"] = m["wiki_article_pre_cutoff"] + yh
+    m["pre_cutoff_recognition_score"] = 3 * m["wiki_article_pre_cutoff"] + yh
+    m["any_recognition"] = m["pre_cutoff_recognition_score"] > 0
+    return m
+
+
 def _academy_conversion_rate(labeled: pd.DataFrame) -> pd.Series:
     """Time-aware: for each player, P(target=1) among SAME academy, EARLIER cohorts
     only, excluding censored. NaN when there is no prior history (SPEC §7 leakage rule).
@@ -136,6 +270,7 @@ def build_feature_matrix(
     seasons: pd.DataFrame,
     market_values: pd.DataFrame | None = None,
     *,
+    wiki: pd.DataFrame | None = None,
     cutoff_age: float | None = None,
     as_of_year: int | None = None,
     cfg: LabelConfig | None = None,
@@ -156,15 +291,52 @@ def build_feature_matrix(
     m[num_fill] = m[num_fill].fillna(0.0)
     m["played_youth_league"] = m["played_youth_league"].astype("boolean").fillna(False).astype(bool)
 
+    traj = _trajectory_features(youth, seasons)
+    m = m.merge(traj, on="player_id", how="left")
+    for col in ("min_age_gap_vs_peers", "mean_age_gap_vs_peers", "minutes_dropoff_max"):
+        m[col] = m[col].fillna(0.0)
+    m["had_minutes_collapse"] = (
+        m["had_minutes_collapse"].astype("boolean").fillna(False).astype(bool)
+    )
+    m["played_senior_pre_cutoff"] = m["played_senior_pre_cutoff"].fillna(0).astype(int)
+    # matches_share_* / first_senior_age / min_per_appearance / starter_share stay
+    # NaN when undefined (CatBoost handles NaN; logreg imputes)
+
+    # era control: rule / legionnaire-limit changes shift the base rate by cohort.
+    # In the temporal split test cohorts sit outside the train range, so the model
+    # can only read a trend here, not memorise a cohort -> outcome mapping.
+    m["cohort_year"] = pd.to_numeric(m["birth_year"], errors="coerce")
+    if "birth_month" in players.columns:
+        bm = pd.to_numeric(
+            m["player_id"].map(players.set_index("player_id")["birth_month"]), errors="coerce"
+        )
+        # RFU age groups cut on 1 Jan: born early in the year => oldest in the cohort
+        m["birth_quarter"] = np.ceil(bm / 3).clip(1, 4)
+        m["rel_age_frac"] = (12 - bm) / 11.0
+    else:
+        m["birth_quarter"] = np.nan
+        m["rel_age_frac"] = np.nan
+
     m["academy_conversion_rate"] = _academy_conversion_rate(m).to_numpy()
     m["market_value_at_cutoff_eur"] = m["player_id"].map(
         _market_value_at_cutoff(market_values, players, cutoff_age)
     )
+    m = _attach_recognition(m, wiki, cutoff_age)
 
     # static player attributes (categoricals kept raw for CatBoost)
     for col in ("position", "position_detail", "height_cm", "is_foreigner"):
         if col in players.columns:
             m[col] = m["player_id"].map(players.set_index("player_id")[col])
+
+    # Phase C: youth-club history (TM ``youth_clubs`` list, no dates). n>=2 =
+    # passed through more than one academy; 0 = unknown (only ~18% of profiles
+    # carry it). Sign is ambiguous (promotion vs churn) — let the model decide.
+    if "n_youth_clubs" in players.columns:
+        nyc = pd.to_numeric(
+            m["player_id"].map(players.set_index("player_id")["n_youth_clubs"]), errors="coerce"
+        ).fillna(0)
+        m["n_youth_clubs"] = nyc.astype(int)
+        m["changed_youth_club"] = (nyc >= 2).astype(int)
 
     assert_no_leakage(feature_columns(m))
     return m
@@ -176,6 +348,17 @@ def feature_columns(df: pd.DataFrame) -> list[str]:
 
 def assert_matrix_is_clean(df: pd.DataFrame) -> None:
     assert_no_leakage(feature_columns(df))
+
+
+def _norm_academy(v) -> object:
+    """Tidy the free-text ``academy_club`` so trivially-different spellings group:
+    first line only, trimmed, trailing punctuation dropped, whitespace collapsed.
+    """
+    if v is None or (isinstance(v, float) and pd.isna(v)):
+        return None
+    s = str(v).splitlines()[0].strip().strip(".,;\"'").strip()
+    s = " ".join(s.split())
+    return s or None
 
 
 # raw tmapi competition codes that older crawls stored unmapped -> readable name
@@ -191,18 +374,41 @@ _LEAGUE_REMAP = {
 def from_db(engine):
     players = pd.read_sql(
         "select p.player_id, p.canonical_name, p.position, p.position_detail, p.height_cm, "
-        "p.is_foreigner, p.academy_club, extract(year from p.birth_date)::int as birth_year "
+        "p.is_foreigner, p.academy_club, extract(year from p.birth_date)::int as birth_year, "
+        "extract(month from p.birth_date)::int as birth_month "
         "from player p",
         engine,
     )
+    try:  # number of youth/academy clubs on the TM profile (0 = unknown)
+        yc = pd.read_sql(
+            "select x.player_id, "
+            "max(coalesce(jsonb_array_length(r.payload->'player'->'youth_clubs'), 0)) "
+            "  as n_youth_clubs "
+            "from raw_document r join player_source_xref x "
+            "  on x.source = 'transfermarkt' and x.source_id = r.source_id "
+            "where r.source = 'transfermarkt' and r.doc_type = 'profile' "
+            "group by x.player_id",
+            engine,
+        )
+        players = players.merge(yc.drop_duplicates("player_id"), on="player_id", how="left")
+    except Exception:  # noqa: BLE001 — no raw payloads (e.g. demo) -> feature stays absent
+        pass
     seasons = pd.read_sql(
         "select player_id, season, league, club, age_at_season, minutes, matches, "
         "goals, assists, is_rpl from season_stats",
         engine,
     )
     seasons["league"] = seasons["league"].replace(_LEAGUE_REMAP)
+    players["academy_club"] = players["academy_club"].map(_norm_academy)
     market_values = pd.read_sql("select player_id, date, value_eur from market_value", engine)
-    return players, seasons, market_values
+    try:
+        wiki = pd.read_sql(
+            "select player_id, article_created_age, youth_honours_count from wiki_recognition",
+            engine,
+        )
+    except Exception:  # noqa: BLE001 — table absent (fresh DB) -> recognition features = 0
+        wiki = None
+    return players, seasons, market_values, wiki
 
 
 def write_parquet(df: pd.DataFrame, path: str | None = None) -> str:

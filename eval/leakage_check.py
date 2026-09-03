@@ -18,6 +18,16 @@ FORBIDDEN_EXACT: frozenset[str] = frozenset(
         "market_value_current_eur",
         "market_value_now_eur",
         "last_known_club",  # fine as an outcome marker, never as a feature
+        # raw ru.wikipedia fields (Phase B). Only the *pre-cutoff* derivations
+        # (wiki_article_pre_cutoff, wiki_youth_national_team, wiki_youth_honours,
+        # *_recognition_*) are features; these carry post-hoc information.
+        "wiki_title",
+        "wiki_article_created_age",
+        "article_created",
+        "article_created_age",
+        "honours_years",
+        "youth_honours_total",
+        "nt_youth_levels",
     }
 )
 
