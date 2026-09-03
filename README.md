@@ -4,7 +4,8 @@
 России (11–21 год) оценивает вероятность когда-либо закрепиться в РПЛ. Это
 **ранжирование потока кандидатов** с калибровкой вероятностей и оценкой
 неопределённости — «топ-N перспективных», а не вердикт по одному игроку. Проект
-портфельный. Полное ТЗ — [`SPEC.md`](SPEC.md).
+портфельный. Полное ТЗ — [`SPEC.md`](SPEC.md); вся логика анализа (фичи, формулы,
+метрики) — [`METHODOLOGY.md`](METHODOLOGY.md); результаты — [`REPORT.md`](REPORT.md).
 
 **EN.** A model that, from a Russian academy footballer's early career stats
 (ages 11–21), estimates the probability of ever establishing themselves in the
