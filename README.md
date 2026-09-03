@@ -80,6 +80,7 @@ uv run --extra app streamlit run app/streamlit_dashboard.py
 
 | Path | Что / What |
 |---|---|
+| [`SPEC.md`](SPEC.md) · [`METHODOLOGY.md`](METHODOLOGY.md) · [`REPORT.md`](REPORT.md) | ТЗ · вся логика анализа (41 фича с формулами, метрики, сплит, защита от утечки) · результаты |
 | `config/settings.toml` | пороги таргета (200 мин / 26 лет), когорты (1990–2004), cutoff-возраст (11), пути |
 | `ingest/` | скрейперы (`sources/`: transfermarkt, wikipedia, ffspb, mosff), rate limiter, pydantic-схемы, resolver, запись в Postgres |
 | `features/` | `time_cutoff.py` (единый анти-leakage фильтр), `build_features.py` (в т.ч. траекторные/когортные фичи: relative age, «молод для лиги», провалы минут, `cohort_year`), `labels.py` |
