@@ -115,11 +115,34 @@ def _score_frame(
         return out
     out["breakthrough_score"] = model.predict_proba(out[feats])
     if "source" in out.columns and "pers_score" in out.columns:
-        is_youth = out["source"].eq("ffspb") & out["pers_score"].notna()
+        is_youth = out["source"].isin(("ffspb", "mosff")) & out["pers_score"].notna()
         out.loc[is_youth, "breakthrough_score"] = (
             pd.to_numeric(out.loc[is_youth, "pers_score"], errors="coerce") / 100.0
         )
     return out
+
+
+# coarse position bucket -> formation line + how many slots in a 4-3-3
+_FORMATION = {
+    "GK": ("GK", 1),
+    "CB": ("DF", 4),
+    "FB": ("DF", 4),
+    "CM": ("MF", 3),
+    "W": ("FW", 3),
+    "ST": ("FW", 3),
+}
+_LINES = ("GK", "DF", "MF", "FW")
+_LINE_SLOTS = {"GK": 1, "DF": 4, "MF": 3, "FW": 3}
+
+
+def best_xi(scored_year: pd.DataFrame) -> dict[str, pd.DataFrame]:
+    """Given already-scored players of one birth-year cohort, pick the strongest
+    per formation line (4-3-3 by coarse position) → {line: rows sorted by score}.
+    """
+    d = scored_year.copy()
+    d["_line"] = d["position"].map(lambda p: _FORMATION.get(str(p), ("MF", 3))[0])
+    d = d.sort_values("breakthrough_score", ascending=False)
+    return {ln: d[d["_line"] == ln].head(_LINE_SLOTS[ln]) for ln in _LINES}
 
 
 def rank_resolved(

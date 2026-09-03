@@ -1,12 +1,12 @@
 """Streamlit dashboard (M7).
 
-Bilingual (RU/EN). Tabs: prospects · already pro/RPL · compare · youth (ФФ СПб).
-One combined dataset: Transfermarkt academy players (CatBoost score) + ФФ СПб kids
-2012–2015 (transparent 0–100 heuristic). A "Источник / Source" filter and a
-"Метод" column tell them apart. Sidebar filters (position, level reached, birth
-year, academy, source) apply to both list tabs. Per-player card: raw youth stats,
-explained SHAP breakdown, closest breakthrough players — or, for a kid, a plain
-projected-level card (no career yet -> no SHAP).
+Bilingual (RU/EN). Tabs: prospects · already pro/RPL · projected squads by year ·
+compare · youth (regions). One combined dataset: Transfermarkt academy players
+(CatBoost score) + regional kids (transparent 0–100 heuristic); a "Метод" column
+tells them apart. Shared left-hand filters (position, level, birth year, academy,
+source) drive every tab. Per-player card (under the table on both list tabs): raw
+youth stats, a signed SHAP breakdown, closest breakthrough players — or, for a
+kid, a plain projected-level card (no career yet -> no SHAP).
 
     uv run --extra app streamlit run app/streamlit_dashboard.py
 """
@@ -19,12 +19,14 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
+import altair as alt  # noqa: E402
 import pandas as pd  # noqa: E402
 import streamlit as st  # noqa: E402
 
 from app.i18n import feat_label, position_label, t  # noqa: E402
 from app.ranking import (  # noqa: E402
     _score_frame,
+    best_xi,
     explain_player,
     player_raw_stats,
     rank_prospects,
@@ -390,8 +392,32 @@ def _player_card(view: pd.DataFrame):
     st.markdown(f"**{t('shap_hdr', lang)}**")
     st.caption(t("shap_help", lang))
     contrib = explain_player(model, df, pick).head(12)
-    contrib.index = [feat_label(c, lang) for c in contrib.index]
-    st.bar_chart(contrib, horizontal=True)
+    cdf = pd.DataFrame(
+        {
+            "feature": [feat_label(c, lang) for c in contrib.index],
+            "contribution": contrib.to_numpy(),
+        }
+    )
+    cdf["dir"] = cdf["contribution"].map(lambda v: "+" if v >= 0 else "−")
+    chart = (
+        alt.Chart(cdf)
+        .mark_bar()
+        .encode(
+            x=alt.X("contribution:Q", title=None),
+            y=alt.Y("feature:N", sort="-x", title=None),
+            color=alt.Color(
+                "dir:N",
+                scale=alt.Scale(domain=["+", "−"], range=["#2e9e5b", "#d1495b"]),
+                legend=None,
+            ),
+            tooltip=[
+                alt.Tooltip("feature:N", title=""),
+                alt.Tooltip("contribution:Q", format="+.3f"),
+            ],
+        )
+        .properties(height=28 * len(cdf))
+    )
+    st.altair_chart(chart)
 
     st.markdown(f"**{t('similar_hdr', lang)}**")
     st.caption(t("similar_help", lang))
@@ -467,10 +493,22 @@ def _compare(scored: pd.DataFrame):
         return
 
     sub = scored[scored["player_id"].isin(picked)].set_index("canonical_name")
+    method = (
+        sub["source"].map(
+            {
+                "tm": t("method_model", lang),
+                "ffspb": t("method_heur", lang),
+                "mosff": t("method_heur", lang),
+            }
+        )
+        if "source" in sub
+        else pd.Series(t("method_model", lang), index=sub.index)
+    )
     st.table(
         pd.DataFrame(
             {
                 t("score", lang): (sub["breakthrough_score"] * 100).round(1),
+                t("cmp_method", lang): method,
                 t("col_birth", lang): sub["birth_year"].astype("Int64"),
                 t("col_pos", lang): [
                     position_label(r.position, r.position_detail, lang) for r in sub.itertuples()
@@ -504,7 +542,7 @@ def _compare(scored: pd.DataFrame):
         best = vals.max() if row.name in higher_better else vals.min()
         return ["font-weight:700" if v == best else "" for v in vals]
 
-    st.dataframe(disp.style.apply(_bold_best, axis=1), use_container_width=True)
+    st.dataframe(disp.style.apply(_bold_best, axis=1))
 
     # one readable view: each key metric as % of the best player in the group.
     # A dataframe with per-player progress bars — always grouped, never stacked.
@@ -528,7 +566,7 @@ def _compare(scored: pd.DataFrame):
     norm_t.index.name = t("compare_stats", lang)
     st.dataframe(
         norm_t,
-        use_container_width=True,
+        
         column_config={
             c: st.column_config.ProgressColumn(c, min_value=0, max_value=100, format="%d%%")
             for c in norm_t.columns
@@ -548,28 +586,24 @@ def _load_youth(mtime: float) -> pd.DataFrame | None:
 def _youth_tab():
     d = _load_youth(_parquet_mtime())
     st.subheader(t("youth_hdr", lang))
+    st.caption(t("youth_cap", lang))
     if d is None:
         st.info(t("youth_none", lang))
         return
-    st.caption(t("youth_note", lang))
     st.caption("ℹ️ " + t("y_score_help", lang))
     _REGION = {"ffspb": t("src_ffspb", lang), "mosff": t("src_mosff", lang)}
-    d = d.assign(region=d["source"].str.split(";").str[0].map(lambda s: _REGION.get(s, s)))
-    with st.expander(t("filters", lang), expanded=True):
-        c1, c2, c3, c4 = st.columns(4)
-        years = sorted(int(y) for y in d["birth_year"].dropna().unique())
-        yr = c1.multiselect(t("birth_range", lang), years, placeholder=t("all_ph", lang))
-        min_g = c2.number_input(t("y_min_games", lang), 0, 200, 10)
-        q = c3.text_input(t("y_search", lang), "")
-        regs = sorted(d["region"].dropna().unique())
-        reg_sel = c4.multiselect(t("source", lang), regs, placeholder=t("all_ph", lang))
-    v = d[d["games"] >= min_g]
-    if yr:
-        v = v[v["birth_year"].isin(yr)]
+    d = d.assign(
+        region=d["source"].str.split(";").str[0].map(lambda s: _REGION.get(s, s)),
+        _src=d["source"].str.split(";").str[0],
+    )
+    # driven by the shared left-hand filters (birth year + source); only the
+    # name search is local to this tab.
+    q = st.text_input(t("y_search", lang), "")
+    v = d[d["birth_year"].fillna(0).between(*flt["yr"])]
+    if flt.get("src"):
+        v = v[v["_src"].isin(flt["src"])]
     if q:
         v = v[v["full_name"].str.contains(q, case=False, na=False)]
-    if reg_sel:
-        v = v[v["region"].isin(reg_sel)]
     v = v.sort_values("pers_score", ascending=False)
 
     show = v.assign(proj=v["proj_level"].map(lambda k: t(k, lang))).rename(
@@ -602,49 +636,102 @@ def _youth_tab():
                 t("y_gpg", lang),
             ]
         ],
-        use_container_width=True,
         hide_index=True,
         height=560,
     )
+    st.caption(t("compare_cap", lang) + " → «" + t("tab_compare", lang) + "»")
 
-    # compare a few kids
-    st.markdown(f"**{t('y_compare', lang)}**")
-    names = dict(zip(v["full_name"] + " · " + v["birth_year"].astype(str), v.index, strict=False))
-    picks = st.multiselect(t("y_compare_pick", lang), list(names), max_selections=6)
-    if len(picks) >= 2:
-        sub = v.loc[[names[p] for p in picks]].set_index("full_name")
-        cmp = pd.DataFrame(
-            {
-                t("y_score", lang): sub["pers_score"].astype(int),
-                t("y_level", lang): sub["proj_level"].map(lambda k: t(k, lang)),
-                t("col_birth", lang): sub["birth_year"].astype("Int64"),
-                t("y_games", lang): sub["games"].astype(int),
-                t("y_goals", lang): sub["goals"].astype(int),
-                t("y_gpg", lang): sub["gpg"],
-                t("y_teams", lang): sub["teams"],
-            }
+
+# -- projected squads by birth year -----------------------------
+_LINE_KEYS = ("GK", "DF", "MF", "FW")
+
+
+def _squad_card(row: pd.Series):
+    with st.container(border=True):
+        st.markdown(f"**{row['canonical_name']}**")
+        pos = position_label(row.get("position"), row.get("position_detail"), lang)
+        st.caption(f"{pos} · {row.get('academy_club') or '—'}")
+        st.markdown(f"### {row['breakthrough_score'] * 100:.0f}")
+
+
+def _squads_tab(scored: pd.DataFrame):
+    st.subheader(t("squads_hdr", lang))
+    st.caption(t("squads_cap", lang))
+
+    # only cohorts big enough to field an XI (from either pool)
+    counts = scored.groupby(scored["birth_year"].astype("Int64")).size()
+    years = sorted(int(y) for y in counts[counts >= 11].index.dropna())
+    if not years:
+        st.info(t("squads_none", lang))
+        return
+    tm_years = sorted(
+        int(y)
+        for y in scored.loc[scored.get("source", "tm").eq("tm"), "birth_year"].dropna().unique()
+        if y in years
+    )
+    default = tm_years[-3] if len(tm_years) >= 3 else years[-1]
+    yr = st.select_slider(t("squads_year", lang), years, value=default)
+
+    year_rows = scored[scored["birth_year"] == yr]
+    if "source" in year_rows:
+        academy = year_rows[year_rows["source"].eq("tm")]
+        kids = year_rows[year_rows["source"].isin(("ffspb", "mosff"))]
+    else:
+        academy, kids = year_rows, year_rows.iloc[:0]
+
+    if len(academy):
+        lines = best_xi(academy)
+        for ln in _LINE_KEYS:
+            rows = lines[ln]
+            if not len(rows):
+                continue
+            st.markdown(f"**{t(f'line_{ln}', lang)}**")
+            cols = st.columns(max(len(rows), 1))
+            for col, (_, r) in zip(cols, rows.iterrows(), strict=False):
+                with col:
+                    _squad_card(r)
+        st.divider()
+
+    if len(kids):
+        st.markdown(f"**{t('src_ffspb', lang)} / {t('src_mosff', lang)}**")
+        st.caption(t("squads_kids_note", lang))
+        top = kids.sort_values("breakthrough_score", ascending=False).head(11)
+        st.dataframe(
+            pd.DataFrame(
+                {
+                    t("col_name", lang): top["canonical_name"].to_numpy(),
+                    t("y_score", lang): (top["breakthrough_score"] * 100).round(0).astype(int),
+                    t("y_teams", lang): top["academy_club"].to_numpy(),
+                }
+            ),
+            hide_index=True,
         )
-        st.table(cmp.T)
 
 
 # -- layout ---------------------------------------------------
 flt = _filter_widgets(df)
 
-tab_prospects, tab_pro, tab_compare, tab_youth = st.tabs(
-    [t("tab_prospects", lang), t("tab_pro", lang), t("tab_compare", lang), t("tab_youth", lang)]
+tab_prospects, tab_pro, tab_squads, tab_compare, tab_youth = st.tabs(
+    [
+        t("tab_prospects", lang),
+        t("tab_pro", lang),
+        t("tab_squads", lang),
+        t("tab_compare", lang),
+        t("tab_youth", lang),
+    ]
 )
 
 with tab_prospects:
     st.subheader(t("prospects_hdr", lang))
+    st.caption(t("prospects_cap", lang))
     view = _apply(rank_prospects(df, model=model, target_col=target_col), flt)
-    left, right = st.columns([3, 2])
-    with left:
-        st.dataframe(_table(view), use_container_width=True, hide_index=True, height=640)
-    with right:
-        _player_card(view)
+    st.dataframe(_table(view), hide_index=True, height=460)
+    st.divider()
+    _player_card(view)
 
 with tab_pro:
     st.subheader(t("pro_hdr", lang))
+    st.caption(t("pro_cap", lang))
     res = _apply(rank_resolved(df, model, target_col=target_col), flt)
     show = _table(res)
     if "outcome" in res:
@@ -653,9 +740,15 @@ with tab_pro:
             "→",
             res["outcome"].map({1: t("outcome_yes", lang), 0: t("outcome_no", lang)}).to_numpy(),
         )
-    st.dataframe(show, use_container_width=True, hide_index=True, height=640)
+    st.dataframe(show, hide_index=True, height=460)
+    st.divider()
+    _player_card(res)
+
+with tab_squads:
+    _squads_tab(_scored_all(df, target_col, _parquet_mtime()))
 
 with tab_compare:
+    st.caption(t("compare_cap", lang))
     _compare(_scored_all(df, target_col, _parquet_mtime()))
 
 with tab_youth:

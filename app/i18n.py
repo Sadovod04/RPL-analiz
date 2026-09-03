@@ -78,6 +78,25 @@ FEATURE_LABELS = {
         "is_foreigner": "Легионер",
         "position": "Позиция (группа)",
         "position_detail": "Позиция (детально)",
+        "academy_club": "Академия / клуб",
+        "cohort_year": "Год рождения (эпоха)",
+        "birth_quarter": "Квартал рождения (1 = янв–мар)",
+        "rel_age_frac": "Относительный возраст в группе (выше = старше)",
+        "min_age_gap_vs_peers": "Макс. «играл на возраст выше» (мин. разрыв с лигой)",
+        "mean_age_gap_vs_peers": "Средний разрыв в возрасте с лигой",
+        "matches_share_min": "Мин. доля отыгранного сезона",
+        "matches_share_mean": "Средняя доля отыгранного сезона",
+        "minutes_dropoff_max": "Макс. обвал игровых минут между сезонами",
+        "had_minutes_collapse": "Был резкий обвал минут",
+        "played_senior_pre_cutoff": "Играл во взрослой лиге до отсечки",
+        "first_senior_age": "Возраст первого взрослого сезона",
+        "min_per_appearance": "Минут за появление (старт/замена)",
+        "starter_share": "Доля сезонов в старте",
+        "wiki_article_pre_cutoff": "Статья в Википедии появилась до 19 лет",
+        "wiki_youth_honours": "Юношеские трофеи (по Википедии)",
+        "pre_cutoff_recognition_score": "Индекс раннего признания",
+        "recognition_count": "Число признаний (статья + трофеи)",
+        "any_recognition": "Есть раннее признание",
     },
     "en": {},  # falls back to the raw column name
 }
@@ -216,6 +235,33 @@ STRINGS = {
         ),
         "outcome_yes": "дошёл до проф.",
         "outcome_no": "не дошёл",
+        "prospects_cap": (
+            "Воспитанники академий, у которых карьера ещё не решена. Оценка — обученной "
+            "моделью (CatBoost) по 40+ признакам молодёжной карьеры."
+        ),
+        "pro_cap": (
+            "Игроки с решённой судьбой (дошли / не дошли, либо уже 26+). Показана оценка "
+            "модели рядом с реальным исходом — видно, где модель права, где нет."
+        ),
+        "compare_cap": "Любые игроки бок о бок — академии (модель) и дети регионов (эвристика) вместе.",
+        "youth_cap": (
+            "Дети региональных федераций (ФФ СПб, Москва), 10–14 лет. Карьеры нет → "
+            "прозрачная эвристика 0–100 (голы/игра, объём, сила клуба), не модель."
+        ),
+        "tab_squads": "Составы по годам",
+        "squads_hdr": "Предполагаемый состав по году рождения",
+        "squads_cap": (
+            "Не из открытых источников — модель сама отбирает сильнейших по позициям из "
+            "своей оценки и расставляет по схеме 4-3-3."
+        ),
+        "squads_year": "Год рождения",
+        "squads_kids_note": "У детей регионов позиций нет — показан просто топ по перспективности.",
+        "squads_none": "Нет игроков этого года рождения.",
+        "line_GK": "Вратарь",
+        "line_DF": "Защита",
+        "line_MF": "Полузащита",
+        "line_FW": "Нападение",
+        "cmp_method": "Метод",
     },
     "en": {
         "title": "RPL-analiz — breakthrough",
@@ -343,6 +389,33 @@ STRINGS = {
         ),
         "outcome_yes": "reached pro",
         "outcome_no": "did not",
+        "prospects_cap": (
+            "Academy players whose career is not settled yet. Scored by the trained "
+            "model (CatBoost) on 40+ youth-career features."
+        ),
+        "pro_cap": (
+            "Players whose fate is settled (made it / didn't, or already 26+). The model "
+            "score is shown next to the real outcome — you can see where it's right."
+        ),
+        "compare_cap": "Any players side by side — academy (model) and regional kids (heuristic) together.",
+        "youth_cap": (
+            "Regional-federation kids (SPb FF, Moscow), age 10–14. No career → a "
+            "transparent 0–100 heuristic (goals/game, volume, club strength), not the model."
+        ),
+        "tab_squads": "Squads by year",
+        "squads_hdr": "Projected squad by birth year",
+        "squads_cap": (
+            "Not from public rosters — the model picks the strongest per position from "
+            "its own score and lays them out in a 4-3-3."
+        ),
+        "squads_year": "Birth year",
+        "squads_kids_note": "Regional kids have no positions — showing the top by prospect score.",
+        "squads_none": "No players for this birth year.",
+        "line_GK": "Goalkeeper",
+        "line_DF": "Defence",
+        "line_MF": "Midfield",
+        "line_FW": "Attack",
+        "cmp_method": "Method",
     },
 }
 
