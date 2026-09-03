@@ -7,6 +7,7 @@ import pytest
 from eval.leakage_check import LeakageError
 from features.build_features import (
     _attach_recognition,
+    _norm_academy,
     _trajectory_features,
     age_bucket,
     assert_matrix_is_clean,
@@ -308,6 +309,15 @@ def test_recognition_pre_vs_post_cutoff():
     assert m.loc["b", "pre_cutoff_recognition_score"] == 0
     assert m.loc["c", "recognition_count"] == 0
     assert bool(m.loc["c", "any_recognition"]) is False
+
+
+def test_norm_academy_groups_trivial_spellings():
+    assert _norm_academy("Akademia Fakel Voronezh.") == "Akademia Fakel Voronezh"
+    assert _norm_academy("Akademia Fakel Voronezh") == "Akademia Fakel Voronezh"
+    assert _norm_academy("Dinamo-SUOR Stavropol\r\nAF Krasnodar") == "Dinamo-SUOR Stavropol"
+    assert _norm_academy('  "Nevskiy front" St. Petersburg  ') == 'Nevskiy front" St. Petersburg'
+    assert _norm_academy(None) is None
+    assert _norm_academy(float("nan")) is None
 
 
 def test_recognition_columns_pass_leakage_and_are_features():

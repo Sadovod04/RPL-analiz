@@ -328,6 +328,16 @@ def build_feature_matrix(
         if col in players.columns:
             m[col] = m["player_id"].map(players.set_index("player_id")[col])
 
+    # Phase C: youth-club history (TM ``youth_clubs`` list, no dates). n>=2 =
+    # passed through more than one academy; 0 = unknown (only ~18% of profiles
+    # carry it). Sign is ambiguous (promotion vs churn) — let the model decide.
+    if "n_youth_clubs" in players.columns:
+        nyc = pd.to_numeric(
+            m["player_id"].map(players.set_index("player_id")["n_youth_clubs"]), errors="coerce"
+        ).fillna(0)
+        m["n_youth_clubs"] = nyc.astype(int)
+        m["changed_youth_club"] = (nyc >= 2).astype(int)
+
     assert_no_leakage(feature_columns(m))
     return m
 
@@ -338,6 +348,17 @@ def feature_columns(df: pd.DataFrame) -> list[str]:
 
 def assert_matrix_is_clean(df: pd.DataFrame) -> None:
     assert_no_leakage(feature_columns(df))
+
+
+def _norm_academy(v) -> object:
+    """Tidy the free-text ``academy_club`` so trivially-different spellings group:
+    first line only, trimmed, trailing punctuation dropped, whitespace collapsed.
+    """
+    if v is None or (isinstance(v, float) and pd.isna(v)):
+        return None
+    s = str(v).splitlines()[0].strip().strip(".,;\"'").strip()
+    s = " ".join(s.split())
+    return s or None
 
 
 # raw tmapi competition codes that older crawls stored unmapped -> readable name
@@ -358,12 +379,25 @@ def from_db(engine):
         "from player p",
         engine,
     )
+    try:  # number of youth/academy clubs on the TM profile (0 = unknown)
+        yc = pd.read_sql(
+            "select x.player_id, "
+            "coalesce(jsonb_array_length(r.payload->'player'->'youth_clubs'), 0) as n_youth_clubs "
+            "from raw_document r join player_source_xref x "
+            "  on x.source = 'transfermarkt' and x.source_id = r.source_id "
+            "where r.source = 'transfermarkt' and r.doc_type = 'profile'",
+            engine,
+        )
+        players = players.merge(yc, on="player_id", how="left")
+    except Exception:  # noqa: BLE001 — no raw payloads (e.g. demo) -> feature stays absent
+        pass
     seasons = pd.read_sql(
         "select player_id, season, league, club, age_at_season, minutes, matches, "
         "goals, assists, is_rpl from season_stats",
         engine,
     )
     seasons["league"] = seasons["league"].replace(_LEAGUE_REMAP)
+    players["academy_club"] = players["academy_club"].map(_norm_academy)
     market_values = pd.read_sql("select player_id, date, value_eur from market_value", engine)
     try:
         wiki = pd.read_sql(

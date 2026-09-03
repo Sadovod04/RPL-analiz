@@ -97,6 +97,8 @@ FEATURE_LABELS = {
         "pre_cutoff_recognition_score": "Индекс раннего признания",
         "recognition_count": "Число признаний (статья + трофеи)",
         "any_recognition": "Есть раннее признание",
+        "n_youth_clubs": "Сколько академий сменил",
+        "changed_youth_club": "Менял академию (2+)",
     },
     "en": {},  # falls back to the raw column name
 }

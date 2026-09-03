@@ -36,6 +36,9 @@ _NEW_COLS = (
     "recognition_count",
     "pre_cutoff_recognition_score",
     "any_recognition",
+    "market_value_at_cutoff_eur",
+    "n_youth_clubs",
+    "changed_youth_club",
 )
 
 
