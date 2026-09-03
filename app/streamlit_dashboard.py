@@ -13,6 +13,7 @@ kid, a plain projected-level card (no career yet -> no SHAP).
 
 from __future__ import annotations
 
+import base64
 import sys
 from pathlib import Path
 
@@ -122,12 +123,17 @@ def _pos(row) -> str:
     return position_label(row.get("position"), row.get("position_detail"), lang)
 
 
+_PLAIN_INT = {"cohort_year", "birth_year", "birth_quarter", "first_senior_age"}
+
+
 def _fmt(key: str, v) -> str:
     if isinstance(v, bool):
         return ("да" if lang == "ru" else "yes") if v else ("нет" if lang == "ru" else "no")
     if v is None or (isinstance(v, float) and pd.isna(v)):
         return "—"
     if isinstance(v, (int, float)):
+        if key in _PLAIN_INT:
+            return f"{v:.0f}"
         if key in _INT_KEYS or abs(v) >= 1000:
             return f"{v:,.0f}".replace(",", " ")
         return f"{v:.2f}"
@@ -366,14 +372,22 @@ def _youth_player_card(row: pd.Series, score: float):
     st.divider()
 
 
-def _player_card(view: pd.DataFrame):
+def _player_card(view: pd.DataFrame, *, slot: str, clicked_pid: str | None = None):
     st.subheader(t("why", lang))
     if not len(view):
         st.info(t("no_match", lang))
         return
+    ids = view["player_id"].tolist()
+    key = f"card_pick_{slot}"
+    # a clicked table row wins; else keep the previous pick; else the top player
+    if clicked_pid in ids:
+        st.session_state[key] = clicked_pid
+    if st.session_state.get(key) not in ids:
+        st.session_state[key] = ids[0]
     pick = st.selectbox(
         t("pick_player", lang),
-        view["player_id"],
+        ids,
+        key=key,
         format_func=lambda pid: view.loc[view["player_id"] == pid, "canonical_name"].iloc[0],
     )
     prow = df[df["player_id"] == pick].iloc[0]
@@ -391,33 +405,42 @@ def _player_card(view: pd.DataFrame):
 
     st.markdown(f"**{t('shap_hdr', lang)}**")
     st.caption(t("shap_help", lang))
-    contrib = explain_player(model, df, pick).head(12)
-    cdf = pd.DataFrame(
-        {
-            "feature": [feat_label(c, lang) for c in contrib.index],
-            "contribution": contrib.to_numpy(),
-        }
-    )
-    cdf["dir"] = cdf["contribution"].map(lambda v: "+" if v >= 0 else "−")
-    chart = (
-        alt.Chart(cdf)
-        .mark_bar()
-        .encode(
-            x=alt.X("contribution:Q", title=None),
-            y=alt.Y("feature:N", sort="-x", title=None),
-            color=alt.Color(
-                "dir:N",
-                scale=alt.Scale(domain=["+", "−"], range=["#2e9e5b", "#d1495b"]),
-                legend=None,
-            ),
-            tooltip=[
-                alt.Tooltip("feature:N", title=""),
-                alt.Tooltip("contribution:Q", format="+.3f"),
-            ],
+    contrib = explain_player(model, df, pick)
+    scale = float(contrib.abs().max()) or 1.0
+    top = contrib.head(7)
+    for col, v in top.items():
+        val = _fmt(col, prow.get(col))
+        strong = abs(v) >= 0.45 * scale
+        if v >= 0:
+            eff = t("eff_up_strong" if strong else "eff_up", lang)
+            mark = "🟢"
+        else:
+            eff = t("eff_down_strong" if strong else "eff_down", lang)
+            mark = "🔴"
+        st.markdown(f"{mark} **{feat_label(col, lang)}** — {val} → {eff}")
+    with st.expander(t("shap_raw", lang)):
+        cdf = pd.DataFrame(
+            {"feature": [feat_label(c, lang) for c in contrib.head(12).index],
+             "contribution": contrib.head(12).to_numpy()}
         )
-        .properties(height=28 * len(cdf))
-    )
-    st.altair_chart(chart)
+        cdf["dir"] = cdf["contribution"].map(lambda x: "+" if x >= 0 else "−")
+        chart = (
+            alt.Chart(cdf)
+            .mark_bar()
+            .encode(
+                x=alt.X("contribution:Q", title=t("shap_axis", lang)),
+                y=alt.Y("feature:N", sort="-x", title=None),
+                color=alt.Color(
+                    "dir:N",
+                    scale=alt.Scale(domain=["+", "−"], range=["#2e9e5b", "#d1495b"]),
+                    legend=None,
+                ),
+                tooltip=[alt.Tooltip("feature:N", title=""),
+                         alt.Tooltip("contribution:Q", format="+.3f")],
+            )
+            .properties(height=26 * len(cdf))
+        )
+        st.altair_chart(chart)
 
     st.markdown(f"**{t('similar_hdr', lang)}**")
     st.caption(t("similar_help", lang))
@@ -644,14 +667,58 @@ def _youth_tab():
 
 # -- projected squads by birth year -----------------------------
 _LINE_KEYS = ("GK", "DF", "MF", "FW")
+_LINE_Y = {"FW": 190, "MF": 470, "DF": 760, "GK": 995}
+_LINE_COLOR = {"GK": "#f4c531", "DF": "#3b82f6", "MF": "#22c55e", "FW": "#ef4444"}
 
 
-def _squad_card(row: pd.Series):
-    with st.container(border=True):
-        st.markdown(f"**{row['canonical_name']}**")
-        pos = position_label(row.get("position"), row.get("position_detail"), lang)
-        st.caption(f"{pos} · {row.get('academy_club') or '—'}")
-        st.markdown(f"### {row['breakthrough_score'] * 100:.0f}")
+def _pitch_svg(lines: dict[str, pd.DataFrame]) -> str:
+    """A 4-3-3 starting XI drawn on a pitch (attack at the top)."""
+    from html import escape
+
+    w, h = 760, 1080
+    p = [
+        f'<svg viewBox="0 0 {w} {h}" width="{w}" height="{h}" '
+        'xmlns="http://www.w3.org/2000/svg">',
+        f'<rect width="{w}" height="{h}" rx="16" fill="#2f7d3a"/>',
+    ]
+    for i in range(0, h, 108):  # mowing stripes
+        if (i // 108) % 2:
+            p.append(f'<rect y="{i}" width="{w}" height="108" fill="#ffffff" opacity="0.045"/>')
+    ln = 'stroke="#ffffff" stroke-opacity="0.5" stroke-width="3" fill="none"'
+    p += [
+        f'<rect x="18" y="18" width="{w - 36}" height="{h - 36}" rx="8" {ln}/>',
+        f'<line x1="18" y1="{h // 2}" x2="{w - 18}" y2="{h // 2}" {ln}/>',
+        f'<circle cx="{w // 2}" cy="{h // 2}" r="72" {ln}/>',
+        f'<rect x="{w // 2 - 150}" y="18" width="300" height="150" {ln}/>',
+        f'<rect x="{w // 2 - 150}" y="{h - 168}" width="300" height="150" {ln}/>',
+        f'<rect x="{w // 2 - 66}" y="18" width="132" height="54" {ln}/>',
+        f'<rect x="{w // 2 - 66}" y="{h - 72}" width="132" height="54" {ln}/>',
+    ]
+    for key, rows in lines.items():
+        rs = list(rows.itertuples())
+        n = len(rs)
+        if not n:
+            continue
+        y = _LINE_Y[key]
+        col = _LINE_COLOR[key]
+        font = "system-ui,-apple-system,sans-serif"
+        for i, r in enumerate(rs):
+            x = int(w * (i + 1) / (n + 1))
+            surname = escape(str(r.canonical_name).split()[-1])
+            sc = f"{r.breakthrough_score * 100:.0f}"
+            p += [
+                f"<g><title>{escape(str(r.canonical_name))} — {sc}</title>",
+                f'<circle cx="{x}" cy="{y}" r="27" fill="#fff" stroke="{col}" stroke-width="4"/>',
+                f'<text x="{x}" y="{y + 6}" text-anchor="middle" font-weight="700" '
+                f'font-size="18" font-family="{font}" fill="{col}">{sc}</text>',
+                f'<text x="{x}" y="{y + 48}" text-anchor="middle" font-weight="600" '
+                f'font-size="15" font-family="{font}" fill="#fff" '
+                f'style="paint-order:stroke;stroke:#000;stroke-width:3px;stroke-opacity:.35">'
+                f"{surname}</text>",
+                "</g>",
+            ]
+    p.append("</svg>")
+    return "".join(p)
 
 
 def _squads_tab(scored: pd.DataFrame):
@@ -681,15 +748,26 @@ def _squads_tab(scored: pd.DataFrame):
 
     if len(academy):
         lines = best_xi(academy)
-        for ln in _LINE_KEYS:
-            rows = lines[ln]
-            if not len(rows):
-                continue
-            st.markdown(f"**{t(f'line_{ln}', lang)}**")
-            cols = st.columns(max(len(rows), 1))
-            for col, (_, r) in zip(cols, rows.iterrows(), strict=False):
-                with col:
-                    _squad_card(r)
+        b64 = base64.b64encode(_pitch_svg(lines).encode()).decode()
+        st.html(
+            f'<img alt="4-3-3" src="data:image/svg+xml;base64,{b64}" '
+            'style="width:100%;max-width:520px;display:block;margin:4px auto"/>'
+        )
+        xi = pd.concat([lines[k] for k in _LINE_KEYS if len(lines[k])])
+        st.dataframe(
+            pd.DataFrame(
+                {
+                    t("col_pos", lang): [
+                        position_label(r.position, r.position_detail, lang)
+                        for r in xi.itertuples()
+                    ],
+                    t("col_name", lang): xi["canonical_name"].to_numpy(),
+                    t("score", lang): (xi["breakthrough_score"] * 100).round(0).astype(int),
+                    t("col_academy", lang): xi["academy_club"].fillna("—").to_numpy(),
+                }
+            ),
+            hide_index=True,
+        )
         st.divider()
 
     if len(kids):
@@ -721,13 +799,33 @@ tab_prospects, tab_pro, tab_squads, tab_compare, tab_youth = st.tabs(
     ]
 )
 
+def _row_click_pid(frame: pd.DataFrame, event) -> str | None:
+    """Player id of the clicked row — via the row checkbox OR any clicked cell."""
+    if not event:
+        return None
+    sel = getattr(event, "selection", None) or {}
+    rows = list(sel.get("rows") or [])
+    if not rows:
+        rows = [c[0] for c in (sel.get("cells") or []) if c]
+    if rows and 0 <= rows[0] < len(frame):
+        return frame.iloc[rows[0]]["player_id"]
+    return None
+
+
 with tab_prospects:
     st.subheader(t("prospects_hdr", lang))
     st.caption(t("prospects_cap", lang))
     view = _apply(rank_prospects(df, model=model, target_col=target_col), flt)
-    st.dataframe(_table(view), hide_index=True, height=460)
+    ev = st.dataframe(
+        _table(view),
+        hide_index=True,
+        height=460,
+        on_select="rerun",
+        selection_mode=["single-row", "single-cell"],
+        key="tbl_prospects",
+    )
     st.divider()
-    _player_card(view)
+    _player_card(view, slot="prospects", clicked_pid=_row_click_pid(view, ev))
 
 with tab_pro:
     st.subheader(t("pro_hdr", lang))
@@ -740,9 +838,16 @@ with tab_pro:
             "→",
             res["outcome"].map({1: t("outcome_yes", lang), 0: t("outcome_no", lang)}).to_numpy(),
         )
-    st.dataframe(show, hide_index=True, height=460)
+    ev = st.dataframe(
+        show,
+        hide_index=True,
+        height=460,
+        on_select="rerun",
+        selection_mode=["single-row", "single-cell"],
+        key="tbl_pro",
+    )
     st.divider()
-    _player_card(res)
+    _player_card(res, slot="pro", clicked_pid=_row_click_pid(res, ev))
 
 with tab_squads:
     _squads_tab(_scored_all(df, target_col, _parquet_mtime()))
