@@ -382,13 +382,15 @@ def from_db(engine):
     try:  # number of youth/academy clubs on the TM profile (0 = unknown)
         yc = pd.read_sql(
             "select x.player_id, "
-            "coalesce(jsonb_array_length(r.payload->'player'->'youth_clubs'), 0) as n_youth_clubs "
+            "max(coalesce(jsonb_array_length(r.payload->'player'->'youth_clubs'), 0)) "
+            "  as n_youth_clubs "
             "from raw_document r join player_source_xref x "
             "  on x.source = 'transfermarkt' and x.source_id = r.source_id "
-            "where r.source = 'transfermarkt' and r.doc_type = 'profile'",
+            "where r.source = 'transfermarkt' and r.doc_type = 'profile' "
+            "group by x.player_id",
             engine,
         )
-        players = players.merge(yc, on="player_id", how="left")
+        players = players.merge(yc.drop_duplicates("player_id"), on="player_id", how="left")
     except Exception:  # noqa: BLE001 — no raw payloads (e.g. demo) -> feature stays absent
         pass
     seasons = pd.read_sql(
