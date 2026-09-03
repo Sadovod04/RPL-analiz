@@ -188,13 +188,8 @@ def _trajectory_features(youth: pd.DataFrame, seasons: pd.DataFrame) -> pd.DataF
     return pd.DataFrame(rows)
 
 
-# youth-NT U-levels that are safely *before* the modelling cutoff (a молодёжная /
-# U21 cap can happen at 20-21, so it is not counted here — see wikipedia_players).
-_PRE_CUTOFF_NT_MAX = 19
-
 _RECOGNITION_COLS = (
     "wiki_article_pre_cutoff",
-    "wiki_youth_national_team",
     "wiki_youth_honours",
     "recognition_count",
     "pre_cutoff_recognition_score",
@@ -208,9 +203,11 @@ def _attach_recognition(
     """Fold ru.wikipedia recognition into the matrix (Phase B).
 
     Only *pre-cutoff* signals become features: an article created before the
-    player turned ``cutoff_age``, a youth-NT category at U19 or below, and
-    honours dated at/before age 18. "Has an article now" / total honours are
-    post-hoc and deliberately never reach the matrix.
+    player turned ``cutoff_age``, and honours dated at/before age 18. "Has an
+    article now" / total honours are post-hoc and deliberately never reach the
+    matrix. (A youth-NT feature was dropped: ru.wikipedia only carries the
+    "молодёжная (до 21)" category, not U17/U19, so it can't be made pre-cutoff
+    clean — that signal is left for the RFS source in a later phase.)
     """
     if wiki is None or wiki.empty:
         for c in _RECOGNITION_COLS:
@@ -221,30 +218,18 @@ def _attach_recognition(
     w = (
         wiki.drop_duplicates("player_id")
         .set_index("player_id")
-        .reindex(columns=["article_created_age", "youth_honours_count", "nt_youth_levels"])
+        .reindex(columns=["article_created_age", "youth_honours_count"])
     )
     idx = m["player_id"]
 
     created_age = pd.to_numeric(idx.map(w["article_created_age"]), errors="coerce")
     m["wiki_article_pre_cutoff"] = (created_age.notna() & (created_age < cutoff_age)).astype(int)
 
-    def _min_nt_level(levels) -> float:
-        if isinstance(levels, (list, tuple)) and len(levels):
-            return min(levels)
-        return np.nan
-
-    nt_min = idx.map(w["nt_youth_levels"]).map(_min_nt_level)
-    m["wiki_youth_national_team"] = (nt_min <= _PRE_CUTOFF_NT_MAX).fillna(False).astype(int)
-
     yh = pd.to_numeric(idx.map(w["youth_honours_count"]), errors="coerce").fillna(0).astype(int)
     m["wiki_youth_honours"] = yh
 
-    m["recognition_count"] = (
-        m["wiki_article_pre_cutoff"] + m["wiki_youth_national_team"] + yh
-    )
-    m["pre_cutoff_recognition_score"] = (
-        3 * m["wiki_article_pre_cutoff"] + 2 * m["wiki_youth_national_team"] + yh
-    )
+    m["recognition_count"] = m["wiki_article_pre_cutoff"] + yh
+    m["pre_cutoff_recognition_score"] = 3 * m["wiki_article_pre_cutoff"] + yh
     m["any_recognition"] = m["pre_cutoff_recognition_score"] > 0
     return m
 
@@ -382,8 +367,7 @@ def from_db(engine):
     market_values = pd.read_sql("select player_id, date, value_eur from market_value", engine)
     try:
         wiki = pd.read_sql(
-            "select player_id, article_created_age, youth_honours_count, nt_youth_levels "
-            "from wiki_recognition",
+            "select player_id, article_created_age, youth_honours_count from wiki_recognition",
             engine,
         )
     except Exception:  # noqa: BLE001 — table absent (fresh DB) -> recognition features = 0

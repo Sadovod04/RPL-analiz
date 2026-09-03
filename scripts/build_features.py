@@ -32,7 +32,6 @@ _NEW_COLS = (
     "min_per_appearance",
     "starter_share",
     "wiki_article_pre_cutoff",
-    "wiki_youth_national_team",
     "wiki_youth_honours",
     "recognition_count",
     "pre_cutoff_recognition_score",
